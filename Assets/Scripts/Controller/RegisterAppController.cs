@@ -56,6 +56,7 @@ public class RegisterAppController : MonoBehaviour
 
     public void confirmarRegistroUsuario()
     {
+        textoErrorRegistro.text = "";
         StartCoroutine(desactivarPorUnTiempoLosBotonesYLuegoActivarCuandoHayaRespuestaDeLaAPIdePlayFab());
 
         string textoNombre = inputTextoNombre.text.Trim();
@@ -149,14 +150,13 @@ public class RegisterAppController : MonoBehaviour
     private IEnumerator desactivarPorUnTiempoLosBotonesYLuegoActivarCuandoHayaRespuestaDeLaAPIdePlayFab()
     {
         mensajeAPIPlayFabDevuelto = false;
-        Debug.Log("A");
+
         botónIniciarSesión.interactable = false;
         botónConfirmar.interactable = false;
 
         //yield return new WaitUntil(() => mensajeAPIPlayFabDevuelto);
         yield return new WaitForSeconds(2f);
 
-        Debug.Log("B");
         botónIniciarSesión.interactable = true;
         botónConfirmar.interactable = true;
     }

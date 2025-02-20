@@ -41,6 +41,7 @@ public class LogInAppController : MonoBehaviour
     // Método para ser llamado por el botón de inicio de sesión
     public void gestionarIniciarSesión()
     {
+        textoErrorLogin.text = "";
         StartCoroutine(desactivarPorUnTiempoLosBotonesYLuegoActivarCuandoHayaRespuestaDeLaAPIdePlayFab());
 
         string username = inputFieldNombreLogin.text.Trim();
