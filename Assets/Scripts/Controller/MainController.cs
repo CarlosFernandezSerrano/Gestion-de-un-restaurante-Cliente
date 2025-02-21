@@ -39,15 +39,8 @@ public class MainController : MonoBehaviour, IProtocolo
 
         GestionarCliente();
         
-        
-
-
-        
-        //recibirUnMensajeDelServidorAsync();
-
 
         //client.Close();
-
     }
 
     private async void GestionarCliente()
@@ -56,7 +49,6 @@ public class MainController : MonoBehaviour, IProtocolo
         {
             if (client != null && stream != null)
             {
-                Debug.Log("A");
                 string mensaje = ""+await LeerMensajeDelServidor();
                 //StartCoroutine(esperarARecibirElMensajeYGestionarlo());
                 Debug.Log("Mensaje SERVER: " + mensaje);
@@ -71,7 +63,6 @@ public class MainController : MonoBehaviour, IProtocolo
                 if (!conectandoAlServer && !conectadoAlServer)
                 {
                     conectandoAlServer = true;
-                    Debug.Log("B");
                     ConectarAlServidorAsync();
                 }
                 
@@ -100,7 +91,8 @@ public class MainController : MonoBehaviour, IProtocolo
                                                  //se conecta a un servidor, el NetworkStream permite leer y escribir información en esa conexión.
                     Debug.Log("Conexión al servidor exitosa.");
                     conectadoAlServer = true;
-                    conectandoAlServer = false; enviarUnMensajeAlServidorAsync("1:Hola server, soy el cliente1");
+                    conectandoAlServer = false;
+                    enviarUnMensajeAlServidorAsync("1:Hola server, soy el cliente");
                     break; // Salimos del bucle si la conexión es exitosa
                 }
                 else
@@ -136,8 +128,7 @@ public class MainController : MonoBehaviour, IProtocolo
         {
             case IProtocolo.BIENVENIDA:
                 Debug.Log("Llega aquí");
-                //enviarUnMensajeAlServidorAsync(""+IProtocolo.BIENVENIDA + ":" + "Hola servidor, ¿qué tal?");
-                //enviarUnMensajeAlServidorAsync("1:Hola server, soy el cliente2");
+                enviarUnMensajeAlServidorAsync("2:Hola server, soy el cliente2");
                 Debug.Log("Consigue llegar aquí");
                 break;
             case 3:
@@ -167,4 +158,28 @@ public class MainController : MonoBehaviour, IProtocolo
         return response;
     }
 
+    private void OnEnable()
+    {
+        Application.wantsToQuit += OnWantsToQuitAsync;
+    }
+
+    private void OnDisable()
+    {
+        Application.wantsToQuit -= OnWantsToQuitAsync;
+    }
+
+    // Intercepta el intento de cerrar la aplicación (por ejemplo, con Alt + F4 o clic en el botón de cierre de la ventana).
+    private bool OnWantsToQuitAsync() //Hacer que no funcione este método hasta que una parte del programa cargue que es la generación del lobby (creo, no estoy seguro)
+    {
+        Debug.Log("Interceptando Alt + F4 o cierre manual.");
+        
+        if (client.Connected)
+        {
+            client.Close();
+        }
+
+        finCliente = true;
+        conectadoAlServer = true;
+        return true; // Unity cierra la aplicación automáticamente.
+    }
 }
