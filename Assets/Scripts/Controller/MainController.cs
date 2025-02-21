@@ -37,7 +37,7 @@ public class MainController : MonoBehaviour, IProtocolo
             canvasLogInUsuario.SetActive(true);
         }
 
-        gestionarServidor();
+        GestionarCliente();
         
         
 
@@ -50,15 +50,21 @@ public class MainController : MonoBehaviour, IProtocolo
 
     }
 
-    private async void gestionarServidor()
+    private async void GestionarCliente()
     {
         do
         {
             if (client != null && stream != null)
             {
                 Debug.Log("A");
-                string mensaje = ""+recibirUnMensajeDelServidorAsync();
-                gestionarMensajeDelServidor(mensaje);
+                string mensaje = ""+await LeerMensajeDelServidor();
+                //StartCoroutine(esperarARecibirElMensajeYGestionarlo());
+                Debug.Log("Mensaje SERVER: " + mensaje);
+                if (mensaje.Trim() != "" && mensaje != null)
+                {
+                    GestionarMensajeDelServidor(mensaje);
+                }
+                
             }
             else
             {
@@ -94,7 +100,7 @@ public class MainController : MonoBehaviour, IProtocolo
                                                  //se conecta a un servidor, el NetworkStream permite leer y escribir información en esa conexión.
                     Debug.Log("Conexión al servidor exitosa.");
                     conectadoAlServer = true;
-                    conectandoAlServer = false;
+                    conectandoAlServer = false; enviarUnMensajeAlServidorAsync("1:Hola server, soy el cliente1");
                     break; // Salimos del bucle si la conexión es exitosa
                 }
                 else
@@ -120,16 +126,19 @@ public class MainController : MonoBehaviour, IProtocolo
     }
 
 
-    private void gestionarMensajeDelServidor(string mensaje)
+    private void GestionarMensajeDelServidor(string mensaje)
     {
         string[] cadServer = mensaje.Trim().Split(":");
-
+        Debug.Log("Mensaje del server: " + mensaje);
         int numMensaje = int.Parse(cadServer[0]);
 
         switch (numMensaje)
         {
             case IProtocolo.BIENVENIDA:
-                enviarUnMensajeAlServidorAsync(IProtocolo.BIENVENIDA + ":" + "Hola servidor, ¿qué tal?");
+                Debug.Log("Llega aquí");
+                //enviarUnMensajeAlServidorAsync(""+IProtocolo.BIENVENIDA + ":" + "Hola servidor, ¿qué tal?");
+                //enviarUnMensajeAlServidorAsync("1:Hola server, soy el cliente2");
+                Debug.Log("Consigue llegar aquí");
                 break;
             case 3:
 
@@ -148,7 +157,7 @@ public class MainController : MonoBehaviour, IProtocolo
         await stream.WriteAsync(messageBytes, 0, messageBytes.Length);
     }
 
-    private async Task<string> recibirUnMensajeDelServidorAsync()
+    private async Task<string> LeerMensajeDelServidor()
     {
         // Leer la respuesta del servidor
         byte[] buffer = new byte[1024];
@@ -157,6 +166,5 @@ public class MainController : MonoBehaviour, IProtocolo
         Debug.Log("Respuesta del servidor: " + response);
         return response;
     }
-
 
 }
