@@ -5,6 +5,7 @@ using TMPro;
 using System;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.Networking;
 
 public class LogInAppController : MonoBehaviour
 {
@@ -25,7 +26,9 @@ public class LogInAppController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        Debug.Log("A");
+        StartCoroutine(GetData());
+        Debug.Log("B");
     }
 
     // Update is called once per frame
@@ -126,6 +129,27 @@ public class LogInAppController : MonoBehaviour
                 int nextIndex = (i + 1) % inputFields.Length;
                 inputFields[nextIndex].Select();
                 break;
+            }
+        }
+    }
+
+    public IEnumerator GetData()
+    {
+        string url = "https://localhost:7233/cliente/listar"; // Ajusta la URL según tu configuración
+        using (UnityWebRequest request = UnityWebRequest.Get(url))
+        {
+            yield return request.SendWebRequest();
+
+            if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
+            {
+                Debug.Log("Error: " + request.error);
+            }
+            else
+            {
+                // Procesa la respuesta, que generalmente es JSON
+                string jsonResponse = request.downloadHandler.text;
+                Debug.Log("Respuesta: " + jsonResponse);
+                // Puedes deserializar con JsonUtility o alguna otra librería JSON
             }
         }
     }

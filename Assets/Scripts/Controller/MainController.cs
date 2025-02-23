@@ -37,7 +37,7 @@ public class MainController : MonoBehaviour, IProtocolo
             canvasLogInUsuario.SetActive(true);
         }
 
-        GestionarCliente();
+        //GestionarCliente();
         
 
         //client.Close();
@@ -173,10 +173,10 @@ public class MainController : MonoBehaviour, IProtocolo
     {
         Debug.Log("Interceptando Alt + F4 o cierre manual.");
         
-        if (client.Connected)
+        /*if (client.Connected)
         {
             client.Close();
-        }
+        }*/
 
         finCliente = true;
         conectadoAlServer = true;

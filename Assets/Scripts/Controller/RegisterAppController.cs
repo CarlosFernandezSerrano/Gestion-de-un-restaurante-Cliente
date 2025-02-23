@@ -20,7 +20,6 @@ public class RegisterAppController : MonoBehaviour
     [SerializeField] private TMP_InputField[] inputFields; // Asigno los InputFields en el orden de tabulación deseado
 
 
-    private bool esHombre = false;
     private bool mensajeAPIPlayFabDevuelto = false;
 
 
