@@ -6,6 +6,10 @@ using System;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.Networking;
+using System.Text;
+using UnityEditor.PackageManager.UI;
+using Newtonsoft.Json;
+
 
 public class LogInAppController : MonoBehaviour
 {
@@ -21,13 +25,17 @@ public class LogInAppController : MonoBehaviour
 
     //private bool mensajeAPIPlayFabDevuelto = false;
 
-    
+    Cliente instanceCliente;
 
     // Start is called before the first frame update
     void Start()
     {
+        instanceCliente = Cliente.instanceCiente;
+
         Debug.Log("A");
         StartCoroutine(GetData("listar"));
+        Cliente cliente = new Cliente("2","Carlos Fernandez","30", "juan@example.com");
+        StartCoroutine(PostData(cliente));
         StartCoroutine(DeleteData());
         Debug.Log("B");
     }
@@ -150,7 +158,52 @@ public class LogInAppController : MonoBehaviour
                 // Procesa la respuesta, que generalmente es JSON
                 string jsonResponse = request.downloadHandler.text;
                 Debug.Log("Respuesta: " + jsonResponse);
+                // Deserializa el JSON a un objeto Persona
+                //Cliente cliente = JsonConvert.DeserializeObject<Cliente>(jsonResponse);
+                //Debug.Log("Cliente: " + cliente.mostrar());
                 // Puedes deserializar con JsonUtility o alguna otra librería JSON
+            }
+        }
+    }
+
+    public IEnumerator PostData(Cliente cliente)
+    {
+        string url = "https://localhost:7233/cliente/guardar"; // Ajusta la URL según tu configuración
+
+        // 2. Crear el objeto cliente
+        /*Cliente cliente = new Cliente
+        {
+            nombre = "Ana García",
+            edad = "28",
+            correo = "ana@ejemplo.com"
+        };*/
+
+        // 3. Convertir a JSON
+        //string json = cliente.toJSONString();
+        string json = JsonConvert.SerializeObject(cliente);
+        byte[] jsonBytes = Encoding.UTF8.GetBytes(json);
+        Debug.Log("Cliente: " + cliente.mostrar());
+        Debug.Log("JSON: " + json);
+        // 4. Configurar la petición
+        using (UnityWebRequest request = new UnityWebRequest(url, "POST"))
+        {
+            request.uploadHandler = new UploadHandlerRaw(jsonBytes);
+            request.downloadHandler = new DownloadHandlerBuffer();
+            request.SetRequestHeader("Content-Type", "application/json");
+
+            // 5. Enviar y esperar
+            yield return request.SendWebRequest();
+
+            // 6. Manejar respuesta
+            if (request.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogError($"Error: {request.error}");
+            }
+            else
+            {
+                Debug.Log($"Respuesta: {request.downloadHandler.text}");
+                // Si quieres deserializar:
+
             }
         }
     }
@@ -178,4 +231,7 @@ public class LogInAppController : MonoBehaviour
             }
         }
     }
+
+
+    
 }
