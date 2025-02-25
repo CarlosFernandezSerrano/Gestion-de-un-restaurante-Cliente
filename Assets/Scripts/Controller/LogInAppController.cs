@@ -34,6 +34,8 @@ public class LogInAppController : MonoBehaviour
     {
         instanceMétodosAPIController = MétodosAPIController.instanceMétodosAPIController;
 
+        StartCoroutine(instanceMétodosAPIController.GetData("cliente/cbdd")); //La API se conecta a la BDD
+
         //StartCoroutine(GetData("listar"));
         StartCoroutine(instanceMétodosAPIController.GetData("cliente/listar"));
         

@@ -37,7 +37,7 @@ public class Cliente
 
     private string mostrarLista(string cad1, List<string> restaurantes)
     {
-        string cad = ""+cad1;
+        string cad = ""+cad1+": ";
         foreach (string nombreRestaurante in restaurantes)
         {
             cad += nombreRestaurante + ", ";
