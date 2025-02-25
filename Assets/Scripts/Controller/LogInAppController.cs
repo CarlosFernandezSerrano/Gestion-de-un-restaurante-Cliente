@@ -9,6 +9,7 @@ using UnityEngine.Networking;
 using System.Text;
 using UnityEditor.PackageManager.UI;
 using Newtonsoft.Json;
+using UnityEditor.PackageManager;
 
 
 public class LogInAppController : MonoBehaviour
@@ -25,19 +26,20 @@ public class LogInAppController : MonoBehaviour
 
     //private bool mensajeAPIPlayFabDevuelto = false;
 
-    Cliente instanceCliente;
+    MétodosAPIController instanceMétodosAPIController;
+
 
     // Start is called before the first frame update
     void Start()
     {
-        instanceCliente = Cliente.instanceCiente;
+        instanceMétodosAPIController = MétodosAPIController.instanceMétodosAPIController;
 
-        Debug.Log("A");
-        StartCoroutine(GetData("listar"));
-        Cliente cliente = new Cliente("2","Carlos Fernandez","30", "juan@example.com");
-        StartCoroutine(PostData(cliente));
-        StartCoroutine(DeleteData());
-        Debug.Log("B");
+        //StartCoroutine(GetData("listar"));
+        StartCoroutine(instanceMétodosAPIController.GetData("cliente/listar"));
+        
+        
+        
+        //StartCoroutine(DeleteData());
     }
 
     // Update is called once per frame
@@ -68,7 +70,7 @@ public class LogInAppController : MonoBehaviour
         }
         Debug.Log("El usuario trata de iniciar sesión");
 
-        LoginUser(username, password);
+        StartCoroutine(LoginUser(username, password));
     }
 
     private IEnumerator desactivarPorUnTiempoLosBotonesYLuegoActivarCuandoHayaRespuestaDeLaAPIdePlayFab()
@@ -86,11 +88,14 @@ public class LogInAppController : MonoBehaviour
     }
 
     // Método para iniciar sesión al usuario
-    public void LoginUser(string username, string password)
+    public IEnumerator LoginUser(string nombre, string password)
     {
         // Crear la solicitud de inicio de sesión
         
+        //Cliente cliente = new Cliente("2", "Carlos Fernandez", "30", "juan@example.com");
+        yield return StartCoroutine(instanceMétodosAPIController.GetData("cliente/existe/"+nombre));
 
+        //yield return StartCoroutine(instanceMétodosAPIController.PostData("cliente/guardar", cliente));
     }
 
     // Coroutine para finalizar el proceso de inicio de sesión
@@ -142,95 +147,11 @@ public class LogInAppController : MonoBehaviour
         }
     }
 
-    public IEnumerator GetData(string cad)
-    {
-        string url = "https://localhost:7233/cliente/"+cad; // Ajusta la URL según tu configuración
-        using (UnityWebRequest request = UnityWebRequest.Get(url))
-        {
-            yield return request.SendWebRequest();
+    
 
-            if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
-            {
-                Debug.Log("Error: " + request.error);
-            }
-            else
-            {
-                // Procesa la respuesta, que generalmente es JSON
-                string jsonResponse = request.downloadHandler.text;
-                Debug.Log("Respuesta: " + jsonResponse);
-                // Deserializa el JSON a un objeto Persona
-                //Cliente cliente = JsonConvert.DeserializeObject<Cliente>(jsonResponse);
-                //Debug.Log("Cliente: " + cliente.mostrar());
-                // Puedes deserializar con JsonUtility o alguna otra librería JSON
-            }
-        }
-    }
+    
 
-    public IEnumerator PostData(Cliente cliente)
-    {
-        string url = "https://localhost:7233/cliente/guardar"; // Ajusta la URL según tu configuración
-
-        // 2. Crear el objeto cliente
-        /*Cliente cliente = new Cliente
-        {
-            nombre = "Ana García",
-            edad = "28",
-            correo = "ana@ejemplo.com"
-        };*/
-
-        // 3. Convertir a JSON
-        //string json = cliente.toJSONString();
-        string json = JsonConvert.SerializeObject(cliente);
-        byte[] jsonBytes = Encoding.UTF8.GetBytes(json);
-        Debug.Log("Cliente: " + cliente.mostrar());
-        Debug.Log("JSON: " + json);
-        // 4. Configurar la petición
-        using (UnityWebRequest request = new UnityWebRequest(url, "POST"))
-        {
-            request.uploadHandler = new UploadHandlerRaw(jsonBytes);
-            request.downloadHandler = new DownloadHandlerBuffer();
-            request.SetRequestHeader("Content-Type", "application/json");
-
-            // 5. Enviar y esperar
-            yield return request.SendWebRequest();
-
-            // 6. Manejar respuesta
-            if (request.result != UnityWebRequest.Result.Success)
-            {
-                Debug.LogError($"Error: {request.error}");
-            }
-            else
-            {
-                Debug.Log($"Respuesta: {request.downloadHandler.text}");
-                // Si quieres deserializar:
-
-            }
-        }
-    }
-
-    public IEnumerator DeleteData()
-    {
-        string url = "https://localhost:7233/cliente/borrarxid/3"; // Ajusta la URL según tu configuración
-        using (UnityWebRequest request = UnityWebRequest.Delete(url))
-        {
-            // Asigna un downloadHandler para poder capturar la respuesta del servidor
-            request.downloadHandler = new DownloadHandlerBuffer();
-
-            yield return request.SendWebRequest();
-
-            if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
-            {
-                Debug.Log("Error: " + request.error);
-            }
-            else
-            {
-                // Procesa la respuesta, que generalmente es JSON
-                string jsonResponse = request.downloadHandler.text;
-                Debug.Log("Respuesta: " + jsonResponse);
-                // Puedes deserializar con JsonUtility o alguna otra librería JSON
-            }
-        }
-    }
+    
 
 
     

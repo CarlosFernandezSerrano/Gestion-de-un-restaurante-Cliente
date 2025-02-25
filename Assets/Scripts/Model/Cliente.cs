@@ -8,17 +8,19 @@ public class Cliente
 {
     public static Cliente instanceCiente { get; private set; }
 
-    public string id { get; set; }
     public string nombre { get; set; }
-    public string edad { get; set; }
-    public string correo { get; set; }
+    public string contraseña { get; set; }
+    public string rol { get; set; }
+    public string cantMapas { get; set; }
+    public List<string> restaurantes { get; set; }
 
-    public Cliente(string id, string nombre, string edad, string correo)
+    public Cliente(string nombre, string contraseña, string rol, string cantMapas, List<string> restaurantes)
     {
-        this.id = id;
         this.nombre = nombre;
-        this.edad = edad;
-        this.correo = correo;
+        this.contraseña = contraseña;
+        this.rol = rol;
+        this.cantMapas = cantMapas;
+        this.restaurantes = restaurantes;
     }
 
     private void Awake()
@@ -30,10 +32,21 @@ public class Cliente
     }
     public string mostrar()
     {
-        return this.id +" "+ this.nombre + " " + this.edad + " " + this.correo;
+        return this.nombre +" "+ this.contraseña + " " + this.rol + " " + this.cantMapas + " " + mostrarLista("restaurantes",this.restaurantes);
     }
 
-    public string AJSONString(string cad)
+    private string mostrarLista(string cad1, List<string> restaurantes)
+    {
+        string cad = ""+cad1;
+        foreach (string nombreRestaurante in restaurantes)
+        {
+            cad += nombreRestaurante + ", ";
+        }
+        return cad;
+
+    }
+
+    /*public string AJSONString(string cad)
     {
         return "\"" + cad + "\"";
     }
@@ -42,5 +55,5 @@ public class Cliente
         return "{" + string.Format("\"nombre\": {0}, \"puntos\": {1}",
                                   AJSONString(this.nombre),
                                   AJSONString(this.edad)) + "}";
-    }
+    }*/
 }
