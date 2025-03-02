@@ -10,6 +10,7 @@ using System.Text;
 using UnityEditor.PackageManager.UI;
 using Newtonsoft.Json;
 using UnityEditor.PackageManager;
+using Assets.Scripts.Model;
 
 
 public class LogInAppController : MonoBehaviour
@@ -34,10 +35,10 @@ public class LogInAppController : MonoBehaviour
     {
         instanceMétodosAPIController = MétodosAPIController.instanceMétodosAPIController;
 
-        StartCoroutine(instanceMétodosAPIController.GetData("cliente/cbdd")); //La API se conecta a la BDD
+        //StartCoroutine(instanceMétodosAPIController.GetData("cliente/cbdd")); //La API se conecta a la BDD
 
         //StartCoroutine(GetData("listar"));
-        StartCoroutine(instanceMétodosAPIController.GetData("cliente/listar"));
+        StartCoroutine(instanceMétodosAPIController.GetData("trabajador/listar"));
         
         
         
@@ -95,9 +96,18 @@ public class LogInAppController : MonoBehaviour
         // Crear la solicitud de inicio de sesión
         
         //Cliente cliente = new Cliente("2", "Carlos Fernandez", "30", "juan@example.com");
-        yield return StartCoroutine(instanceMétodosAPIController.GetData("cliente/existe/"+nombre));
+        yield return StartCoroutine(instanceMétodosAPIController.GetData("trabajador/logIn/" + nombre+"*"+password));
+        Debug.Log("Respuesta login user: "+instanceMétodosAPIController.respuestaGET);
 
-        //yield return StartCoroutine(instanceMétodosAPIController.PostData("cliente/guardar", cliente));
+        Trabajador t = new Trabajador(nombre,password,1,1);
+        //Cliente c = new Cliente(nombre, "024124124f", "335423252");
+        yield return StartCoroutine(instanceMétodosAPIController.PostData("trabajador/guardar", t));
+        Debug.Log("Respueta después de POST: " + instanceMétodosAPIController.respuestaPOST);
+        // Si quieres deserializar:
+        Trabajador trabajador2 = JsonConvert.DeserializeObject<Trabajador>(instanceMétodosAPIController.respuestaPOST);
+        //Cliente cliente2 = JsonConvert.DeserializeObject<Cliente>(instanceMétodosAPIController.respuestaPOST);
+        Debug.Log("Deserializado JSON en POST: " + trabajador2.mostrar());
+        
     }
 
     // Coroutine para finalizar el proceso de inicio de sesión

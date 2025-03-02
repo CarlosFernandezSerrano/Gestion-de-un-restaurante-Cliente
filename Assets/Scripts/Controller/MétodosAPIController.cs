@@ -52,19 +52,20 @@ public class MétodosAPIController : MonoBehaviour
                 string jsonResponse = request.downloadHandler.text;
                 Debug.Log("Respuesta 1: " + jsonResponse);
                 //Cliente cliente = JsonConvert.DeserializeObject<Cliente>(jsonResponse);
+                respuestaGET = jsonResponse;
                 Debug.Log("Deserializado 1: ");
                 // Deserializa el JSON a una lista de objetos Cliente
-                List<Cliente> listaClientes = JsonConvert.DeserializeObject<List<Cliente>>(jsonResponse);
+                /*List<Trabajador> listaClientes = JsonConvert.DeserializeObject<List<Trabajador>>(jsonResponse);
                 Debug.Log("Clientes:");
-                foreach (Cliente cliente in listaClientes)
+                foreach (Trabajador cliente in listaClientes)
                 {
                     Debug.Log(cliente.mostrar());
-                }
+                }*/
             }
         }
     }
 
-    public IEnumerator PostData(string cad, Cliente cliente)
+    public IEnumerator PostData(string cad, object objeto)
     {
         string url = "https://localhost:7233/"+cad; // Ajusta la URL según tu configuración
 
@@ -78,9 +79,9 @@ public class MétodosAPIController : MonoBehaviour
 
         // 3. Convertir a JSON
         //string json = cliente.toJSONString();
-        string json = JsonConvert.SerializeObject(cliente);
+        string json = JsonConvert.SerializeObject(objeto);
         byte[] jsonBytes = Encoding.UTF8.GetBytes(json);
-        Debug.Log("Cliente: " + cliente.mostrar());
+        //Debug.Log("Cliente: " + objeto.mostrar());
         Debug.Log("JSON: " + json);
         // 4. Configurar la petición
         using (UnityWebRequest request = new UnityWebRequest(url, "POST"))
@@ -95,18 +96,14 @@ public class MétodosAPIController : MonoBehaviour
             // 6. Manejar respuesta
             if (request.result != UnityWebRequest.Result.Success)
             {
-                Debug.LogError($"Error: {request.error}");
+                Debug.LogError("Error: "+request.error);
             }
             else
             {
                 string jsonResponse = request.downloadHandler.text;
                 Debug.Log("Respuesta POST en JSON: " + jsonResponse);
-                Debug.Log($"Respuesta: {request.downloadHandler.text}");
-                respuestaPOST = jsonResponse;
-                // Si quieres deserializar:
-                Cliente cliente2 = JsonConvert.DeserializeObject<Cliente>(jsonResponse);
-                Debug.Log("Deserializado JSON en POST: " + cliente2.mostrar());
-
+                Debug.Log("Respuesta: "+request.downloadHandler.text);
+                respuestaPOST = jsonResponse;                
             }
         }
     }

@@ -22,12 +22,12 @@ public class RegisterAppController : MonoBehaviour
 
     private bool mensajeAPIPlayFabDevuelto = false;
 
-
+    MétodosAPIController instanceMétodosAPIController;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        instanceMétodosAPIController = MétodosAPIController.instanceMétodosAPIController;
     }
 
     // Update is called once per frame
@@ -91,7 +91,7 @@ public class RegisterAppController : MonoBehaviour
                             if (!textoNombre.Contains(" "))
                             {
                                 Debug.Log("El nombre no tiene espacios entre letras");                                
-                                RegisterUser(textoNombre, textoPassword);                                
+                                StartCoroutine(RegisterUser(textoNombre, textoPassword));     
                             }
                             else
                             {
@@ -162,11 +162,14 @@ public class RegisterAppController : MonoBehaviour
 
 
     // Método para registrar al usuario
-    public void RegisterUser(string username, string password)
+    public IEnumerator RegisterUser(string username, string password)
     {
         // Crear la solicitud de registro
         Debug.Log("El usuario trata de registrarse");
-        
+
+        yield return StartCoroutine(instanceMétodosAPIController.GetData("trabajador/registrarUser/" + username + "*" + password));
+        Debug.Log("Respuesta register user: " + instanceMétodosAPIController.respuestaGET);
+
     }
 
     // Método llamado cuando el registro es exitoso
