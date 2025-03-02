@@ -4,6 +4,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using Newtonsoft.Json;
+using Assets.Scripts.Model;
 
 
 public class RegisterAppController : MonoBehaviour
@@ -19,8 +21,6 @@ public class RegisterAppController : MonoBehaviour
     [SerializeField] private Button botónIniciarSesión;
     [SerializeField] private TMP_InputField[] inputFields; // Asigno los InputFields en el orden de tabulación deseado
 
-
-    private bool mensajeAPIPlayFabDevuelto = false;
 
     MétodosAPIController instanceMétodosAPIController;
 
@@ -97,58 +97,41 @@ public class RegisterAppController : MonoBehaviour
                             {
                                 Debug.Log("El nombre no puede tener espacios entre letras");
                                 textoErrorRegistro.text = "El nombre no puede tener espacios entre letras.";
-
-                                mensajeAPIPlayFabDevuelto = true; //No accede a la API en este punto, lo pongo como si accediese. Pero necesito activar esta variable aquí para que funcione bien el resto del código, en vez de crear 2 variables
                             }
-
                         }
                         else
                         {
                             Debug.Log("Nombre con ñ");
                             textoErrorRegistro.text = "El nombre no debe tener ñ.";
-
-                            mensajeAPIPlayFabDevuelto = true; //No accede a la API en este punto, lo pongo como si accediese. Pero necesito activar esta variable aquí para que funcione bien el resto del código, en vez de crear 2 variables
                         }
-
                     }
                     else
                     {
                         Debug.Log("Nombre con menos de 3 caracteres");
                         textoErrorRegistro.text = "Nombre con menos de 3 caracteres.";
-
-                        mensajeAPIPlayFabDevuelto = true; //No accede a la API en este punto, lo pongo como si accediese. Pero necesito activar esta variable aquí para que funcione bien el resto del código, en vez de crear 2 variables
                     }
-
                 }
                 else
                 {
                     Debug.Log("Contraseña con menos de 6 caracteres");
                     textoErrorRegistro.text = "Contraseña con menos de 6 caracteres.";
-
-                    mensajeAPIPlayFabDevuelto = true; //No accede a la API en este punto, lo pongo como si accediese. Pero necesito activar esta variable aquí para que funcione bien el resto del código, en vez de crear 2 variables
                 }
-
             }
             else
             {
                 Debug.Log("Contraseña diferente en ambos lados");
                 textoErrorRegistro.text = "Contraseña diferente en ambos lados.";
-
-                mensajeAPIPlayFabDevuelto = true; //No accede a la API en este punto, lo pongo como si accediese. Pero necesito activar esta variable aquí para que funcione bien el resto del código, en vez de crear 2 variables
             }
         }
         else
         {
             Debug.Log("El usuario no se puede registrar.");
             textoErrorRegistro.text = "Rellene todos los campos por favor.";
-
-            mensajeAPIPlayFabDevuelto = true; //No accede a la API en este punto, lo pongo como si accediese. Pero necesito activar esta variable aquí para que funcione bien el resto del código, en vez de crear 2 variables
         }
     }
 
     private IEnumerator desactivarPorUnTiempoLosBotonesYLuegoActivarCuandoHayaRespuestaDeLaAPIdePlayFab()
     {
-        mensajeAPIPlayFabDevuelto = false;
 
         botónIniciarSesión.interactable = false;
         botónConfirmar.interactable = false;
@@ -166,31 +149,41 @@ public class RegisterAppController : MonoBehaviour
     {
         // Crear la solicitud de registro
         Debug.Log("El usuario trata de registrarse");
+        Trabajador t = new Trabajador(username, password, 0, 0);
+        yield return StartCoroutine(instanceMétodosAPIController.PostData("trabajador/registrarUser", t));
+        Debug.Log("Respuesta register user: " + instanceMétodosAPIController.respuestaPOST);
 
-        yield return StartCoroutine(instanceMétodosAPIController.GetData("trabajador/registrarUser/" + username + "*" + password));
-        Debug.Log("Respuesta register user: " + instanceMétodosAPIController.respuestaGET);
-
+        // Deserializo la respuesta
+        Resultado data = JsonConvert.DeserializeObject<Resultado>(instanceMétodosAPIController.respuestaPOST);
+        Debug.Log("El valor de result es: " + data.Result);
+        
+        switch (data.Result)
+        {
+            case 0:
+                textoErrorRegistro.text = "Error inesperado";
+                break;
+            case 1:
+                textoErrorRegistro.text = "";
+                textoÉxitoRegistro.text = "Trabajador registrado correctamente";
+                GestionarRegistroExitoso();
+                break;
+            case 2:
+                textoErrorRegistro.text = "El usuario " + username + " ya existe";
+                break;            
+        }
     }
 
     // Método llamado cuando el registro es exitoso
-    private void OnRegisterSuccess()
+    private void GestionarRegistroExitoso()
     {
-        Debug.Log("Usuario registrado exitosamente");
-
-        // Aquí puedes proceder al siguiente paso, como iniciar sesión automáticamente o cambiar de escena
-        textoErrorRegistro.text = "";
-        textoÉxitoRegistro.text = "Usuario registrado con éxito.";
         StartCoroutine(finRegistroUsuario());
-        //PlayerPrefs.SetInt("UsuarioRegistrado", 1); //Ya está registrado el usuario
 
         string nombreUsuario = inputTextoNombre.text.Trim();
-        string contraseñaUsuario = inputTextoContraseña.text.Trim();
 
-        //Guardo estas strings en estos PlayerPrefs para usar futuramente en el modo multijugador
+        //Guardo estos valores en estos PlayerPrefs para usar futuramente
         PlayerPrefs.SetString("Nombre Usuario", nombreUsuario);
-        //No creo que haya peligro que se guarde en este PlayerPrefs la contraseña del usuario, ya que sólo podría guardarse en la App de la persona donde inició sesión.
-        PlayerPrefs.SetString("Contraseña Usuario", contraseñaUsuario);
-
+        PlayerPrefs.SetInt("Rol Usuario", 1);
+        Debug.Log("Nombre Usuario: " + PlayerPrefs.GetString("Nombre Usuario") + ", Rol Usuario: " + PlayerPrefs.GetInt("Rol Usuario"));
     }
 
     private IEnumerator finRegistroUsuario()
@@ -206,23 +199,9 @@ public class RegisterAppController : MonoBehaviour
         inputTextoContraseña.text = "";
         inputTextoContraseñaRepetida.text = "";
 
-        mensajeAPIPlayFabDevuelto = true;
-
         PlayerPrefs.SetInt("UsuarioRegistrado", 1);
     }
 
-    // Método llamado cuando el registro falla
-    private void OnRegisterFailure(string error)
-    {
-        Debug.LogError("Error al registrar el usuario: " + error);
-
-        // Verificar el tipo de error
-        if (error == "")
-        {
-            textoErrorRegistro.text = "El nombre de usuario ya está en uso. Por favor, elija otro nombre.";
-            mensajeAPIPlayFabDevuelto = true;
-        }
-    }
 
     /// <summary>
     ///  Método para cambiar de componente con TAB en la interfaz gráfica.

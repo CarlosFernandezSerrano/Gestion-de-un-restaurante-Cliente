@@ -102,7 +102,6 @@ public class MétodosAPIController : MonoBehaviour
             {
                 string jsonResponse = request.downloadHandler.text;
                 Debug.Log("Respuesta POST en JSON: " + jsonResponse);
-                Debug.Log("Respuesta: "+request.downloadHandler.text);
                 respuestaPOST = jsonResponse;                
             }
         }

@@ -25,9 +25,9 @@ public class MainController : MonoBehaviour, IProtocolo
         if (usuarioRegistrado.Equals(0))
         {
             canvasLogInUsuario.SetActive(true);
-        }        
-        
-
+        }
+        PlayerPrefs.SetInt("UsuarioRegistrado", 0); //Quitar esta línea cuando deje de hacer pruebas con el registro e inicio de sesión
+        Debug.Log("Nombre Usuario: " + PlayerPrefs.GetString("Nombre Usuario") + ", Rol Usuario: " + PlayerPrefs.GetInt("Rol Usuario"));
     }
 
     // Update is called once per frame
