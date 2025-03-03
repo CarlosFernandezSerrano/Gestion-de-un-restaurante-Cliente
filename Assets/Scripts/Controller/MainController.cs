@@ -29,7 +29,7 @@ public class MainController : MonoBehaviour, IProtocolo
             canvasLogInUsuario.SetActive(true);
         }
         
-        Debug.Log("ID Usuario: " + PlayerPrefs.GetInt("ID Usuario") + ", Nombre Usuario: " + PlayerPrefs.GetString("Nombre Usuario") + ", Rol Usuario: " + PlayerPrefs.GetInt("Rol Usuario"));
+        Debug.Log("ID Usuario: " + PlayerPrefs.GetInt("ID Usuario") + ", Nombre Usuario: " + PlayerPrefs.GetString("Nombre Usuario") + ", Rol_ID Usuario: " + PlayerPrefs.GetInt("Rol Usuario")+ ", Restaurante_ID Usuario: " + PlayerPrefs.GetInt("Restaurante_ID Usuario"));
     }
 
     // Update is called once per frame

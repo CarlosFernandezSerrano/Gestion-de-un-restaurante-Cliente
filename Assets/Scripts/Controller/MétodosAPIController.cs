@@ -50,7 +50,7 @@ public class MétodosAPIController : MonoBehaviour
             {
                 // Procesa la respuesta, que generalmente es JSON
                 string jsonResponse = request.downloadHandler.text;
-                Debug.Log("Respuesta 1: " + jsonResponse);
+                Debug.Log("Respuesta GET en JSON: " + jsonResponse);
                 //Cliente cliente = JsonConvert.DeserializeObject<Cliente>(jsonResponse);
                 respuestaGET = jsonResponse;
             }

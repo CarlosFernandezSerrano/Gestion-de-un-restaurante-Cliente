@@ -11,6 +11,7 @@ using UnityEditor.PackageManager.UI;
 using Newtonsoft.Json;
 using UnityEditor.PackageManager;
 using Assets.Scripts.Model;
+using Assets.Scripts.Controller;
 
 
 public class LogInAppController : MonoBehaviour
@@ -28,13 +29,14 @@ public class LogInAppController : MonoBehaviour
     //private bool mensajeAPIPlayFabDevuelto = false;
 
     MétodosAPIController instanceMétodosAPIController;
+    TrabajadorController instanceTrabajadorController;
 
 
     // Start is called before the first frame update
     void Start()
     {
         instanceMétodosAPIController = MétodosAPIController.instanceMétodosAPIController;
-
+        instanceTrabajadorController = TrabajadorController.instanceTrabajadorController;
                 
         //StartCoroutine(DeleteData());
     }
@@ -50,7 +52,7 @@ public class LogInAppController : MonoBehaviour
 
 
     // Método para ser llamado por el botón de inicio de sesión
-    public void gestionarIniciarSesión()
+    public void ConfirmarIniciarSesión()
     {
         textoErrorLogin.text = "";
         StartCoroutine(desactivarPorUnTiempoLosBotonesYLuegoActivarCuandoHayaRespuestaDeLaAPIdePlayFab());
@@ -86,27 +88,38 @@ public class LogInAppController : MonoBehaviour
     // Método para iniciar sesión al usuario
     public IEnumerator LoginUser(string nombre, string password)
     {
-        // Crear la solicitud de inicio de sesión
-
+        // Creo la solicitud de inicio de sesión
         Trabajador t = new Trabajador(nombre, password, 0, 0);
         yield return StartCoroutine(instanceMétodosAPIController.PostData("trabajador/logIn/", t));
-        Debug.Log("Respuesta login user: "+instanceMétodosAPIController.respuestaGET);
 
         // Deserializo la respuesta
-        Resultado data = JsonConvert.DeserializeObject<Resultado>(instanceMétodosAPIController.respuestaGET);
-        if (data.Result.Equals(1)){
-            textoErrorLogin.text = "El trabajador " + nombre + " ya existe";
+        Resultado data = JsonConvert.DeserializeObject<Resultado>(instanceMétodosAPIController.respuestaPOST);
+        switch (data.Result)
+        {
+            case 1:
+                textoExitoLogin.text = "Inicio de sesión correcto";
+                GestionarLogInExitoso();
+                yield return StartCoroutine(instanceTrabajadorController.ObtenerDatosTrabajador(t));
+                break;
+            case 0:
+                textoErrorLogin.text = "Contraseña incorrecta";
+                break;
+            case -1:
+                textoErrorLogin.text = "El trabajador " + nombre + " no existe";
+                break;
         }
-        data.Result = -1;
-        Trabajador t2 = new Trabajador(nombre,password,1,1);
-        //Cliente c = new Cliente(nombre, "024124124f", "335423252");
-        yield return StartCoroutine(instanceMétodosAPIController.PostData("trabajador/guardar", t2));
-        Debug.Log("Respueta después de POST: " + instanceMétodosAPIController.respuestaPOST);
-        // Si quieres deserializar:
-        Trabajador trabajador2 = JsonConvert.DeserializeObject<Trabajador>(instanceMétodosAPIController.respuestaPOST);
-        //Cliente cliente2 = JsonConvert.DeserializeObject<Cliente>(instanceMétodosAPIController.respuestaPOST);
-        Debug.Log("Deserializado JSON en POST: " + trabajador2.mostrar());
-        
+        data.Result = -2;
+    }
+
+    private void GestionarLogInExitoso()
+    {
+        StartCoroutine(FinInicioSesion());
+
+        string nombreUsuario = inputFieldNombreLogin.text.Trim();
+
+        //Guardo estos valores en estos PlayerPrefs para usar futuramente.
+        PlayerPrefs.SetString("Nombre Usuario", nombreUsuario);
+        PlayerPrefs.SetInt("Rol Usuario", 1);
     }
 
     // Coroutine para finalizar el proceso de inicio de sesión
@@ -117,11 +130,10 @@ public class LogInAppController : MonoBehaviour
         textoExitoLogin.text = "";
         textoErrorLogin.text = "";
         canvasInicioSesiónUsuario.SetActive(false);
+
         //Dejo vacíos los campos por si se vuelve a ver este canvas
         inputFieldNombreLogin.text = "";
         inputFieldPasswordLogin.text = "";
-
-        //mensajeAPIPlayFabDevuelto = true;
 
         PlayerPrefs.SetInt("UsuarioRegistrado", 1);
     }
