@@ -20,14 +20,16 @@ public class MainController : MonoBehaviour, IProtocolo
     // Start is called before the first frame update
     void Start()
     {
+        PlayerPrefs.SetInt("UsuarioRegistrado", 0); //Quitar esta línea cuando deje de hacer pruebas con el registro e inicio de sesión
+
         int usuarioRegistrado = PlayerPrefs.GetInt("UsuarioRegistrado", 0); // 1 es sí, 0 es no
         //Si el usuario no se ha registrado, le aparece el canvas de iniciar sesión
         if (usuarioRegistrado.Equals(0))
         {
             canvasLogInUsuario.SetActive(true);
         }
-        PlayerPrefs.SetInt("UsuarioRegistrado", 0); //Quitar esta línea cuando deje de hacer pruebas con el registro e inicio de sesión
-        Debug.Log("Nombre Usuario: " + PlayerPrefs.GetString("Nombre Usuario") + ", Rol Usuario: " + PlayerPrefs.GetInt("Rol Usuario"));
+        
+        Debug.Log("ID Usuario: " + PlayerPrefs.GetInt("ID Usuario") + ", Nombre Usuario: " + PlayerPrefs.GetString("Nombre Usuario") + ", Rol Usuario: " + PlayerPrefs.GetInt("Rol Usuario"));
     }
 
     // Update is called once per frame

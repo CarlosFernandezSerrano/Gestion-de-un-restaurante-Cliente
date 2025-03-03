@@ -53,47 +53,29 @@ public class MétodosAPIController : MonoBehaviour
                 Debug.Log("Respuesta 1: " + jsonResponse);
                 //Cliente cliente = JsonConvert.DeserializeObject<Cliente>(jsonResponse);
                 respuestaGET = jsonResponse;
-                Debug.Log("Deserializado 1: ");
-                // Deserializa el JSON a una lista de objetos Cliente
-                /*List<Trabajador> listaClientes = JsonConvert.DeserializeObject<List<Trabajador>>(jsonResponse);
-                Debug.Log("Clientes:");
-                foreach (Trabajador cliente in listaClientes)
-                {
-                    Debug.Log(cliente.mostrar());
-                }*/
             }
         }
     }
 
     public IEnumerator PostData(string cad, object objeto)
     {
-        string url = "https://localhost:7233/"+cad; // Ajusta la URL según tu configuración
+        string url = "https://localhost:7233/"+cad;
 
-        // 2. Crear el objeto cliente
-        /*Cliente cliente = new Cliente
-        {
-            nombre = "Ana García",
-            edad = "28",
-            correo = "ana@ejemplo.com"
-        };*/
-
-        // 3. Convertir a JSON
-        //string json = cliente.toJSONString();
+        // Convierto el objeto a JSON
         string json = JsonConvert.SerializeObject(objeto);
         byte[] jsonBytes = Encoding.UTF8.GetBytes(json);
-        //Debug.Log("Cliente: " + objeto.mostrar());
         Debug.Log("JSON: " + json);
-        // 4. Configurar la petición
+        // Configuro la petición
         using (UnityWebRequest request = new UnityWebRequest(url, "POST"))
         {
             request.uploadHandler = new UploadHandlerRaw(jsonBytes);
             request.downloadHandler = new DownloadHandlerBuffer();
             request.SetRequestHeader("Content-Type", "application/json");
 
-            // 5. Enviar y esperar
+            // Envio y espero
             yield return request.SendWebRequest();
 
-            // 6. Manejar respuesta
+            // Manejo la respuesta
             if (request.result != UnityWebRequest.Result.Success)
             {
                 Debug.LogError("Error: "+request.error);

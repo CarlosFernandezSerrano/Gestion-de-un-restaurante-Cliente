@@ -6,6 +6,8 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using Newtonsoft.Json;
 using Assets.Scripts.Model;
+using UnityEditor.Experimental.GraphView;
+using System;
 
 
 public class RegisterAppController : MonoBehaviour
@@ -56,7 +58,7 @@ public class RegisterAppController : MonoBehaviour
     public void confirmarRegistroUsuario()
     {
         textoErrorRegistro.text = "";
-        StartCoroutine(desactivarPorUnTiempoLosBotonesYLuegoActivarCuandoHayaRespuestaDeLaAPIdePlayFab());
+        StartCoroutine(DesactivarPorUnTiempoLosBotonesYLuegoActivarCuandoHayaRespuestaDeLaAPIdePlayFab());
 
         string textoNombre = inputTextoNombre.text.Trim();
         string textoPassword = inputTextoContraseña.text.Trim();
@@ -65,32 +67,23 @@ public class RegisterAppController : MonoBehaviour
         //Si se han rellenado todos los huecos (InputFields) pasa por aquí
         if (!string.IsNullOrEmpty(textoNombre) && !string.IsNullOrEmpty(textoPassword) && !string.IsNullOrEmpty(textoRepeatedPassword))
         {
-            Debug.Log("El usuario se puede registrar");
-
-            //La contraseña repetida es igual a la contraseña 
+            // La contraseña es igual en ambos lados. 
             if (textoPassword.CompareTo(textoRepeatedPassword) == 0)
             {
-                Debug.Log("Contraseña igual en ambos lados.");
-
-                //La contraseña tiene más de 5 caracteres
+                // La contraseña tiene más de 5 caracteres
                 if (textoPassword.Length > 5)
                 {
-                    Debug.Log("Contraseña con buena cantidad de caracteres");
-
-                    //El nombre tiene más de 2 caracteres
+                    // El nombre tiene más de 2 caracteres
                     if (textoNombre.Length > 2)
                     {
-                        Debug.Log("Nombre con buena cantidad de caracteres");
-
                         // El nombre no tiene la ñ
                         if (!textoNombre.Contains("ñ") && !textoNombre.Contains("Ñ"))
                         {
                             Debug.Log("Nombre sin ñ");
 
-                            //El nombre no tiene espacios entre letras
+                            // El nombre no tiene espacios entre letras
                             if (!textoNombre.Contains(" "))
                             {
-                                Debug.Log("El nombre no tiene espacios entre letras");                                
                                 StartCoroutine(RegisterUser(textoNombre, textoPassword));     
                             }
                             else
@@ -130,14 +123,14 @@ public class RegisterAppController : MonoBehaviour
         }
     }
 
-    private IEnumerator desactivarPorUnTiempoLosBotonesYLuegoActivarCuandoHayaRespuestaDeLaAPIdePlayFab()
+    private IEnumerator DesactivarPorUnTiempoLosBotonesYLuegoActivarCuandoHayaRespuestaDeLaAPIdePlayFab()
     {
 
         botónIniciarSesión.interactable = false;
         botónConfirmar.interactable = false;
 
         //yield return new WaitUntil(() => mensajeAPIPlayFabDevuelto);
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1.5f);
 
         botónIniciarSesión.interactable = true;
         botónConfirmar.interactable = true;
@@ -147,17 +140,16 @@ public class RegisterAppController : MonoBehaviour
     // Método para registrar al usuario
     public IEnumerator RegisterUser(string username, string password)
     {
-        // Crear la solicitud de registro
+        // Creo la solicitud de registro
         Debug.Log("El usuario trata de registrarse");
         Trabajador t = new Trabajador(username, password, 0, 0);
         yield return StartCoroutine(instanceMétodosAPIController.PostData("trabajador/registrarUser", t));
-        Debug.Log("Respuesta register user: " + instanceMétodosAPIController.respuestaPOST);
 
         // Deserializo la respuesta
-        Resultado data = JsonConvert.DeserializeObject<Resultado>(instanceMétodosAPIController.respuestaPOST);
-        Debug.Log("El valor de result es: " + data.Result);
+        Resultado resultado = JsonConvert.DeserializeObject<Resultado>(instanceMétodosAPIController.respuestaPOST);
+        //Debug.Log("El valor de result es: " + data.Result);
         
-        switch (data.Result)
+        switch (resultado.Result)
         {
             case 0:
                 textoErrorRegistro.text = "Error inesperado";
@@ -166,11 +158,23 @@ public class RegisterAppController : MonoBehaviour
                 textoErrorRegistro.text = "";
                 textoÉxitoRegistro.text = "Trabajador registrado correctamente";
                 GestionarRegistroExitoso();
+                StartCoroutine(ObtenerIdTrabajador(t));
                 break;
             case 2:
                 textoErrorRegistro.text = "El usuario " + username + " ya existe";
                 break;            
         }
+        resultado.Result = -1;        
+    }
+
+    private IEnumerator ObtenerIdTrabajador(Trabajador t)
+    {
+        // Es más seguro usar POST aunque solo necesito obtener información. Esto se debe a la protección de datos sensibles.
+        // No quiero que cualquier persona pueda ver el id de cualquier trabajador usando la url.
+        yield return StartCoroutine(instanceMétodosAPIController.PostData("trabajador/obtenerID", t));
+        // Deserializo la respuesta
+        Resultado data2 = JsonConvert.DeserializeObject<Resultado>(instanceMétodosAPIController.respuestaPOST);
+        PlayerPrefs.SetInt("ID Usuario", data2.Result);
     }
 
     // Método llamado cuando el registro es exitoso
@@ -180,21 +184,20 @@ public class RegisterAppController : MonoBehaviour
 
         string nombreUsuario = inputTextoNombre.text.Trim();
 
-        //Guardo estos valores en estos PlayerPrefs para usar futuramente
+        //Guardo estos valores en estos PlayerPrefs para usar futuramente.
         PlayerPrefs.SetString("Nombre Usuario", nombreUsuario);
         PlayerPrefs.SetInt("Rol Usuario", 1);
-        Debug.Log("Nombre Usuario: " + PlayerPrefs.GetString("Nombre Usuario") + ", Rol Usuario: " + PlayerPrefs.GetInt("Rol Usuario"));
     }
 
     private IEnumerator finRegistroUsuario()
     {
-        yield return new WaitForSeconds(1f); //1f = duración que espera antes de ocultar el canvas y así mostrar el mensaje de "Usuario registrado con éxito" un poco.
+        yield return new WaitForSeconds(1f); // 1f = duración que espera antes de ocultar el canvas y así mostrar el mensaje de "Usuario registrado con éxito" un poco.
 
         textoÉxitoRegistro.text = "";
         textoErrorRegistro.text = "";
         canvasRegistroUsuario.SetActive(false);
 
-        //Dejo vacíos los campos por si se vuelve a ver este canvas
+        // Dejo vacíos los campos por si se vuelve a ver este canvas
         inputTextoNombre.text = "";
         inputTextoContraseña.text = "";
         inputTextoContraseñaRepetida.text = "";

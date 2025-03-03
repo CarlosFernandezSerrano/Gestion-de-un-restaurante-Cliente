@@ -35,13 +35,7 @@ public class LogInAppController : MonoBehaviour
     {
         instanceMétodosAPIController = MétodosAPIController.instanceMétodosAPIController;
 
-        //StartCoroutine(instanceMétodosAPIController.GetData("cliente/cbdd")); //La API se conecta a la BDD
-
-        //StartCoroutine(GetData("listar"));
-        StartCoroutine(instanceMétodosAPIController.GetData("trabajador/listar"));
-        
-        
-        
+                
         //StartCoroutine(DeleteData());
     }
 
@@ -68,7 +62,6 @@ public class LogInAppController : MonoBehaviour
         if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
         {
             textoErrorLogin.text = "Por favor, ingresa tu nombre de usuario y contraseña.";
-            //mensajeAPIPlayFabDevuelto = true; //No accede a la API en este punto, lo pongo como si accediese. Pero necesito activar esta variable aquí para que funcione bien el resto del código, en vez de crear 2 variables
             return;
         }
         Debug.Log("El usuario trata de iniciar sesión");
@@ -94,14 +87,20 @@ public class LogInAppController : MonoBehaviour
     public IEnumerator LoginUser(string nombre, string password)
     {
         // Crear la solicitud de inicio de sesión
-        
-        //Cliente cliente = new Cliente("2", "Carlos Fernandez", "30", "juan@example.com");
-        yield return StartCoroutine(instanceMétodosAPIController.GetData("trabajador/logIn/" + nombre+"*"+password));
+
+        Trabajador t = new Trabajador(nombre, password, 0, 0);
+        yield return StartCoroutine(instanceMétodosAPIController.PostData("trabajador/logIn/", t));
         Debug.Log("Respuesta login user: "+instanceMétodosAPIController.respuestaGET);
 
-        Trabajador t = new Trabajador(nombre,password,1,1);
+        // Deserializo la respuesta
+        Resultado data = JsonConvert.DeserializeObject<Resultado>(instanceMétodosAPIController.respuestaGET);
+        if (data.Result.Equals(1)){
+            textoErrorLogin.text = "El trabajador " + nombre + " ya existe";
+        }
+        data.Result = -1;
+        Trabajador t2 = new Trabajador(nombre,password,1,1);
         //Cliente c = new Cliente(nombre, "024124124f", "335423252");
-        yield return StartCoroutine(instanceMétodosAPIController.PostData("trabajador/guardar", t));
+        yield return StartCoroutine(instanceMétodosAPIController.PostData("trabajador/guardar", t2));
         Debug.Log("Respueta después de POST: " + instanceMétodosAPIController.respuestaPOST);
         // Si quieres deserializar:
         Trabajador trabajador2 = JsonConvert.DeserializeObject<Trabajador>(instanceMétodosAPIController.respuestaPOST);
