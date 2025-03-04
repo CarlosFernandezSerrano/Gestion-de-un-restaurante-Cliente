@@ -9,18 +9,25 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Runtime.InteropServices.ComTypes;
 using System;
+using Assets.Scripts.Controller;
+using Assets.Scripts.Model;
+using Newtonsoft.Json;
 
 
 public class MainController : MonoBehaviour, IProtocolo
 {
     [SerializeField] private GameObject canvasLogInUsuario;
 
-    
+    MétodosAPIController instanceMétodosAPIController;
+    TrabajadorController instanceTrabajadorController;
 
     // Start is called before the first frame update
     void Start()
     {
-        PlayerPrefs.SetInt("UsuarioRegistrado", 0); //Quitar esta línea cuando deje de hacer pruebas con el registro e inicio de sesión
+        instanceMétodosAPIController = MétodosAPIController.instanceMétodosAPIController;
+        instanceTrabajadorController = TrabajadorController.instanceTrabajadorController;
+
+        //PlayerPrefs.SetInt("UsuarioRegistrado", 0); //Quitar esta línea cuando deje de hacer pruebas con el registro e inicio de sesión
 
         int usuarioRegistrado = PlayerPrefs.GetInt("UsuarioRegistrado", 0); // 1 es sí, 0 es no
         //Si el usuario no se ha registrado, le aparece el canvas de iniciar sesión
@@ -28,8 +35,28 @@ public class MainController : MonoBehaviour, IProtocolo
         {
             canvasLogInUsuario.SetActive(true);
         }
-        
-        Debug.Log("ID Usuario: " + PlayerPrefs.GetInt("ID Usuario") + ", Nombre Usuario: " + PlayerPrefs.GetString("Nombre Usuario") + ", Rol_ID Usuario: " + PlayerPrefs.GetInt("Rol Usuario")+ ", Restaurante_ID Usuario: " + PlayerPrefs.GetInt("Restaurante_ID Usuario"));
+        else // Si el usuario ya está registrado, compruebo si sigue en la BDD por si lo han eliminado y obtengo su rol_ID actualizado, por si el gerente se lo ha cambiado.
+        {
+            ComprueboSiUserExiste();
+        }
+
+        Debug.Log("ID Usuario: " + PlayerPrefs.GetInt("ID Usuario") + ", Nombre Usuario: " + PlayerPrefs.GetString("Nombre Usuario") + ", Rol_ID Usuario: " + PlayerPrefs.GetInt("Rol_ID Usuario") + ", Restaurante_ID Usuario: " + PlayerPrefs.GetInt("Restaurante_ID Usuario"));
+    }
+
+    private async void ComprueboSiUserExiste()
+    {
+        string cad = await instanceMétodosAPIController.GetDataAsync("trabajador/existe/" + PlayerPrefs.GetInt("ID Usuario"));
+        Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
+        // El trabajador no existe. Ha sido eliminado de la BDD y tiene que volver a registrarse.
+        if (resultado.Result.Equals(0)) 
+        {
+            PlayerPrefs.SetInt("UsuarioRegistrado", 0);
+            canvasLogInUsuario.SetActive(true);
+        }
+        else // El trabajdor existe y obtengo sus datos por si ha tenido cambios. Ejemplo: le han puesto un rol distinto o le han agregado a un restaurante.
+        {
+            instanceTrabajadorController.ObtenerDatosTrabajadorPorIdAsync(PlayerPrefs.GetInt("ID Usuario"));
+        }
     }
 
     // Update is called once per frame

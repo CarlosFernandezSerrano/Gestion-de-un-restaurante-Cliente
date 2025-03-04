@@ -33,7 +33,9 @@ public class RegisterAppController : MonoBehaviour
     {
         instanceMÈtodosAPIController = MÈtodosAPIController.instanceMÈtodosAPIController;
         instanceTrabajadorController = TrabajadorController.instanceTrabajadorController;
+
     }
+
 
     // Update is called once per frame
     void Update()
@@ -87,7 +89,7 @@ public class RegisterAppController : MonoBehaviour
                             // El nombre no tiene espacios entre letras
                             if (!textoNombre.Contains(" "))
                             {
-                                StartCoroutine(RegisterUser(textoNombre, textoPassword));     
+                               RegisterUserAsync(textoNombre, textoPassword);     
                             }
                             else
                             {
@@ -141,15 +143,15 @@ public class RegisterAppController : MonoBehaviour
 
 
     // MÈtodo para registrar al usuario
-    public IEnumerator RegisterUser(string username, string password)
+    public async void RegisterUserAsync(string username, string password)
     {
         // Creo la solicitud de registro
         Debug.Log("El usuario trata de registrarse");
         Trabajador t = new Trabajador(username, password, 0, 0);
-        yield return StartCoroutine(instanceMÈtodosAPIController.PostData("trabajador/registrarUser", t));
+        string cad = await instanceMÈtodosAPIController.PostDataAsync("trabajador/registrarUser", t);
 
         // Deserializo la respuesta
-        Resultado resultado = JsonConvert.DeserializeObject<Resultado>(instanceMÈtodosAPIController.respuestaPOST);
+        Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
         //Debug.Log("El valor de result es: " + data.Result);
         
         switch (resultado.Result)
@@ -161,8 +163,7 @@ public class RegisterAppController : MonoBehaviour
                 textoErrorRegistro.text = "";
                 texto…xitoRegistro.text = "Trabajador registrado correctamente";
                 GestionarRegistroExitoso();
-                StartCoroutine(instanceTrabajadorController.ObtenerDatosTrabajador(t));
-                //StartCoroutine(ObtenerIdTrabajador(t));
+                instanceTrabajadorController.ObtenerDatosTrabajadorPorNombreAsync(new Trabajador(username, "", 0, 0));
                 break;
             case 2:
                 textoErrorRegistro.text = "El usuario " + username + " ya existe";

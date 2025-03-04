@@ -55,7 +55,7 @@ public class LogInAppController : MonoBehaviour
     public void ConfirmarIniciarSesión()
     {
         textoErrorLogin.text = "";
-        StartCoroutine(desactivarPorUnTiempoLosBotonesYLuegoActivarCuandoHayaRespuestaDeLaAPIdePlayFab());
+        StartCoroutine(DesactivarPorUnTiempoLosBotonesYLuegoActivarCuandoHayaRespuestaDeLaAPIdePlayFab());
 
         string username = inputFieldNombreLogin.text.Trim();
         string password = inputFieldPasswordLogin.text.Trim();
@@ -68,10 +68,10 @@ public class LogInAppController : MonoBehaviour
         }
         Debug.Log("El usuario trata de iniciar sesión");
 
-        StartCoroutine(LoginUser(username, password));
+        LoginUserAsync(username, password);
     }
 
-    private IEnumerator desactivarPorUnTiempoLosBotonesYLuegoActivarCuandoHayaRespuestaDeLaAPIdePlayFab()
+    private IEnumerator DesactivarPorUnTiempoLosBotonesYLuegoActivarCuandoHayaRespuestaDeLaAPIdePlayFab()
     {
         //mensajeAPIPlayFabDevuelto = false;
 
@@ -86,20 +86,20 @@ public class LogInAppController : MonoBehaviour
     }
 
     // Método para iniciar sesión al usuario
-    public IEnumerator LoginUser(string nombre, string password)
+    public async void LoginUserAsync(string nombre, string password)
     {
         // Creo la solicitud de inicio de sesión
         Trabajador t = new Trabajador(nombre, password, 0, 0);
-        yield return StartCoroutine(instanceMétodosAPIController.PostData("trabajador/logIn/", t));
+        string cad = await instanceMétodosAPIController.PostDataAsync("trabajador/logIn/", t);
 
         // Deserializo la respuesta
-        Resultado data = JsonConvert.DeserializeObject<Resultado>(instanceMétodosAPIController.respuestaPOST);
+        Resultado data = JsonConvert.DeserializeObject<Resultado>(cad);
         switch (data.Result)
         {
             case 1:
                 textoExitoLogin.text = "Inicio de sesión correcto";
                 GestionarLogInExitoso();
-                yield return StartCoroutine(instanceTrabajadorController.ObtenerDatosTrabajador(t));
+                instanceTrabajadorController.ObtenerDatosTrabajadorPorNombreAsync(new Trabajador(nombre, "", 0, 0));
                 break;
             case 0:
                 textoErrorLogin.text = "Contraseña incorrecta";
@@ -119,7 +119,6 @@ public class LogInAppController : MonoBehaviour
 
         //Guardo estos valores en estos PlayerPrefs para usar futuramente.
         PlayerPrefs.SetString("Nombre Usuario", nombreUsuario);
-        PlayerPrefs.SetInt("Rol Usuario", 1);
     }
 
     // Coroutine para finalizar el proceso de inicio de sesión
