@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -9,20 +10,24 @@ using UnityEngine.Networking;
 public class MétodosAPIController : MonoBehaviour
 {
 
-    public static MétodosAPIController instanceMétodosAPIController { get; private set; }
+    private bool mostrandoImgNoConexión = false;
+
+    GeneralController instanceGeneralController;
+
+    public static MétodosAPIController InstanceMétodosAPIController { get; private set; }
 
     private void Awake()
     {
-        if (instanceMétodosAPIController == null)
+        if (InstanceMétodosAPIController == null)
         {
-            instanceMétodosAPIController = this;
+            InstanceMétodosAPIController = this;
         }
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        instanceGeneralController = GeneralController.InstanceGeneralController;
     }
 
     // Update is called once per frame
@@ -51,6 +56,15 @@ public class MétodosAPIController : MonoBehaviour
             if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
             {
                 Debug.LogError("Error: " + request.error);
+                if (request.error.Contains("Cannot connect to destination host")) 
+                {
+                    Debug.Log("Servidor apagado.");
+                    if (!mostrandoImgNoConexión)
+                    {
+                        mostrandoImgNoConexión = true;
+                        StartCoroutine(MostrarImgNoConexión());
+                    }                    
+                }
                 return null;
             }
 
@@ -61,6 +75,29 @@ public class MétodosAPIController : MonoBehaviour
             // Devuelvo la respuesta JSON
             return jsonResponse;
         }
+    }
+
+    private IEnumerator MostrarImgNoConexión()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            // Hago aparecer lentamente la imagen de "no hay conexión".
+            yield return StartCoroutine(instanceGeneralController.HacerAparecerLentamente(instanceGeneralController.getImgNoConexión(), 1f));
+
+            // La tercera vez que muestro la imagen, ya dejo la imagen puesta y no la quito.
+            if (i < 2) 
+            {
+                // Espero 2 segundos para que se vea bien la imagen
+                yield return new WaitForSeconds(2f);
+            
+                // Hago desaparecer lentamente la imagen de "no hay conexión".
+                yield return StartCoroutine(instanceGeneralController.HacerDesaparecerLentamente(instanceGeneralController.getImgNoConexión(), 1f));
+            }
+            
+        }
+
+
+        mostrandoImgNoConexión = false;
     }
 
     public async Task<string> PostDataAsync(string cad, object objeto)

@@ -14,19 +14,19 @@ namespace Assets.Scripts.Controller
     {
         MétodosAPIController instanceMétodosAPIController;
 
-        public static TrabajadorController instanceTrabajadorController { get; private set; }
+        public static TrabajadorController InstanceTrabajadorController { get; private set; }
 
         private void Awake()
         {
-            if (instanceTrabajadorController == null)
+            if (InstanceTrabajadorController == null)
             {
-                instanceTrabajadorController = this;
+                InstanceTrabajadorController = this;
             }
         }
 
         public void Start()
         {
-            instanceMétodosAPIController = MétodosAPIController.instanceMétodosAPIController;
+            instanceMétodosAPIController = MétodosAPIController.InstanceMétodosAPIController;
         }
 
         public async void ObtenerDatosTrabajadorPorNombreAsync(Trabajador t)

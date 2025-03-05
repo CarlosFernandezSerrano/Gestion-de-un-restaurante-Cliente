@@ -32,8 +32,8 @@ public class RegisterAppController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        instanceMétodosAPIController = MétodosAPIController.instanceMétodosAPIController;
-        instanceTrabajadorController = TrabajadorController.instanceTrabajadorController;
+        instanceMétodosAPIController = MétodosAPIController.InstanceMétodosAPIController;
+        instanceTrabajadorController = TrabajadorController.InstanceTrabajadorController;
 
     }
 

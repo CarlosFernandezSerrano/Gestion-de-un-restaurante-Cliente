@@ -15,7 +15,7 @@ using Newtonsoft.Json;
 using UnityEngine.SceneManagement;
 
 
-public class MainController : MonoBehaviour, IProtocolo
+public class MainController : MonoBehaviour
 {
     [SerializeField] private GameObject canvasLogInUsuario;
     [SerializeField] private GameObject canvasIdiomasLogInYRegistro;
@@ -27,6 +27,7 @@ public class MainController : MonoBehaviour, IProtocolo
 
     MétodosAPIController instanceMétodosAPIController;
     TrabajadorController instanceTrabajadorController;
+    
 
     void Awake()
     {
@@ -36,10 +37,24 @@ public class MainController : MonoBehaviour, IProtocolo
     // Start is called before the first frame update
     void Start()
     {
-        instanceMétodosAPIController = MétodosAPIController.instanceMétodosAPIController;
-        instanceTrabajadorController = TrabajadorController.instanceTrabajadorController;
+        instanceMétodosAPIController = MétodosAPIController.InstanceMétodosAPIController;
+        instanceTrabajadorController = TrabajadorController.InstanceTrabajadorController;
 
-        //PlayerPrefs.SetInt("UsuarioRegistrado", 0); //Quitar esta línea cuando deje de hacer pruebas con el registro e inicio de sesión
+
+        GestiónInicioDelProgramaAsync();
+
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+    private async void GestiónInicioDelProgramaAsync()
+    {
+        //PlayerPrefs.SetInt("UsuarioRegistrado", 0); // - - - Quitar esta línea cuando deje de hacer pruebas con el registro e inicio de sesión
 
         int usuarioRegistrado = PlayerPrefs.GetInt("UsuarioRegistrado", 0); // 1 es sí, 0 es no
         //Si el usuario no se ha registrado, le aparece el canvas de iniciar sesión
@@ -50,36 +65,37 @@ public class MainController : MonoBehaviour, IProtocolo
         }
         else // Si el usuario ya está registrado, compruebo si sigue en la BDD por si lo han eliminado y obtengo su rol_ID actualizado, por si el gerente se lo ha cambiado.
         {
-            ComprueboSiUserExiste();
+           await ComprueboSiUserExisteAsync();
         }
 
         Debug.Log("ID Usuario: " + PlayerPrefs.GetInt("ID Usuario") + ", Nombre Usuario: " + PlayerPrefs.GetString("Nombre Usuario") + ", Rol_ID Usuario: " + PlayerPrefs.GetInt("Rol_ID Usuario") + ", Restaurante_ID Usuario: " + PlayerPrefs.GetInt("Restaurante_ID Usuario"));
     }
 
-    private async void ComprueboSiUserExiste()
+    private async Task ComprueboSiUserExisteAsync()
     {
         string cad = await instanceMétodosAPIController.GetDataAsync("trabajador/existe/" + PlayerPrefs.GetInt("ID Usuario"));
-        Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
-        // El trabajador no existe. Ha sido eliminado de la BDD y tiene que volver a registrarse.
-        if (resultado.Result.Equals(0)) 
+        try
         {
-            PlayerPrefs.SetInt("UsuarioRegistrado", 0);
-            PlayerPrefs.Save();
-            canvasIdiomasLogInYRegistro.SetActive(true);
-            canvasLogInUsuario.SetActive(true);
+            Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
+
+            // El trabajador no existe. Ha sido eliminado de la BDD y tiene que volver a registrarse.
+            if (resultado.Result.Equals(0))
+            {
+                PlayerPrefs.SetInt("UsuarioRegistrado", 0);
+                PlayerPrefs.Save();
+                canvasIdiomasLogInYRegistro.SetActive(true);
+                canvasLogInUsuario.SetActive(true);
+            }
+            else // El trabajdor existe y obtengo sus datos por si ha tenido cambios. Ejemplo: le han puesto un rol distinto o le han agregado a un restaurante.
+            {
+                instanceTrabajadorController.ObtenerDatosTrabajadorPorIdAsync(PlayerPrefs.GetInt("ID Usuario"));
+            }
         }
-        else // El trabajdor existe y obtengo sus datos por si ha tenido cambios. Ejemplo: le han puesto un rol distinto o le han agregado a un restaurante.
+        catch (Exception ex)
         {
-            instanceTrabajadorController.ObtenerDatosTrabajadorPorIdAsync(PlayerPrefs.GetInt("ID Usuario"));
+            Debug.LogError("Error: " + ex.Message);
         }
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }    
-
 
 
     public void PresionarBotónPerfil()
@@ -113,7 +129,7 @@ public class MainController : MonoBehaviour, IProtocolo
             // Pinto
             rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, y);
 
-            // Espero al siguiente frame antes de continuar. Más fluido que usar un WaitForSeconds()
+            // Espero al siguiente frame antes de continuar. Más fluido que usar un WaitForSeconds(), ya que el movimiento no se basa en los FPS.
             yield return null;
         }
         telónMoviéndose = false;
@@ -131,7 +147,7 @@ public class MainController : MonoBehaviour, IProtocolo
             rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, y);
 
             // Espero
-            yield return new WaitForSeconds(0.001f);
+            yield return null;
         }
         telónMoviéndose = false;
         telónAbajo = false;
