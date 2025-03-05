@@ -19,6 +19,8 @@ public class MainController : MonoBehaviour, IProtocolo
 {
     [SerializeField] private GameObject canvasLogInUsuario;
     [SerializeField] private GameObject canvasIdiomasLogInYRegistro;
+    [SerializeField] private GameObject medioYFinTelon;
+ 
 
     MétodosAPIController instanceMétodosAPIController;
     TrabajadorController instanceTrabajadorController;
@@ -34,7 +36,7 @@ public class MainController : MonoBehaviour, IProtocolo
         instanceMétodosAPIController = MétodosAPIController.instanceMétodosAPIController;
         instanceTrabajadorController = TrabajadorController.instanceTrabajadorController;
 
-        PlayerPrefs.SetInt("UsuarioRegistrado", 0); //Quitar esta línea cuando deje de hacer pruebas con el registro e inicio de sesión
+        //PlayerPrefs.SetInt("UsuarioRegistrado", 0); //Quitar esta línea cuando deje de hacer pruebas con el registro e inicio de sesión
 
         int usuarioRegistrado = PlayerPrefs.GetInt("UsuarioRegistrado", 0); // 1 es sí, 0 es no
         //Si el usuario no se ha registrado, le aparece el canvas de iniciar sesión
@@ -74,6 +76,41 @@ public class MainController : MonoBehaviour, IProtocolo
     {
         
     }    
+
+
+
+    public void PresionarBotónPerfil()
+    {
+        RectTransform rt = medioYFinTelon.GetComponent<RectTransform>();
+
+        StartCoroutine(MoverTelónHaciaAbajo(rt));
+
+        //StartCoroutine(MoverTelónHaciaArriba(rt));
+        
+
+        
+    }
+
+    private IEnumerator MoverTelónHaciaArriba(RectTransform rt)
+    {
+        throw new NotImplementedException();
+    }
+
+    private IEnumerator MoverTelónHaciaAbajo(RectTransform rt)
+    {
+        for (int i = 0; i < 900; i++)
+        {
+            //Actualizo
+            float y = rt.anchoredPosition.y - 1;
+
+            // Pinto
+            rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, y);
+
+            // Espero
+            yield return new WaitForSeconds(0.005f);
+        }
+        
+    }
 
     private void OnEnable()
     {
