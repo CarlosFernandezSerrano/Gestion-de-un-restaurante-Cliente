@@ -22,6 +22,7 @@ public class RegisterAppController : MonoBehaviour
     [SerializeField] private TMP_InputField inputTextoContraseñaRepetida;
     [SerializeField] private Button botónConfirmar;
     [SerializeField] private Button botónIniciarSesión;
+    [SerializeField] private GameObject canvasIdiomasLogInYRegistro;
     [SerializeField] private TMP_InputField[] inputFields; // Asigno los InputFields en el orden de tabulación deseado
 
 
@@ -181,8 +182,9 @@ public class RegisterAppController : MonoBehaviour
 
         string nombreUsuario = inputTextoNombre.text.Trim();
 
-        //Guardo estos valores en estos PlayerPrefs para usar futuramente.
+        //Guardo este valor en este PlayerPrefs para usar futuramente.
         PlayerPrefs.SetString("Nombre Usuario", nombreUsuario);
+        PlayerPrefs.Save();
     }
 
     private IEnumerator FinRegistroUsuario()
@@ -191,6 +193,8 @@ public class RegisterAppController : MonoBehaviour
 
         textoÉxitoRegistro.text = "";
         textoErrorRegistro.text = "";
+        
+        canvasIdiomasLogInYRegistro.SetActive(false);
         canvasRegistroUsuario.SetActive(false);
 
         // Dejo vacíos los campos por si se vuelve a ver este canvas
@@ -199,6 +203,7 @@ public class RegisterAppController : MonoBehaviour
         inputTextoContraseñaRepetida.text = "";
 
         PlayerPrefs.SetInt("UsuarioRegistrado", 1);
+        PlayerPrefs.Save();
     }
 
 

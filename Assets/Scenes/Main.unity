@@ -308,7 +308,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &432669139
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -379,8 +379,8 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 432669138}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 6.7422957}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -388,7 +388,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -1175.3334, y: -472.02405}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &432669143
@@ -1134,6 +1134,7 @@ MonoBehaviour:
   "inputTextoContrase\xF1aRepetida": {fileID: 903220650}
   "bot\xF3nConfirmar": {fileID: 1755878167}
   "bot\xF3nIniciarSesi\xF3n": {fileID: 1513071580}
+  canvasIdiomasLogInYRegistro: {fileID: 1990073573}
   inputFields:
   - {fileID: 903220652}
   - {fileID: 903220651}
@@ -1753,6 +1754,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasLogInUsuario: {fileID: 1175882022}
+  canvasIdiomasLogInYRegistro: {fileID: 1990073573}
 --- !u!4 &1188165482
 Transform:
   m_ObjectHideFlags: 0
@@ -1842,6 +1844,7 @@ MonoBehaviour:
   inputFieldPasswordLogin: {fileID: 2029920799}
   "bot\xF3nRegistrarse": {fileID: 91719659}
   "bot\xF3nAcceder": {fileID: 847386678}
+  canvasIdiomasLogInYRegistro: {fileID: 1990073573}
   inputFields:
   - {fileID: 1611996840}
   - {fileID: 2029920799}
@@ -2090,7 +2093,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1990073574
 MonoBehaviour:
   m_ObjectHideFlags: 0

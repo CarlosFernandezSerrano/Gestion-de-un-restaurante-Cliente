@@ -36,10 +36,10 @@ public class Cambio_Idioma_Escena_Main_Controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        StartCoroutine(PonerTextosEnIdiomaCorrecto());
+        //PonerTextosEnIdiomaCorrecto();
     }
 
-    private IEnumerator PonerTextosEnIdiomaCorrecto()
+    private void PonerTextosEnIdiomaCorrecto()
     {
         switch (PlayerPrefs.GetString("TipoIdioma", "Español"))
         {
@@ -90,16 +90,19 @@ public class Cambio_Idioma_Escena_Main_Controller : MonoBehaviour
                 break;
         }
 
-        yield return new WaitForSeconds(0.001f);
     }
 
     public void CambiarAIdiomaSpanish()
     {
         PlayerPrefs.SetString("TipoIdioma", "Español");
+        PlayerPrefs.Save(); // Para asegurarme de que el cambio se guarda de inmediato en el disco.
+        PonerTextosEnIdiomaCorrecto();
     }
 
     public void CambiarAIdiomaEnglish()
     {
         PlayerPrefs.SetString("TipoIdioma", "English");
+        PlayerPrefs.Save();
+        PonerTextosEnIdiomaCorrecto();
     }
 }

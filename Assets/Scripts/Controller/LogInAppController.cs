@@ -24,6 +24,7 @@ public class LogInAppController : MonoBehaviour
     [SerializeField] private TMP_InputField inputFieldPasswordLogin;
     [SerializeField] private Button botónRegistrarse;
     [SerializeField] private Button botónAcceder;
+    [SerializeField] private GameObject canvasIdiomasLogInYRegistro;
     [SerializeField] private TMP_InputField[] inputFields; // Asigno los InputFields en el orden de tabulación deseado
 
     //private bool mensajeAPIPlayFabDevuelto = false;
@@ -119,6 +120,7 @@ public class LogInAppController : MonoBehaviour
 
         //Guardo estos valores en estos PlayerPrefs para usar futuramente.
         PlayerPrefs.SetString("Nombre Usuario", nombreUsuario);
+        PlayerPrefs.Save();
     }
 
     // Coroutine para finalizar el proceso de inicio de sesión
@@ -128,6 +130,8 @@ public class LogInAppController : MonoBehaviour
 
         textoExitoLogin.text = "";
         textoErrorLogin.text = "";
+        
+        canvasIdiomasLogInYRegistro.SetActive(false);
         canvasInicioSesiónUsuario.SetActive(false);
 
         //Dejo vacíos los campos por si se vuelve a ver este canvas
@@ -135,6 +139,7 @@ public class LogInAppController : MonoBehaviour
         inputFieldPasswordLogin.text = "";
 
         PlayerPrefs.SetInt("UsuarioRegistrado", 1);
+        PlayerPrefs.Save();
     }
 
     

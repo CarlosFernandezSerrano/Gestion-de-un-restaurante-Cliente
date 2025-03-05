@@ -41,6 +41,7 @@ namespace Assets.Scripts.Controller
             PlayerPrefs.SetInt("Rol_ID Usuario", trabajador.Rol_ID);
             // Si el valor es 0, es que no está en ningún restaurante.
             PlayerPrefs.SetInt("Restaurante_ID Usuario", trabajador.Restaurante_ID);
+            PlayerPrefs.Save();
         }
 
         //Importante:
@@ -57,6 +58,7 @@ namespace Assets.Scripts.Controller
             PlayerPrefs.SetInt("Rol_ID Usuario", trabajador.Rol_ID);
             // Si el valor es 0, es que no está en ningún restaurante.
             PlayerPrefs.SetInt("Restaurante_ID Usuario", trabajador.Restaurante_ID);
+            PlayerPrefs.Save();
 
             Debug.Log("ID Usuario: " + PlayerPrefs.GetInt("ID Usuario") + ", Nombre Usuario: " + PlayerPrefs.GetString("Nombre Usuario") + ", Rol_ID Usuario: " + PlayerPrefs.GetInt("Rol_ID Usuario") + ", Restaurante_ID Usuario: " + PlayerPrefs.GetInt("Restaurante_ID Usuario"));
         }

@@ -18,6 +18,7 @@ using UnityEngine.SceneManagement;
 public class MainController : MonoBehaviour, IProtocolo
 {
     [SerializeField] private GameObject canvasLogInUsuario;
+    [SerializeField] private GameObject canvasIdiomasLogInYRegistro;
 
     MétodosAPIController instanceMétodosAPIController;
     TrabajadorController instanceTrabajadorController;
@@ -39,6 +40,7 @@ public class MainController : MonoBehaviour, IProtocolo
         //Si el usuario no se ha registrado, le aparece el canvas de iniciar sesión
         if (usuarioRegistrado.Equals(0))
         {
+            canvasIdiomasLogInYRegistro.SetActive(true);
             canvasLogInUsuario.SetActive(true);
         }
         else // Si el usuario ya está registrado, compruebo si sigue en la BDD por si lo han eliminado y obtengo su rol_ID actualizado, por si el gerente se lo ha cambiado.
@@ -57,6 +59,8 @@ public class MainController : MonoBehaviour, IProtocolo
         if (resultado.Result.Equals(0)) 
         {
             PlayerPrefs.SetInt("UsuarioRegistrado", 0);
+            PlayerPrefs.Save();
+            canvasIdiomasLogInYRegistro.SetActive(true);
             canvasLogInUsuario.SetActive(true);
         }
         else // El trabajdor existe y obtengo sus datos por si ha tenido cambios. Ejemplo: le han puesto un rol distinto o le han agregado a un restaurante.
