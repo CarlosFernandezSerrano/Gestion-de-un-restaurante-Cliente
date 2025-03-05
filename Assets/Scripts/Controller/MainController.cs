@@ -20,7 +20,10 @@ public class MainController : MonoBehaviour, IProtocolo
     [SerializeField] private GameObject canvasLogInUsuario;
     [SerializeField] private GameObject canvasIdiomasLogInYRegistro;
     [SerializeField] private GameObject medioYFinTelon;
- 
+
+
+    private bool telónMoviéndose = false;
+    private bool telónAbajo = false;
 
     MétodosAPIController instanceMétodosAPIController;
     TrabajadorController instanceTrabajadorController;
@@ -83,17 +86,21 @@ public class MainController : MonoBehaviour, IProtocolo
     {
         RectTransform rt = medioYFinTelon.GetComponent<RectTransform>();
 
-        StartCoroutine(MoverTelónHaciaAbajo(rt));
-
-        //StartCoroutine(MoverTelónHaciaArriba(rt));
+        // Si el telón no se mueve...
+        if (!telónMoviéndose)
+        {
+            telónMoviéndose = true;
+            // Y el telón no está abajo, va para abajo
+            if (!telónAbajo)
+            {
+                StartCoroutine(MoverTelónHaciaAbajo(rt));
+            }
+            else // Y el telón está abajo, va para arriba
+            {
+                StartCoroutine(MoverTelónHaciaArriba(rt));
+            }
+        }
         
-
-        
-    }
-
-    private IEnumerator MoverTelónHaciaArriba(RectTransform rt)
-    {
-        throw new NotImplementedException();
     }
 
     private IEnumerator MoverTelónHaciaAbajo(RectTransform rt)
@@ -106,10 +113,28 @@ public class MainController : MonoBehaviour, IProtocolo
             // Pinto
             rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, y);
 
-            // Espero
-            yield return new WaitForSeconds(0.005f);
+            // Espero al siguiente frame antes de continuar. Más fluido que usar un WaitForSeconds()
+            yield return null;
         }
-        
+        telónMoviéndose = false;
+        telónAbajo = true;
+    }
+
+    private IEnumerator MoverTelónHaciaArriba(RectTransform rt)
+    {
+        for (int i = 0; i < 900; i++)
+        {
+            //Actualizo
+            float y = rt.anchoredPosition.y + 1;
+
+            // Pinto
+            rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, y);
+
+            // Espero
+            yield return new WaitForSeconds(0.001f);
+        }
+        telónMoviéndose = false;
+        telónAbajo = false;
     }
 
     private void OnEnable()
