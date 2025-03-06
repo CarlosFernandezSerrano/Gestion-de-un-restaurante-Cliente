@@ -30,13 +30,13 @@ public class Cambio_Idioma_Escena_Main_Controller : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        PonerTextosEnIdiomaCorrecto();
     }
 
     // Update is called once per frame
     void Update()
     {
-        //PonerTextosEnIdiomaCorrecto();
+
     }
 
     private void PonerTextosEnIdiomaCorrecto()

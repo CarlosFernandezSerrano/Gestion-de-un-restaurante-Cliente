@@ -70,7 +70,6 @@ namespace Assets.Scripts.Controller
 
         public void PonerDatosEnPerfilTrabajador(TMPro.TMP_Text textUserNombre, TMPro.TMP_Text textUserRol, TMPro.TMP_Text textUserRestaurante)
         {
-            Debug.Log("Pasa por aquí");
             textUserNombre.text = PlayerPrefs.GetString("Nombre Usuario");
             switch (PlayerPrefs.GetInt("Rol_ID Usuario"))
             {

@@ -65,7 +65,7 @@ public class MainController : MonoBehaviour
 
     private async void GestiónInicioDelProgramaAsync()
     {
-        PlayerPrefs.SetInt("UsuarioRegistrado", 0); // - - - Quitar esta línea cuando deje de hacer pruebas con el registro e inicio de sesión
+        //PlayerPrefs.SetInt("UsuarioRegistrado", 0); // - - - Quitar esta línea cuando deje de hacer pruebas con el registro e inicio de sesión
 
         int usuarioRegistrado = PlayerPrefs.GetInt("UsuarioRegistrado", 0); // 1 es sí, 0 es no
         //Si el usuario no se ha registrado, le aparece el canvas de iniciar sesión
