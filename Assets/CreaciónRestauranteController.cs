@@ -9,7 +9,10 @@ public class CreaciónRestauranteController : MonoBehaviour
 {
     [SerializeField] private TMP_Dropdown horaApertura;
     [SerializeField] private TMP_Dropdown minutoApertura;
-
+    [SerializeField] private TMP_Dropdown horaCierre;
+    [SerializeField] private TMP_Dropdown minutoCierre;
+    [SerializeField] private GameObject canvasCreaciónRestaurante;
+    [SerializeField] private GameObject canvasInicioApp;
 
     // Start is called before the first frame update
     void Start()
@@ -23,6 +26,8 @@ public class CreaciónRestauranteController : MonoBehaviour
                                                           "50", "51", "52", "53", "54", "55", "56", "57", "58", "59" };
         AgregarOpcionesADropdown(horaApertura, opcionesHoras);
         AgregarOpcionesADropdown(minutoApertura, opcionesMinutos);
+        AgregarOpcionesADropdown(horaCierre, opcionesHoras);
+        AgregarOpcionesADropdown(minutoCierre, opcionesMinutos);
     }
 
     // Update is called once per frame
@@ -36,4 +41,11 @@ public class CreaciónRestauranteController : MonoBehaviour
         dropdown.ClearOptions();  // Limpia opciones anteriores
         dropdown.AddOptions(opciones);
     }
+
+    public void VolverAlCanvasInicioApp()
+    {
+        canvasInicioApp.SetActive(true);
+        canvasCreaciónRestaurante.SetActive(false);
+    }
+
 }

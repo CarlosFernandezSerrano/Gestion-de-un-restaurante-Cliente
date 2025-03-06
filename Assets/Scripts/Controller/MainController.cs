@@ -24,6 +24,7 @@ public class MainController : MonoBehaviour
     [SerializeField] private TMP_Text textUserNombre;
     [SerializeField] private TMP_Text textUserRol;
     [SerializeField] private TMP_Text textUserRestaurante;
+    [SerializeField] private GameObject canvasCrearRestaurante;
 
 
     private bool telónMoviéndose = false;
@@ -164,6 +165,13 @@ public class MainController : MonoBehaviour
         telónMoviéndose = false;
         telónAbajo = false;
     }
+
+    public void IrAlCanvasCrearRestaurante()
+    {
+        Debug.Log("C");
+        canvasCrearRestaurante.SetActive(true);
+    }
+
 
     private void OnEnable()
     {
