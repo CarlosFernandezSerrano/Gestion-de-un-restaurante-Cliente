@@ -13,6 +13,7 @@ using Assets.Scripts.Controller;
 using Assets.Scripts.Model;
 using Newtonsoft.Json;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 
 public class MainController : MonoBehaviour
@@ -20,6 +21,9 @@ public class MainController : MonoBehaviour
     [SerializeField] private GameObject canvasLogInUsuario;
     [SerializeField] private GameObject canvasIdiomasLogInYRegistro;
     [SerializeField] private GameObject medioYFinTelon;
+    [SerializeField] private TMP_Text textUserNombre;
+    [SerializeField] private TMP_Text textUserRol;
+    [SerializeField] private TMP_Text textUserRestaurante;
 
 
     private bool telónMoviéndose = false;
@@ -27,10 +31,17 @@ public class MainController : MonoBehaviour
 
     MétodosAPIController instanceMétodosAPIController;
     TrabajadorController instanceTrabajadorController;
-    
+
+
+    public static MainController InstanceMainController { get; private set; }
 
     void Awake()
     {
+        if (InstanceMainController == null)
+        {
+            InstanceMainController = this;
+        }
+
         SceneManager.LoadSceneAsync("General Controller", LoadSceneMode.Additive);
     }
 
@@ -54,20 +65,21 @@ public class MainController : MonoBehaviour
 
     private async void GestiónInicioDelProgramaAsync()
     {
-        //PlayerPrefs.SetInt("UsuarioRegistrado", 0); // - - - Quitar esta línea cuando deje de hacer pruebas con el registro e inicio de sesión
+        PlayerPrefs.SetInt("UsuarioRegistrado", 0); // - - - Quitar esta línea cuando deje de hacer pruebas con el registro e inicio de sesión
 
         int usuarioRegistrado = PlayerPrefs.GetInt("UsuarioRegistrado", 0); // 1 es sí, 0 es no
         //Si el usuario no se ha registrado, le aparece el canvas de iniciar sesión
         if (usuarioRegistrado.Equals(0))
         {
-            canvasIdiomasLogInYRegistro.SetActive(true);
             canvasLogInUsuario.SetActive(true);
+            canvasIdiomasLogInYRegistro.SetActive(true);
         }
         else // Si el usuario ya está registrado, compruebo si sigue en la BDD por si lo han eliminado y obtengo su rol_ID actualizado, por si el gerente se lo ha cambiado.
         {
            await ComprueboSiUserExisteAsync();
         }
 
+        
         Debug.Log("ID Usuario: " + PlayerPrefs.GetInt("ID Usuario") + ", Nombre Usuario: " + PlayerPrefs.GetString("Nombre Usuario") + ", Rol_ID Usuario: " + PlayerPrefs.GetInt("Rol_ID Usuario") + ", Restaurante_ID Usuario: " + PlayerPrefs.GetInt("Restaurante_ID Usuario"));
     }
 
@@ -83,8 +95,8 @@ public class MainController : MonoBehaviour
             {
                 PlayerPrefs.SetInt("UsuarioRegistrado", 0);
                 PlayerPrefs.Save();
-                canvasIdiomasLogInYRegistro.SetActive(true);
                 canvasLogInUsuario.SetActive(true);
+                canvasIdiomasLogInYRegistro.SetActive(true);
             }
             else // El trabajdor existe y obtengo sus datos por si ha tenido cambios. Ejemplo: le han puesto un rol distinto o le han agregado a un restaurante.
             {
@@ -121,7 +133,7 @@ public class MainController : MonoBehaviour
 
     private IEnumerator MoverTelónHaciaAbajo(RectTransform rt)
     {
-        for (int i = 0; i < 900; i++)
+        for (int i = 0; i < 950; i++)
         {
             //Actualizo
             float y = rt.anchoredPosition.y - 1;
@@ -138,7 +150,7 @@ public class MainController : MonoBehaviour
 
     private IEnumerator MoverTelónHaciaArriba(RectTransform rt)
     {
-        for (int i = 0; i < 900; i++)
+        for (int i = 0; i < 950; i++)
         {
             //Actualizo
             float y = rt.anchoredPosition.y + 1;
@@ -169,5 +181,21 @@ public class MainController : MonoBehaviour
         Debug.Log("Interceptando Alt + F4 o cierre manual.");
         
         return true; // Unity cierra la aplicación automáticamente.
+    }
+
+
+    public TMP_Text getTextPerfilUserNombre()
+    {
+        return textUserNombre;
+    }
+
+    public TMP_Text getTextPerfilUserRol()
+    {
+        return textUserRol;
+    }
+
+    public TMP_Text getTextPerfilUserRestaurante()
+    {
+        return textUserRestaurante;
     }
 }

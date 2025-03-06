@@ -48,7 +48,7 @@ public class RegisterAppController : MonoBehaviour
     }
 
     
-    public void cambiarACanvasIniciarSesión()
+    public void CambiarACanvasIniciarSesión()
     {
         canvasRegistroUsuario.SetActive(false);
         canvasIniciarSesiónUsuario.SetActive(true);

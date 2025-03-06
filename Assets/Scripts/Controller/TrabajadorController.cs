@@ -13,6 +13,7 @@ namespace Assets.Scripts.Controller
     class TrabajadorController : MonoBehaviour
     {
         MétodosAPIController instanceMétodosAPIController;
+        MainController instanceMainController;
 
         public static TrabajadorController InstanceTrabajadorController { get; private set; }
 
@@ -27,6 +28,7 @@ namespace Assets.Scripts.Controller
         public void Start()
         {
             instanceMétodosAPIController = MétodosAPIController.InstanceMétodosAPIController;
+            instanceMainController = MainController.InstanceMainController;
         }
 
         public async void ObtenerDatosTrabajadorPorNombreAsync(Trabajador t)
@@ -42,6 +44,8 @@ namespace Assets.Scripts.Controller
             // Si el valor es 0, es que no está en ningún restaurante.
             PlayerPrefs.SetInt("Restaurante_ID Usuario", trabajador.Restaurante_ID);
             PlayerPrefs.Save();
+
+            PonerDatosEnPerfilTrabajador(instanceMainController.getTextPerfilUserNombre(), instanceMainController.getTextPerfilUserRol(), instanceMainController.getTextPerfilUserRestaurante());
         }
 
         //Importante:
@@ -60,8 +64,32 @@ namespace Assets.Scripts.Controller
             PlayerPrefs.SetInt("Restaurante_ID Usuario", trabajador.Restaurante_ID);
             PlayerPrefs.Save();
 
+            PonerDatosEnPerfilTrabajador(instanceMainController.getTextPerfilUserNombre(), instanceMainController.getTextPerfilUserRol(), instanceMainController.getTextPerfilUserRestaurante());
             Debug.Log("ID Usuario: " + PlayerPrefs.GetInt("ID Usuario") + ", Nombre Usuario: " + PlayerPrefs.GetString("Nombre Usuario") + ", Rol_ID Usuario: " + PlayerPrefs.GetInt("Rol_ID Usuario") + ", Restaurante_ID Usuario: " + PlayerPrefs.GetInt("Restaurante_ID Usuario"));
         }
 
+        public void PonerDatosEnPerfilTrabajador(TMPro.TMP_Text textUserNombre, TMPro.TMP_Text textUserRol, TMPro.TMP_Text textUserRestaurante)
+        {
+            Debug.Log("Pasa por aquí");
+            textUserNombre.text = PlayerPrefs.GetString("Nombre Usuario");
+            switch (PlayerPrefs.GetInt("Rol_ID Usuario"))
+            {
+                case 1:
+                    textUserRol.text = "Empleado";
+                    break;
+                case 2:
+                    textUserRol.text = "Gerente";
+                    break;
+            }
+            if (PlayerPrefs.GetInt("Restaurante_ID Usuario").Equals(0))
+            {
+                textUserRestaurante.text = "";
+            }
+            else
+            {
+                //textUserRestaurante.text = ObtenerNombreRestauranteTrabajador();
+            }
+
+        }
     }
 }
