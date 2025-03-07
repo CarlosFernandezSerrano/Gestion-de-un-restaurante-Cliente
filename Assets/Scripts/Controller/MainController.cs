@@ -14,6 +14,7 @@ using Assets.Scripts.Model;
 using Newtonsoft.Json;
 using UnityEngine.SceneManagement;
 using TMPro;
+using UnityEngine.UI;
 
 
 public class MainController : MonoBehaviour
@@ -25,6 +26,7 @@ public class MainController : MonoBehaviour
     [SerializeField] private TMP_Text textUserRol;
     [SerializeField] private TMP_Text textUserRestaurante;
     [SerializeField] private GameObject canvasCrearRestaurante;
+    [SerializeField] private Button botónCerrarSesión;
 
 
     private bool telónMoviéndose = false;
@@ -119,6 +121,7 @@ public class MainController : MonoBehaviour
         if (!telónMoviéndose)
         {
             telónMoviéndose = true;
+            botónCerrarSesión.interactable = false;
             // Y el telón no está abajo, va para abajo
             if (!telónAbajo)
             {
@@ -147,6 +150,7 @@ public class MainController : MonoBehaviour
         }
         telónMoviéndose = false;
         telónAbajo = true;
+        botónCerrarSesión.interactable = true;
     }
 
     private IEnumerator MoverTelónHaciaArriba(RectTransform rt)
@@ -164,11 +168,13 @@ public class MainController : MonoBehaviour
         }
         telónMoviéndose = false;
         telónAbajo = false;
+        botónCerrarSesión.interactable = true;
     }
 
     public void IrAlCanvasCrearRestaurante()
     {
         canvasCrearRestaurante.SetActive(true);
+        PresionarBotónPerfil();
     }
 
     public void CerrarSesión()

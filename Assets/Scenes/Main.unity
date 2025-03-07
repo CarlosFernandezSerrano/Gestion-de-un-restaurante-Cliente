@@ -6272,6 +6272,7 @@ MonoBehaviour:
   textUserRol: {fileID: 1561237100}
   textUserRestaurante: {fileID: 911158532}
   canvasCrearRestaurante: {fileID: 1553022199}
+  "bot\xF3nCerrarSesi\xF3n": {fileID: 2049332289}
 --- !u!4 &1188165482
 Transform:
   m_ObjectHideFlags: 0
