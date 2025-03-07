@@ -158,16 +158,37 @@ public class RegisterAppController : MonoBehaviour
         switch (resultado.Result)
         {
             case 0:
-                textoErrorRegistro.text = "Error inesperado";
+                if (PlayerPrefs.GetString("TipoIdioma").CompareTo("Español") == 0 || PlayerPrefs.GetString("TipoIdioma") == null)
+                {
+                    textoErrorRegistro.text = "Error inesperado";
+                }
+                else
+                {
+                    textoErrorRegistro.text = "Unexpected error";
+                }
                 break;
             case 1:
                 textoErrorRegistro.text = "";
-                textoÉxitoRegistro.text = "Trabajador registrado correctamente";
+                if (PlayerPrefs.GetString("TipoIdioma").CompareTo("Español") == 0 || PlayerPrefs.GetString("TipoIdioma") == null)
+                {
+                    textoÉxitoRegistro.text = "Trabajador registrado correctamente";
+                }
+                else
+                {
+                    textoÉxitoRegistro.text = "Worker registered correctly";
+                }
                 GestionarRegistroExitoso();
                 instanceTrabajadorController.ObtenerDatosTrabajadorPorNombreAsync(new Trabajador(username, "", 0, 0));
                 break;
             case 2:
-                textoErrorRegistro.text = "El usuario " + username + " ya existe";
+                if (PlayerPrefs.GetString("TipoIdioma").CompareTo("Español") == 0 || PlayerPrefs.GetString("TipoIdioma") == null)
+                {
+                    textoErrorRegistro.text = "El usuario " + username + " ya existe";
+                }
+                else
+                {
+                    textoErrorRegistro.text = "The user " + username + " already exists";
+                }
                 break;            
         }
         resultado.Result = -2;        

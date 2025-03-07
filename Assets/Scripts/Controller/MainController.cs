@@ -168,10 +168,16 @@ public class MainController : MonoBehaviour
 
     public void IrAlCanvasCrearRestaurante()
     {
-        Debug.Log("C");
         canvasCrearRestaurante.SetActive(true);
     }
 
+    public void CerrarSesión()
+    {
+        PlayerPrefs.SetInt("UsuarioRegistrado", 0);
+        canvasLogInUsuario.SetActive(true);
+        canvasIdiomasLogInYRegistro.SetActive(true);
+        PresionarBotónPerfil();
+    }
 
     private void OnEnable()
     {

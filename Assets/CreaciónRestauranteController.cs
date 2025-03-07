@@ -12,7 +12,6 @@ public class CreaciónRestauranteController : MonoBehaviour
     [SerializeField] private TMP_Dropdown horaCierre;
     [SerializeField] private TMP_Dropdown minutoCierre;
     [SerializeField] private GameObject canvasCreaciónRestaurante;
-    [SerializeField] private GameObject canvasInicioApp;
 
     // Start is called before the first frame update
     void Start()
@@ -44,7 +43,6 @@ public class CreaciónRestauranteController : MonoBehaviour
 
     public void VolverAlCanvasInicioApp()
     {
-        canvasInicioApp.SetActive(true);
         canvasCreaciónRestaurante.SetActive(false);
     }
 

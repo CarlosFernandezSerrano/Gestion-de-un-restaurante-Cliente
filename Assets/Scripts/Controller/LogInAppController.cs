@@ -98,15 +98,36 @@ public class LogInAppController : MonoBehaviour
         switch (data.Result)
         {
             case 1:
-                textoExitoLogin.text = "Inicio de sesión correcto";
+                if (PlayerPrefs.GetString("TipoIdioma").CompareTo("Español") == 0 || PlayerPrefs.GetString("TipoIdioma") == null)
+                {
+                    textoExitoLogin.text = "Inicio de sesión correcto";
+                }
+                else
+                {
+                    textoExitoLogin.text = "Successful login";
+                }
                 GestionarLogInExitoso();
                 instanceTrabajadorController.ObtenerDatosTrabajadorPorNombreAsync(new Trabajador(nombre, "", 0, 0));
                 break;
             case 0:
-                textoErrorLogin.text = "Contraseña incorrecta";
+                if (PlayerPrefs.GetString("TipoIdioma").CompareTo("Español") == 0 || PlayerPrefs.GetString("TipoIdioma") == null)
+                {
+                    textoErrorLogin.text = "Contraseña incorrecta";
+                }
+                else
+                {
+                    textoErrorLogin.text = "Incorrect password";
+                }
                 break;
             case -1:
-                textoErrorLogin.text = "El trabajador " + nombre + " no existe";
+                if (PlayerPrefs.GetString("TipoIdioma").CompareTo("Español") == 0 || PlayerPrefs.GetString("TipoIdioma") == null)
+                {
+                    textoErrorLogin.text = "El trabajador " + nombre + " no existe";
+                }
+                else
+                {
+                    textoErrorLogin.text = "The worker " + nombre + " does not exist";
+                }
                 break;
         }
         data.Result = -2;
