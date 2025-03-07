@@ -46,4 +46,9 @@ public class CreaciónRestauranteController : MonoBehaviour
         canvasCreaciónRestaurante.SetActive(false);
     }
 
+    public void ConfirmarOpciones()
+    {
+        Debug.Log("Confirmo las opciones");
+    }
+
 }
