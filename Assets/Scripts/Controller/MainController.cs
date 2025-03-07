@@ -174,7 +174,9 @@ public class MainController : MonoBehaviour
     public void IrAlCanvasCrearRestaurante()
     {
         canvasCrearRestaurante.SetActive(true);
-        PresionarBotónPerfil();
+        //Si el telón está abajo
+        if (telónAbajo)
+            PresionarBotónPerfil();
     }
 
     public void CerrarSesión()
