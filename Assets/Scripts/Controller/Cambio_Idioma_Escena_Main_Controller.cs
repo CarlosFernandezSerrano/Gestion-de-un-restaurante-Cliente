@@ -26,6 +26,14 @@ public class Cambio_Idioma_Escena_Main_Controller : MonoBehaviour
     [SerializeField] private TMP_Text textIniciarSesionRegistrarse;
     [SerializeField] private TMP_Text textConfirmarRegistrarse;
 
+    // Texto en canvas Inicio App
+    [SerializeField] private TMP_Text textComprarInicio;
+    [SerializeField] private TMP_Text textPerfilInicio;
+    [SerializeField] private TMP_Text textCerrarSesiónInicio;
+    [SerializeField] private TMP_Text textIdiomaInicio;
+    [SerializeField] private TMP_Text textRestauranteInicio;
+    [SerializeField] private TMP_Text textNombreInicio;
+
 
     // Start is called before the first frame update
     void Start()
@@ -64,6 +72,13 @@ public class Cambio_Idioma_Escena_Main_Controller : MonoBehaviour
                 textIniciarSesionRegistrarse.text = "Iniciar Sesión";
                 textConfirmarRegistrarse.text = "Confirmar";
 
+                // Texto en canvas Inicio App
+                textComprarInicio.text = "Comprar";
+                textPerfilInicio.text = "Perfil";
+                textCerrarSesiónInicio.text = "Cerrar sesión";
+                textIdiomaInicio.text = "Idioma";
+                textRestauranteInicio.text = "Restaurante";
+                textNombreInicio.text = "Nombre";
                 break;
 
             case "English":
@@ -87,6 +102,13 @@ public class Cambio_Idioma_Escena_Main_Controller : MonoBehaviour
                 textIniciarSesionRegistrarse.text = "Login";
                 textConfirmarRegistrarse.text = "Confirm";
 
+                // Texto en canvas Inicio App
+                textComprarInicio.text = "Buy";
+                textPerfilInicio.text = "Profile";
+                textCerrarSesiónInicio.text = "Log out";
+                textIdiomaInicio.text = "Language";
+                textRestauranteInicio.text = "Restaurant";
+                textNombreInicio.text = "Name";
                 break;
         }
 

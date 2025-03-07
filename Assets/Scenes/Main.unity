@@ -167,8 +167,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -16.5, y: -127}
-  m_SizeDelta: {x: 355, y: 50}
+  m_AnchoredPosition: {x: -21.409, y: -127}
+  m_SizeDelta: {x: 528.5, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &39276021
 MonoBehaviour:
@@ -224,7 +224,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 5
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -2592,7 +2592,7 @@ GameObject:
   - component: {fileID: 521547267}
   - component: {fileID: 521547266}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: "Text Cerrar Sesi\xF3n"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4403,8 +4403,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -21.4105, y: -209}
-  m_SizeDelta: {x: 528.5045, y: 50}
+  m_AnchoredPosition: {x: -21.411, y: -209}
+  m_SizeDelta: {x: 528.5, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &911158532
 MonoBehaviour:
@@ -4426,7 +4426,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4605,7 +4605,7 @@ GameObject:
   - component: {fileID: 914267696}
   - component: {fileID: 914267695}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Text Perfil
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4854,8 +4854,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -18, y: -288}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: -21.409, y: -288}
+  m_SizeDelta: {x: 528.5, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &949528773
 MonoBehaviour:
@@ -7079,8 +7079,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -18, y: 169}
-  m_SizeDelta: {x: 261, y: 63.4272}
+  m_AnchoredPosition: {x: -21.409, y: 169}
+  m_SizeDelta: {x: 528.5, y: 63.4272}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1346075529
 MonoBehaviour:
@@ -7739,8 +7739,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -18, y: 15}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: -21.41, y: 15}
+  m_SizeDelta: {x: 528.5, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1479664547
 MonoBehaviour:
@@ -8646,7 +8646,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!114 &1553022204
 MonoBehaviour:
@@ -8815,7 +8815,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -8952,6 +8952,12 @@ MonoBehaviour:
   textInputFieldRepeatPasswordRegistrarse: {fileID: 894283614}
   textIniciarSesionRegistrarse: {fileID: 1297096523}
   textConfirmarRegistrarse: {fileID: 1532524821}
+  textComprarInicio: {fileID: 1354957089}
+  textPerfilInicio: {fileID: 914267695}
+  "textCerrarSesi\xF3nInicio": {fileID: 521547266}
+  textIdiomaInicio: {fileID: 949528773}
+  textRestauranteInicio: {fileID: 39276021}
+  textNombreInicio: {fileID: 1346075529}
 --- !u!114 &1583957835 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 130313552839031130, guid: bfecb644de7b0c741b9cab9addc7e934, type: 3}
@@ -9157,7 +9163,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
