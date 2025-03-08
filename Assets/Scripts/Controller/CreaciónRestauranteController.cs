@@ -214,10 +214,6 @@ public class CreaciónRestauranteController : MonoBehaviour
     // Método llamado cuando el registro es exitoso
     private async void GestionarRegistroExitoso(string nombreRestaurante)
     {
-        // Guardo este valor en este PlayerPrefs para usar futuramente.
-        PlayerPrefs.SetString("Nombre Restaurante", nombreRestaurante);
-        PlayerPrefs.Save();
-
         // Obtengo el id del restaurante
         string cad2 = await instanceMétodosAPIController.GetDataAsync("restaurante/getRestaurantePorNombre/" + nombreRestaurante);
         // Deserializo
