@@ -218,8 +218,43 @@ public class MétodosAPIController : MonoBehaviour
         }
     }
 
-    internal async Task<string> PutDataAsync(string v, Trabajador trabajador)
+    public async Task<string> PutDataAsync(string cad, object objeto)
     {
-        throw new NotImplementedException();
+        string url = "https://localhost:7233/" + cad;
+
+        // Convierto el objeto a JSON
+        string json = JsonConvert.SerializeObject(objeto);
+        byte[] jsonBytes = Encoding.UTF8.GetBytes(json);
+        Debug.Log("JSON enviado: " + json);
+
+        // Creo la solicitud POST
+        using (UnityWebRequest request = new UnityWebRequest(url, "PUT"))
+        {
+            request.uploadHandler = new UploadHandlerRaw(jsonBytes);
+            request.downloadHandler = new DownloadHandlerBuffer();
+            request.SetRequestHeader("Content-Type", "application/json");
+
+            // Enviamos la solicitud
+            var operation = request.SendWebRequest();
+
+            // Espero sin bloquear el hilo principal
+            while (!operation.isDone)
+            {
+                await Task.Yield();
+            }
+
+            // Verifico si hubo un error
+            if (request.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogError("Error: " + request.error);
+                return null;
+            }
+
+            // Obtengo la respuesta JSON
+            string jsonResponse = request.downloadHandler.text;
+            Debug.Log("Respuesta PUT en JSON: " + jsonResponse);
+
+            return jsonResponse;
+        }
     }
 }

@@ -225,16 +225,19 @@ public class CreaciónRestauranteController : MonoBehaviour
         Debug.Log("Restaurante: " + restaurant.mostrar());
 
         PlayerPrefs.SetInt("Restaurante_ID Usuario", restaurant.Id);
+        PlayerPrefs.SetInt("Rol_ID Usuario", 2); // Al comprar el servicio, el rol del usuario cambia
         PlayerPrefs.Save();
 
         // Actualizo el trabajador con nuevo Rol por comprar el servicio y su nuevo restaurante_ID.
         await instanceTrabajadorController.ActualizarDatosTrabajadorPorIdAsync(new Trabajador(PlayerPrefs.GetInt("ID Usuario"), PlayerPrefs.GetString("Nombre Usuario"), "", 2, PlayerPrefs.GetInt("Restaurante_ID Usuario")));
 
-        FinRegistroRestaurante();
+        StartCoroutine(FinRegistroRestaurante());
     }
 
-    private void FinRegistroRestaurante()
+    private IEnumerator FinRegistroRestaurante()
     {
+        yield return new WaitForSeconds(2f); // Espero a que se muestre bien la mano de OKAY
+
         textoErrorRegistro.text = "";
 
         canvasCreaciónRestaurante.SetActive(false);

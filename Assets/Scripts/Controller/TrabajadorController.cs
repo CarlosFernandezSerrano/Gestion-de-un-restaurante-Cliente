@@ -12,6 +12,9 @@ namespace Assets.Scripts.Controller
 {
     class TrabajadorController : MonoBehaviour
     {
+        private static bool ComprobandoDatosTrabajador;
+
+
         MétodosAPIController instanceMétodosAPIController;
         MainController instanceMainController;
 
@@ -29,6 +32,36 @@ namespace Assets.Scripts.Controller
         {
             instanceMétodosAPIController = MétodosAPIController.InstanceMétodosAPIController;
             instanceMainController = MainController.InstanceMainController;
+        }
+
+        private void Update()
+        {
+            ComprobarDatosTrabajador();
+            
+        }
+
+        private void ComprobarDatosTrabajador()
+        {
+            int id = PlayerPrefs.GetInt("ID Usuario", 0);
+            // Si el usuario ya tiene asignado un ID, puede realizar esta función
+            if (id > 0)
+            {
+                if (!ComprobandoDatosTrabajador)
+                {
+                    ComprobandoDatosTrabajador = true;
+                    ObtenerDatosTrabajadorPorIdAsync(id);
+                    StartCoroutine(EsperoUnTiempoAntesDeVolverAComprobarLosDatosDelTrabajador());
+                }
+                    
+            }
+
+            
+        }
+
+        private IEnumerator EsperoUnTiempoAntesDeVolverAComprobarLosDatosDelTrabajador()
+        {
+            yield return new WaitForSeconds(5f);
+            ComprobandoDatosTrabajador = false;
         }
 
         public async void ObtenerDatosTrabajadorPorNombreAsync(Trabajador t)
@@ -102,7 +135,7 @@ namespace Assets.Scripts.Controller
 
         public async Task ActualizarDatosTrabajadorPorIdAsync(Trabajador trabajador)
         {
-            string cad = await instanceMétodosAPIController.PutDataAsync("trabajador/actualizarTrabajador/", trabajador); // Crear ese método en el servidor
+            string cad = await instanceMétodosAPIController.PutDataAsync("trabajador/actualizarTrabajador/", trabajador);
 
             // Deserializo la respuesta
             Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
