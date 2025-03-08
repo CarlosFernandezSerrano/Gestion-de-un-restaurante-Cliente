@@ -4855,11 +4855,11 @@ PrefabInstance:
       objectReference: {fileID: 802823506}
     - target: {fileID: 1888282256921419692, guid: bfecb644de7b0c741b9cab9addc7e934, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: "cambiarACanvasIniciarSesi\xF3n"
+      value: "CambiarACanvasIniciarSesi\xF3n"
       objectReference: {fileID: 0}
     - target: {fileID: 1888282256921419692, guid: bfecb644de7b0c741b9cab9addc7e934, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: RegisterController, Assembly-CSharp
+      value: RegisterAppController, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 1950156124321495883, guid: bfecb644de7b0c741b9cab9addc7e934, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -7287,6 +7287,7 @@ MonoBehaviour:
   textUserRestaurante: {fileID: 911158532}
   canvasCrearRestaurante: {fileID: 1553022199}
   "bot\xF3nCerrarSesi\xF3n": {fileID: 2049332289}
+  "bot\xF3nComprarServicio": {fileID: 1154527611}
 --- !u!4 &1188165482
 Transform:
   m_ObjectHideFlags: 0

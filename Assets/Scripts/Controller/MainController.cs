@@ -27,6 +27,7 @@ public class MainController : MonoBehaviour
     [SerializeField] private TMP_Text textUserRestaurante;
     [SerializeField] private GameObject canvasCrearRestaurante;
     [SerializeField] private Button botónCerrarSesión;
+    [SerializeField] private Button botónComprarServicio;
 
 
     private bool telónMoviéndose = false;
@@ -57,12 +58,29 @@ public class MainController : MonoBehaviour
 
         GestiónInicioDelProgramaAsync();
 
+        // Método para prevenir
+        QuitarBotónComprarServicio();
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    // Si el usuario tiene un restaurante_ID superior a 0 (el trabajador ya está asignado a un restaurante), se desactiva el botón de comprar el servicio
+    public void QuitarBotónComprarServicio()
+    {
+        if (PlayerPrefs.GetInt("Restaurante_ID Usuario", 0) > 0)
+        {
+            botónComprarServicio.gameObject.SetActive(false);
+            Debug.Log("Pasa por A");
+        }
+        else // El trabajador no está en ningún restaurante aún y le sale el botón de comprar el servicio
+        {// Quizás no es necesario este else
+            botónComprarServicio.gameObject.SetActive(true);
+            Debug.Log("Pasa por B");
+        }
     }
 
     private async void GestiónInicioDelProgramaAsync()

@@ -52,15 +52,12 @@ namespace Assets.Scripts.Controller
                     ObtenerDatosTrabajadorPorIdAsync(id);
                     StartCoroutine(EsperoUnTiempoAntesDeVolverAComprobarLosDatosDelTrabajador());
                 }
-                    
             }
-
-            
         }
 
         private IEnumerator EsperoUnTiempoAntesDeVolverAComprobarLosDatosDelTrabajador()
         {
-            yield return new WaitForSeconds(5f);
+            yield return new WaitForSeconds(5f); // Cada 5 segundos actualizo
             ComprobandoDatosTrabajador = false;
         }
 
@@ -77,6 +74,8 @@ namespace Assets.Scripts.Controller
             // Si el valor es 0, es que no está en ningún restaurante.
             PlayerPrefs.SetInt("Restaurante_ID Usuario", trabajador.Restaurante_ID);
             PlayerPrefs.Save();
+
+            instanceMainController.QuitarBotónComprarServicio();
 
             PonerDatosEnPerfilTrabajador(instanceMainController.getTextPerfilUserNombre(), instanceMainController.getTextPerfilUserRol(), instanceMainController.getTextPerfilUserRestaurante());
         }
@@ -96,7 +95,9 @@ namespace Assets.Scripts.Controller
             // Si el valor es 0, es que no está en ningún restaurante.
             PlayerPrefs.SetInt("Restaurante_ID Usuario", trabajador.Restaurante_ID);
             PlayerPrefs.Save();
-            
+
+            instanceMainController.QuitarBotónComprarServicio();
+
             PonerDatosEnPerfilTrabajador(instanceMainController.getTextPerfilUserNombre(), instanceMainController.getTextPerfilUserRol(), instanceMainController.getTextPerfilUserRestaurante());
             Debug.Log("ID Usuario: " + PlayerPrefs.GetInt("ID Usuario") + ", Nombre Usuario: " + PlayerPrefs.GetString("Nombre Usuario") + ", Rol_ID Usuario: " + PlayerPrefs.GetInt("Rol_ID Usuario") + ", Restaurante_ID Usuario: " + PlayerPrefs.GetInt("Restaurante_ID Usuario"));
         }
@@ -143,6 +144,8 @@ namespace Assets.Scripts.Controller
             if (resultado.Result.Equals(1)) {
                 Debug.Log("Actualización exitosa de datos del trabajador");
             }
+
+            instanceMainController.QuitarBotónComprarServicio();
 
             PonerDatosEnPerfilTrabajador(instanceMainController.getTextPerfilUserNombre(), instanceMainController.getTextPerfilUserRol(), instanceMainController.getTextPerfilUserRestaurante());
         }
