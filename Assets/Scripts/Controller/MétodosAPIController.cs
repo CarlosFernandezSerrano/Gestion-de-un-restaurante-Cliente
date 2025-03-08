@@ -217,4 +217,9 @@ public class MétodosAPIController : MonoBehaviour
             }
         }
     }
+
+    internal async Task<string> PutDataAsync(string v, Trabajador trabajador)
+    {
+        throw new NotImplementedException();
+    }
 }

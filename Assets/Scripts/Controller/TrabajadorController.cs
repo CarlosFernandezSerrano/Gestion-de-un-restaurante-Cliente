@@ -63,7 +63,7 @@ namespace Assets.Scripts.Controller
             // Si el valor es 0, es que no está en ningún restaurante.
             PlayerPrefs.SetInt("Restaurante_ID Usuario", trabajador.Restaurante_ID);
             PlayerPrefs.Save();
-
+            
             PonerDatosEnPerfilTrabajador(instanceMainController.getTextPerfilUserNombre(), instanceMainController.getTextPerfilUserRol(), instanceMainController.getTextPerfilUserRestaurante());
             Debug.Log("ID Usuario: " + PlayerPrefs.GetInt("ID Usuario") + ", Nombre Usuario: " + PlayerPrefs.GetString("Nombre Usuario") + ", Rol_ID Usuario: " + PlayerPrefs.GetInt("Rol_ID Usuario") + ", Restaurante_ID Usuario: " + PlayerPrefs.GetInt("Restaurante_ID Usuario"));
         }
@@ -86,9 +86,32 @@ namespace Assets.Scripts.Controller
             }
             else
             {
-                //textUserRestaurante.text = ObtenerNombreRestauranteTrabajador();
+                ObtenerNombreRestauranteTrabajador(textUserRestaurante);
+            }
+        }
+
+        private async void ObtenerNombreRestauranteTrabajador(TMPro.TMP_Text textUserRestaurante)
+        {
+            string cad =  await instanceMétodosAPIController.GetDataAsync("restaurante/getRestaurantePorId/" + PlayerPrefs.GetInt("Restaurante_ID Usuario"));
+            
+            // Deserializo la respuesta
+            Restaurante restaurante = JsonConvert.DeserializeObject<Restaurante>(cad);
+
+            textUserRestaurante.text = restaurante.Nombre;
+        }
+
+        public async Task ActualizarDatosTrabajadorPorIdAsync(Trabajador trabajador)
+        {
+            string cad = await instanceMétodosAPIController.PutDataAsync("trabajador/actualizarTrabajador/", trabajador); // Crear ese método en el servidor
+
+            // Deserializo la respuesta
+            Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
+
+            if (resultado.Result.Equals(1)) {
+                Debug.Log("Actualización exitosa de datos del trabajador");
             }
 
+            PonerDatosEnPerfilTrabajador(instanceMainController.getTextPerfilUserNombre(), instanceMainController.getTextPerfilUserRol(), instanceMainController.getTextPerfilUserRestaurante());
         }
     }
 }

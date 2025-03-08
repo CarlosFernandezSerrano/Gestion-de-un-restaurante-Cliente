@@ -57,8 +57,6 @@ public class MainController : MonoBehaviour
 
         GestiónInicioDelProgramaAsync();
 
-        string cad = "AA";
-        Debug.Log("Tamaño: " + cad.Length);
     }
 
     // Update is called once per frame
