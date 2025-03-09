@@ -28,6 +28,7 @@ public class MainController : MonoBehaviour
     [SerializeField] private GameObject canvasCrearRestaurante;
     [SerializeField] private Button botónCerrarSesión;
     [SerializeField] private Button botónComprarServicio;
+    [SerializeField] private Button botónEditarRestaurante;
 
 
     private bool telónMoviéndose = false;
@@ -59,8 +60,11 @@ public class MainController : MonoBehaviour
         GestiónInicioDelProgramaAsync();
 
         // Método para prevenir
-        QuitarBotónComprarServicio();
+        QuitarYPonerBotonesSegúnElTrabajador();
+        
     }
+
+    
 
     // Update is called once per frame
     void Update()
@@ -68,8 +72,16 @@ public class MainController : MonoBehaviour
         
     }
 
+    public void QuitarYPonerBotonesSegúnElTrabajador()
+    {
+        QuitarBotónComprarServicio();
+
+        PonerBotónEditarRestaurante();
+    }
+
+
     // Si el usuario tiene un restaurante_ID superior a 0 (el trabajador ya está asignado a un restaurante), se desactiva el botón de comprar el servicio
-    public void QuitarBotónComprarServicio()
+    private void QuitarBotónComprarServicio()
     {
         if (PlayerPrefs.GetInt("Restaurante_ID Usuario", 0) > 0)
         {
@@ -80,6 +92,19 @@ public class MainController : MonoBehaviour
         {// Quizás no es necesario este else
             botónComprarServicio.gameObject.SetActive(true);
             Debug.Log("Pasa por B");
+        }
+    }
+
+    private void PonerBotónEditarRestaurante()
+    {
+        // Si el trabajador tiene el rol de "Gerente", sale el botón para editar el restaurante
+        if (PlayerPrefs.GetInt("Rol_ID Usuario").Equals(2))
+        {
+            botónEditarRestaurante.gameObject.SetActive(true);
+        }
+        else
+        {
+            botónEditarRestaurante.gameObject.SetActive(false);
         }
     }
 
@@ -194,6 +219,11 @@ public class MainController : MonoBehaviour
         //Si el telón está abajo
         if (telónAbajo)
             PresionarBotónPerfil();
+    }
+
+    public void IrALaEscenaEditarRestaurante()
+    {
+        SceneManager.LoadScene("Editar Restaurante");
     }
 
     public void CerrarSesión()

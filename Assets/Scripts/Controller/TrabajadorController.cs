@@ -75,7 +75,7 @@ namespace Assets.Scripts.Controller
             PlayerPrefs.SetInt("Restaurante_ID Usuario", trabajador.Restaurante_ID);
             PlayerPrefs.Save();
 
-            instanceMainController.QuitarBotónComprarServicio();
+            instanceMainController.QuitarYPonerBotonesSegúnElTrabajador();
 
             PonerDatosEnPerfilTrabajador(instanceMainController.getTextPerfilUserNombre(), instanceMainController.getTextPerfilUserRol(), instanceMainController.getTextPerfilUserRestaurante());
         }
@@ -96,7 +96,7 @@ namespace Assets.Scripts.Controller
             PlayerPrefs.SetInt("Restaurante_ID Usuario", trabajador.Restaurante_ID);
             PlayerPrefs.Save();
 
-            instanceMainController.QuitarBotónComprarServicio();
+            instanceMainController.QuitarYPonerBotonesSegúnElTrabajador();
 
             PonerDatosEnPerfilTrabajador(instanceMainController.getTextPerfilUserNombre(), instanceMainController.getTextPerfilUserRol(), instanceMainController.getTextPerfilUserRestaurante());
             Debug.Log("ID Usuario: " + PlayerPrefs.GetInt("ID Usuario") + ", Nombre Usuario: " + PlayerPrefs.GetString("Nombre Usuario") + ", Rol_ID Usuario: " + PlayerPrefs.GetInt("Rol_ID Usuario") + ", Restaurante_ID Usuario: " + PlayerPrefs.GetInt("Restaurante_ID Usuario"));
@@ -114,7 +114,7 @@ namespace Assets.Scripts.Controller
                     textUserRol.text = "Gerente";
                     break;
             }
-            if (PlayerPrefs.GetInt("Restaurante_ID Usuario").Equals(0))
+            if (PlayerPrefs.GetInt("Restaurante_ID Usuario", 0).Equals(0))
             {
                 textUserRestaurante.text = "";
             }
@@ -145,7 +145,7 @@ namespace Assets.Scripts.Controller
                 Debug.Log("Actualización exitosa de datos del trabajador");
             }
 
-            instanceMainController.QuitarBotónComprarServicio();
+            instanceMainController.QuitarYPonerBotonesSegúnElTrabajador();
 
             PonerDatosEnPerfilTrabajador(instanceMainController.getTextPerfilUserNombre(), instanceMainController.getTextPerfilUserRol(), instanceMainController.getTextPerfilUserRestaurante());
         }
