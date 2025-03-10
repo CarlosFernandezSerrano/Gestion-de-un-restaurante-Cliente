@@ -58,6 +58,8 @@ public class MainController : MonoBehaviour
         instanceTrabajadorController = TrabajadorController.InstanceTrabajadorController;
 
         TrabajadorController.ComprobandoDatosTrabajador = false;
+        instanceTrabajadorController.PonerDatosEnPerfilTrabajador(textUserNombre, textUserRol, textUserRestaurante);
+
 
         GestiónInicioDelProgramaAsync();
 

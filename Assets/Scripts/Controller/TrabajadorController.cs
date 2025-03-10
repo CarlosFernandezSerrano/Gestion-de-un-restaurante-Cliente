@@ -98,9 +98,13 @@ namespace Assets.Scripts.Controller
             PlayerPrefs.SetInt("Restaurante_ID Usuario", trabajador.Restaurante_ID);
             PlayerPrefs.Save();
 
-            instanceMainController.QuitarYPonerBotonesSegúnElTrabajador();
+            if (instanceMainController != null)
+            {
+                instanceMainController.QuitarYPonerBotonesSegúnElTrabajador();
 
-            PonerDatosEnPerfilTrabajador(instanceMainController.getTextPerfilUserNombre(), instanceMainController.getTextPerfilUserRol(), instanceMainController.getTextPerfilUserRestaurante());
+                PonerDatosEnPerfilTrabajador(instanceMainController.getTextPerfilUserNombre(), instanceMainController.getTextPerfilUserRol(), instanceMainController.getTextPerfilUserRestaurante());
+            }
+             
             Debug.Log("ID Usuario: " + PlayerPrefs.GetInt("ID Usuario") + ", Nombre Usuario: " + PlayerPrefs.GetString("Nombre Usuario") + ", Rol_ID Usuario: " + PlayerPrefs.GetInt("Rol_ID Usuario") + ", Restaurante_ID Usuario: " + PlayerPrefs.GetInt("Restaurante_ID Usuario"));
         }
 
