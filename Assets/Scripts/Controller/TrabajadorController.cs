@@ -12,7 +12,7 @@ namespace Assets.Scripts.Controller
 {
     class TrabajadorController : MonoBehaviour
     {
-        private static bool ComprobandoDatosTrabajador;
+        public static bool ComprobandoDatosTrabajador { get; set; } = false;
 
 
         MétodosAPIController instanceMétodosAPIController;
@@ -48,10 +48,12 @@ namespace Assets.Scripts.Controller
             {
                 if (!ComprobandoDatosTrabajador)
                 {
+                    Debug.Log("2");
                     ComprobandoDatosTrabajador = true;
                     ObtenerDatosTrabajadorPorIdAsync(id);
                     StartCoroutine(EsperoUnTiempoAntesDeVolverAComprobarLosDatosDelTrabajador());
                 }
+                
             }
         }
 

@@ -56,6 +56,7 @@ public class MainController : MonoBehaviour
         instanceMétodosAPIController = MétodosAPIController.InstanceMétodosAPIController;
         instanceTrabajadorController = TrabajadorController.InstanceTrabajadorController;
 
+        TrabajadorController.ComprobandoDatosTrabajador = false;
 
         GestiónInicioDelProgramaAsync();
 
@@ -86,12 +87,10 @@ public class MainController : MonoBehaviour
         if (PlayerPrefs.GetInt("Restaurante_ID Usuario", 0) > 0)
         {
             botónComprarServicio.gameObject.SetActive(false);
-            Debug.Log("Pasa por A");
         }
         else // El trabajador no está en ningún restaurante aún y le sale el botón de comprar el servicio
         {// Quizás no es necesario este else
             botónComprarServicio.gameObject.SetActive(true);
-            Debug.Log("Pasa por B");
         }
     }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -44,5 +45,17 @@ public class EditarRestauranteController : MonoBehaviour
     {
         dropdown.ClearOptions();  // Limpia opciones anteriores
         dropdown.AddOptions(opciones);
+    }
+
+    public void IrALaEscenaMain()
+    {
+        ComprobarSiHayCambios();
+
+        SceneManager.LoadScene("Main");
+    }
+
+    private void ComprobarSiHayCambios()
+    {
+        
     }
 }
