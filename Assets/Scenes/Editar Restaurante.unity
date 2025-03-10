@@ -2074,7 +2074,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 416355083}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1499560293}
+        m_TargetAssemblyTypeName: EditarRestauranteController, Assembly-CSharp
+        m_MethodName: Guardar
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &416355083
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4450,6 +4462,7 @@ MonoBehaviour:
   minutoApertura: {fileID: 2109506251}
   horaCierre: {fileID: 95120027}
   minutoCierre: {fileID: 506906050}
+  inputFieldNombreRestaurante: {fileID: 214900824}
 --- !u!1 &1525870345
 GameObject:
   m_ObjectHideFlags: 0

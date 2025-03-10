@@ -1,12 +1,16 @@
 using Assets.Scripts.Controller;
+using Assets.Scripts.Model;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class EditarRestauranteController : MonoBehaviour
 {
@@ -14,9 +18,16 @@ public class EditarRestauranteController : MonoBehaviour
     [SerializeField] private TMP_Dropdown minutoApertura;
     [SerializeField] private TMP_Dropdown horaCierre;
     [SerializeField] private TMP_Dropdown minutoCierre;
+    [SerializeField] private TMP_InputField inputFieldNombreRestaurante;
+
+
+    private string NombreRestaurante;
+    private string HoraApertura;
+    private string HoraCierre;
 
 
     ButtonMesaController instanceButtonMesaController;
+    MétodosAPIController instanceMétodosApiController;
 
 
     void Awake()
@@ -28,9 +39,18 @@ public class EditarRestauranteController : MonoBehaviour
     void Start()
     {
         instanceButtonMesaController = ButtonMesaController.InstanceButtonMesaController;
-
+        instanceMétodosApiController = MétodosAPIController.InstanceMétodosAPIController;
+        
         TrabajadorController.ComprobandoDatosTrabajador = false;
 
+        InicializarValoresDropdowns();
+
+        ObtenerDatosRestaurante();
+
+    }
+
+    private void InicializarValoresDropdowns()
+    {
         List<string> opcionesHoras = new List<string> { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24" };
         List<string> opcionesMinutos = new List<string> { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09",
                                                           "10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
@@ -42,6 +62,41 @@ public class EditarRestauranteController : MonoBehaviour
         AgregarOpcionesADropdown(minutoApertura, opcionesMinutos);
         AgregarOpcionesADropdown(horaCierre, opcionesHoras);
         AgregarOpcionesADropdown(minutoCierre, opcionesMinutos);
+    }
+
+    private async void ObtenerDatosRestaurante()
+    {
+        string cad = await instanceMétodosApiController.GetDataAsync("restaurante/getRestaurantePorId/" + PlayerPrefs.GetInt("Restaurante_ID Usuario"));
+
+        // Deserializo la respuesta
+        Restaurante restaurante = JsonConvert.DeserializeObject<Restaurante>(cad);
+
+        NombreRestaurante =  restaurante.Nombre;
+        HoraApertura = restaurante.HoraApertura;
+        HoraCierre = restaurante.HoraCierre;
+
+        inputFieldNombreRestaurante.text = NombreRestaurante;
+
+        Debug.Log("Hora Apertura: " + restaurante.HoraApertura);
+        Debug.Log("Hora Cierre: " + restaurante.HoraCierre);
+
+        AsignarHorasEnDropdowns();
+        
+
+
+    }
+
+    private void AsignarHorasEnDropdowns()
+    {
+        // Hora apertura
+        string[] horaApertura = HoraApertura.Split(":");
+        string hora_Apertura = horaApertura[0].Trim();
+        string minuto_Apertura = horaApertura[1].Trim();
+
+        // Hora cierre
+        string[] horaCierre = HoraApertura.Split(":");
+        string hora_Cierre = horaCierre[0].Trim();
+        string minuto_Cierre = horaCierre[1].Trim();
     }
 
     // Update is called once per frame
@@ -59,11 +114,13 @@ public class EditarRestauranteController : MonoBehaviour
 
     public void AgregarMesa()
     {
-        Debug.Log("A");
         instanceButtonMesaController.SpawnButton();
     }
 
-    
+    public void Guardar()
+    {
+        Debug.Log("G");
+    }    
 
 
 
