@@ -48,6 +48,7 @@ public class MainController : MonoBehaviour
         }
 
         SceneManager.LoadSceneAsync("General Controller", LoadSceneMode.Additive);
+
     }
 
     // Start is called before the first frame update
