@@ -4449,7 +4449,7 @@ MonoBehaviour:
   minutoApertura: {fileID: 2109506251}
   horaCierre: {fileID: 95120027}
   minutoCierre: {fileID: 506906050}
-  canvas: {fileID: 795598872}
+  containerRect: {fileID: 99731598}
 --- !u!1 &1525870345
 GameObject:
   m_ObjectHideFlags: 0
