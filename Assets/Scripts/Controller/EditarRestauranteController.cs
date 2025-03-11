@@ -19,6 +19,11 @@ public class EditarRestauranteController : MonoBehaviour
     [SerializeField] private TMP_Dropdown horaCierre;
     [SerializeField] private TMP_Dropdown minutoCierre;
     [SerializeField] private TMP_InputField inputFieldNombreRestaurante;
+    [SerializeField] private GameObject imgHayCambiosSinGuardar;
+    [SerializeField] private UnityEngine.UI.Button buttonGuardar;
+    [SerializeField] private UnityEngine.UI.Button buttonVolver;
+    [SerializeField] private UnityEngine.UI.Button buttonAñadirMesa;
+
 
 
     private string NombreRestaurante;
@@ -143,6 +148,9 @@ public class EditarRestauranteController : MonoBehaviour
         if (NombreOHorasDistintasEnRestaurante())
         {
             Debug.Log("Hay cambios");
+            // Poner método aquí para actualizar datos restaurante en la BDD
+            // ---------------------------
+            ObtenerDatosRestaurante();
         }
         else
         {
@@ -180,13 +188,45 @@ public class EditarRestauranteController : MonoBehaviour
 
     public void IrALaEscenaMain()
     {
-        ComprobarSiHayCambios();
-
-        SceneManager.LoadScene("Main");
+        ComprobarSiHayCambios();        
     }
 
     private void ComprobarSiHayCambios()
     {
-        
+        // Hay cambios sin guardar
+        if (NombreOHorasDistintasEnRestaurante())
+        {
+            Debug.Log("Hay cambios. ¿Desea guardar antes de irse?");
+            DesactivarBotonesDelCanvas();
+            imgHayCambiosSinGuardar.SetActive(true);
+
+        }
+        else // No hay cambios sin guardar
+        {
+            SceneManager.LoadScene("Main");
+        }        
     }
+
+    private void DesactivarBotonesDelCanvas()
+    {
+        buttonVolver.interactable = false;
+        buttonGuardar.interactable = false;
+        buttonAñadirMesa.interactable = false;
+    }
+
+    public void GuardarYSalir()
+    {
+        Guardar();
+        imgHayCambiosSinGuardar.SetActive(false);
+        //Aquí podría esperar un poquito antes de cargar la nueva escena ---------------------------------
+        SceneManager.LoadScene("Main");
+    }
+
+    public void CancelarYSalir()
+    {
+        imgHayCambiosSinGuardar.SetActive(false);
+        SceneManager.LoadScene("Main");
+    }
+
+    
 }
