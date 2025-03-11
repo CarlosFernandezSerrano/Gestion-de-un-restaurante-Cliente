@@ -127,14 +127,11 @@ public class EditarRestauranteController : MonoBehaviour
         }
     }
 
-    
-
     private void AgregarOpcionesADropdown(TMP_Dropdown dropdown, List<string> opciones)
     {
         dropdown.ClearOptions();  // Limpia opciones anteriores
         dropdown.AddOptions(opciones);
     }
-
 
     public void AgregarMesa()
     {
