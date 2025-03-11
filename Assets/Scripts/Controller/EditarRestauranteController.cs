@@ -151,27 +151,59 @@ public class EditarRestauranteController : MonoBehaviour
 
     private async void GestionarGuardarDatosRestaurante()
     {
+        Restaurante restaurante = RellenarRestauranteSiActualizara();
+        
+
         bool b = await NombreRestauranteVálidoDistintoYNoRepetidoEnLaBDD();
 
         // Nombre cambiado y comprobado que se puede actualizar porque no existe otro restaurante con ese nuevo nombre
         if (b)
         {
             Debug.Log("Hay cambios 1 ");
-            // Poner método aquí para actualizar datos restaurante en la BDD
-            // ---------------------------
-            //ObtenerDatosRestaurante();
+            await ActualizarRestauranteEnBDDAsync(restaurante);
+            
+            ObtenerDatosRestaurante(); 
         }
         else if (HorasDistintasEnRestaurante() && NombreEsIgualQueEnLaBDD())
         {
             Debug.Log("Hay cambios 2");
-            // Poner método aquí para actualizar datos restaurante en la BDD
-            // ---------------------------
-            //ObtenerDatosRestaurante();
+            await ActualizarRestauranteEnBDDAsync(restaurante);
+
+            ObtenerDatosRestaurante();
         }
         else
         {
             Debug.Log("No hay cambios");
         }
+    }
+
+    private async Task ActualizarRestauranteEnBDDAsync(Restaurante restaurante)
+    {
+        // Poner método aquí para actualizar datos restaurante en la BDD
+        string cad = await instanceMétodosApiController.PutDataAsync("restaurante/actualizarRestaurante/", restaurante);
+        // Deserializo la respuesta
+        Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
+
+        if (resultado.Result.Equals(1))
+        {
+            Debug.Log("Actualización exitosa");
+        }
+        else
+        {
+            Debug.Log("La actualización salió mal");
+        }
+    }
+
+    private Restaurante RellenarRestauranteSiActualizara()
+    {
+        int id = PlayerPrefs.GetInt("Restaurante_ID Usuario");
+        string nombreRestaurante = inputFieldNombreRestaurante.text.Trim();
+        nombreRestaurante = Regex.Replace(nombreRestaurante, @"\s+", " "); // Reemplaza múltiples espacios por uno
+
+        string hora_Apertura = horaApertura.options[horaApertura.value].text+" : "+ minutoApertura.options[minutoApertura.value].text;
+        string hora_Cierre = horaCierre.options[horaCierre.value].text + " : " + minutoCierre.options[minutoCierre.value].text;
+
+        return new Restaurante(id, nombreRestaurante, hora_Apertura, hora_Cierre, new List<Mesa>(), new List<Trabajador>());
     }
 
     private bool NombreEsIgualQueEnLaBDD()
