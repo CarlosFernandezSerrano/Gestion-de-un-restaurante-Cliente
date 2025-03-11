@@ -146,10 +146,10 @@ public class EditarRestauranteController : MonoBehaviour
 
     public void Guardar()
     {
-        GestionarGuardarDatosRestaurante();
+        GestionarGuardarDatosRestauranteAsync();
     }
 
-    private async void GestionarGuardarDatosRestaurante()
+    private async void GestionarGuardarDatosRestauranteAsync()
     {
         Restaurante restaurante = RellenarRestauranteSiActualizara();
         
@@ -162,7 +162,7 @@ public class EditarRestauranteController : MonoBehaviour
             Debug.Log("Hay cambios 1 ");
             await ActualizarRestauranteEnBDDAsync(restaurante);
             
-            ObtenerDatosRestaurante(); 
+            ObtenerDatosRestaurante();
         }
         else if (HorasDistintasEnRestaurante() && NombreEsIgualQueEnLaBDD())
         {
@@ -293,20 +293,37 @@ public class EditarRestauranteController : MonoBehaviour
         ComprobarSiHayCambios();        
     }
 
-    private void ComprobarSiHayCambios()
+    private async void ComprobarSiHayCambios()
     {
-        // Hay cambios sin guardar
-        if (HorasDistintasEnRestaurante()) // Cambiar --------- - --- - - -- - -  - - - - - - --  - - -  - - - -  -
+        Restaurante restaurante = RellenarRestauranteSiActualizara();
+
+
+        bool b = await NombreRestauranteVálidoDistintoYNoRepetidoEnLaBDD();
+
+        // Nombre cambiado y comprobado que se puede actualizar porque no existe otro restaurante con ese nuevo nombre
+        if (b)
         {
             Debug.Log("Hay cambios. ¿Desea guardar antes de irse?");
             DesactivarBotonesDelCanvas();
             imgHayCambiosSinGuardar.SetActive(true);
+            //await ActualizarRestauranteEnBDDAsync(restaurante);
 
+            //ObtenerDatosRestaurante();
         }
-        else // No hay cambios sin guardar
+        else if (HorasDistintasEnRestaurante() && NombreEsIgualQueEnLaBDD())
         {
+            Debug.Log("Hay cambios. ¿Desea guardar antes de irse?");
+            DesactivarBotonesDelCanvas();
+            imgHayCambiosSinGuardar.SetActive(true);
+            //await ActualizarRestauranteEnBDDAsync(restaurante);
+
+            //ObtenerDatosRestaurante();
+        }
+        else
+        {
+            Debug.Log("No hay cambios");
             SceneManager.LoadScene("Main");
-        }        
+        }
     }
 
     private void DesactivarBotonesDelCanvas()
@@ -318,9 +335,16 @@ public class EditarRestauranteController : MonoBehaviour
 
     public void GuardarYSalir()
     {
+        StartCoroutine(GuardoYSalgo());
+    }
+
+    private IEnumerator GuardoYSalgo()
+    {
         Guardar(); //Tengo que esperar a que se guarde antes de cambiar de escena
         imgHayCambiosSinGuardar.SetActive(false);
-        //Aquí podría esperar un poquito antes de cargar la nueva escena ---------------------------------
+
+        yield return new WaitForSeconds(1f);
+
         SceneManager.LoadScene("Main");
     }
 
