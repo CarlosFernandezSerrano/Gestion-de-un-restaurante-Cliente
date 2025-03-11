@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -145,12 +146,27 @@ public class EditarRestauranteController : MonoBehaviour
 
     public void Guardar()
     {
-        if (NombreOHorasDistintasEnRestaurante())
+        GestionarGuardarDatosRestaurante();
+    }
+
+    private async void GestionarGuardarDatosRestaurante()
+    {
+        bool b = await NombreRestauranteVálidoDistintoYNoRepetidoEnLaBDD();
+
+        // Nombre cambiado y comprobado que se puede actualizar porque no existe otro restaurante con ese nuevo nombre
+        if (b)
         {
-            Debug.Log("Hay cambios");
+            Debug.Log("Hay cambios 1 ");
             // Poner método aquí para actualizar datos restaurante en la BDD
             // ---------------------------
-            ObtenerDatosRestaurante();
+            //ObtenerDatosRestaurante();
+        }
+        else if (NombreOHorasDistintasEnRestaurante() && NombreEsVálidoEIgualQueEnLaBDD())
+        {
+            Debug.Log("Hay cambios 2");
+            // Poner método aquí para actualizar datos restaurante en la BDD
+            // ---------------------------
+            //ObtenerDatosRestaurante();
         }
         else
         {
@@ -158,13 +174,75 @@ public class EditarRestauranteController : MonoBehaviour
         }
     }
 
-    private bool NombreOHorasDistintasEnRestaurante()
+    private bool NombreEsVálidoEIgualQueEnLaBDD()
+    {
+        string nombreRestaurante = inputFieldNombreRestaurante.text.Trim();
+        nombreRestaurante = Regex.Replace(nombreRestaurante, @"\s+", " "); // Reemplaza múltiples espacios por uno
+
+        if (nombreRestaurante.Length > 2 && nombreRestaurante.CompareTo(NombreRestaurante) == 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    private async Task<bool> NombreRestauranteVálidoDistintoYNoRepetidoEnLaBDD()
     {
         // Nombre del restaurante cambiado del original.
         if (NombreRestaurante.CompareTo(inputFieldNombreRestaurante.text) != 0)
         {
-            return true;
+            string nombreRestaurante = inputFieldNombreRestaurante.text.Trim();
+            nombreRestaurante = Regex.Replace(nombreRestaurante, @"\s+", " "); // Reemplaza múltiples espacios por uno
+
+            // Si el nombre del restaurante tiene más de 2 caracteres, se crea.
+            if (nombreRestaurante.Length > 2)
+            {
+                string cad = await instanceMétodosApiController.GetDataAsync("restaurante/existeConNombre/" + nombreRestaurante);
+                // Deserializo la respuesta
+                Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
+
+                switch (resultado.Result)
+                {
+                    case 0: // El nuevo nombre de restaurante no existe en la BDD, se puede actualizar.
+                        return true;
+                    case 1:
+                        if (PlayerPrefs.GetString("TipoIdioma").CompareTo("Español") == 0 || PlayerPrefs.GetString("TipoIdioma") == null)
+                        {
+                            Debug.Log("El restaurante ya existe.");
+                            //textoErrorRegistro.text = "El restaurante ya existe.";
+                            //StartCoroutine(MostrarManoError(2f));
+                        }
+                        else
+                        {
+                            Debug.Log("El restaurante ya existe.");
+                            //textoErrorRegistro.text = "The restaurant already exists.";
+                            //StartCoroutine(MostrarManoError(2f));
+                        }
+                        return false;
+                }
+            }
+            else
+            {
+                Debug.Log("Nombre tiene menos de 3 caracteres");
+                //textoErrorRegistro.text = "El nombre tiene menos de 3 caracteres.";
+                //StartCoroutine(MostrarManoError(2f));
+                return false;
+            }
         }
+        return false;
+    }
+
+    private bool NombreOHorasDistintasEnRestaurante()
+    {
+        //bool b = await NombreRestauranteDistintoYNoRepetidoEnLaBDD();
+        // Nombre del restaurante cambiado del original.
+        /*if (NombreRestaurante.CompareTo(inputFieldNombreRestaurante.text) != 0)
+        {
+            return true;
+        }*/
 
         // Hora apertura
         string[] horaAperturaArray = HoraApertura.Split(":");
@@ -183,7 +261,6 @@ public class EditarRestauranteController : MonoBehaviour
         }
 
         return false;
-
     }
 
     public void IrALaEscenaMain()
@@ -216,7 +293,7 @@ public class EditarRestauranteController : MonoBehaviour
 
     public void GuardarYSalir()
     {
-        Guardar();
+        Guardar(); //Tengo que esperar a que se guarde antes de cambiar de escena
         imgHayCambiosSinGuardar.SetActive(false);
         //Aquí podría esperar un poquito antes de cargar la nueva escena ---------------------------------
         SceneManager.LoadScene("Main");
