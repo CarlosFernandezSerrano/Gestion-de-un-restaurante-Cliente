@@ -49,6 +49,12 @@ public class EditarRestauranteController : MonoBehaviour
 
     }
 
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+
     private void InicializarValoresDropdowns()
     {
         List<string> opcionesHoras = new List<string> { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24" };
@@ -102,7 +108,6 @@ public class EditarRestauranteController : MonoBehaviour
         BuscoElIndiceYLoPongoSiLoEncuentro(minutoApertura, minuto_Apertura);
         BuscoElIndiceYLoPongoSiLoEncuentro(horaCierre, hora_Cierre);
         BuscoElIndiceYLoPongoSiLoEncuentro(minutoCierre, minuto_Cierre);
-        
     }
 
     private void BuscoElIndiceYLoPongoSiLoEncuentro(TMP_Dropdown horaOMinuto, string hora_O_Minuto)
@@ -122,11 +127,7 @@ public class EditarRestauranteController : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    
 
     private void AgregarOpcionesADropdown(TMP_Dropdown dropdown, List<string> opciones)
     {
@@ -142,10 +143,43 @@ public class EditarRestauranteController : MonoBehaviour
 
     public void Guardar()
     {
-        Debug.Log("G");
-    }    
+        if (NombreOHorasDistintasEnRestaurante())
+        {
+            Debug.Log("Hay cambios");
+        }
+        else
+        {
+            Debug.Log("No hay cambios");
+        }
+    }
 
+    private bool NombreOHorasDistintasEnRestaurante()
+    {
+        // Nombre del restaurante cambiado del original.
+        if (NombreRestaurante.CompareTo(inputFieldNombreRestaurante.text) != 0)
+        {
+            return true;
+        }
 
+        // Hora apertura
+        string[] horaAperturaArray = HoraApertura.Split(":");
+        string hora_Apertura = horaAperturaArray[0].Trim();
+        string minuto_Apertura = horaAperturaArray[1].Trim();
+
+        // Hora cierre
+        string[] horaCierreArray = HoraCierre.Split(":");
+        string hora_Cierre = horaCierreArray[0].Trim();
+        string minuto_Cierre = horaCierreArray[1].Trim();
+
+        //Hora o minuto de apertura o cierre ha cambiado del original
+        if (hora_Apertura.CompareTo(horaApertura.options[horaApertura.value].text) != 0 || minuto_Apertura.CompareTo(minutoApertura.options[minutoApertura.value].text) != 0 || hora_Cierre.CompareTo(horaCierre.options[horaCierre.value].text) != 0 || minuto_Cierre.CompareTo(minutoCierre.options[minutoCierre.value].text) != 0)
+        {
+            return true;
+        }
+
+        return false;
+
+    }
 
     public void IrALaEscenaMain()
     {
