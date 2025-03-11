@@ -89,14 +89,37 @@ public class EditarRestauranteController : MonoBehaviour
     private void AsignarHorasEnDropdowns()
     {
         // Hora apertura
-        string[] horaApertura = HoraApertura.Split(":");
-        string hora_Apertura = horaApertura[0].Trim();
-        string minuto_Apertura = horaApertura[1].Trim();
+        string[] horaAperturaArray = HoraApertura.Split(":");
+        string hora_Apertura = horaAperturaArray[0].Trim();
+        string minuto_Apertura = horaAperturaArray[1].Trim();
 
         // Hora cierre
-        string[] horaCierre = HoraApertura.Split(":");
-        string hora_Cierre = horaCierre[0].Trim();
-        string minuto_Cierre = horaCierre[1].Trim();
+        string[] horaCierreArray = HoraCierre.Split(":");
+        string hora_Cierre = horaCierreArray[0].Trim();
+        string minuto_Cierre = horaCierreArray[1].Trim();
+
+        BuscoElIndiceYLoPongoSiLoEncuentro(horaApertura, hora_Apertura);
+        BuscoElIndiceYLoPongoSiLoEncuentro(minutoApertura, minuto_Apertura);
+        BuscoElIndiceYLoPongoSiLoEncuentro(horaCierre, hora_Cierre);
+        BuscoElIndiceYLoPongoSiLoEncuentro(minutoCierre, minuto_Cierre);
+        
+    }
+
+    private void BuscoElIndiceYLoPongoSiLoEncuentro(TMP_Dropdown horaOMinuto, string hora_O_Minuto)
+    {
+        // Busco el índice de ese valor en el Dropdown
+        int index = horaOMinuto.options.FindIndex(option => option.text == hora_O_Minuto);
+
+        // Si lo encuentra, establecerlo como el seleccionado
+        if (index != -1)
+        {
+            horaOMinuto.value = index;
+            horaOMinuto.RefreshShownValue(); // Refresca la UI para mostrar el valor seleccionado.
+        }
+        else
+        {
+            Debug.Log("Valor no encontrado");
+        }
     }
 
     // Update is called once per frame

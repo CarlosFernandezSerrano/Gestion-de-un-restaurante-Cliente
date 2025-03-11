@@ -132,12 +132,15 @@ namespace Assets.Scripts.Controller
 
         private async void ObtenerNombreRestauranteTrabajador(TMPro.TMP_Text textUserRestaurante)
         {
-            string cad =  await instanceMétodosAPIController.GetDataAsync("restaurante/getRestaurantePorId/" + PlayerPrefs.GetInt("Restaurante_ID Usuario"));
-            
-            // Deserializo la respuesta
-            Restaurante restaurante = JsonConvert.DeserializeObject<Restaurante>(cad);
+            if (instanceMétodosAPIController != null)
+            {
+                string cad = await instanceMétodosAPIController.GetDataAsync("restaurante/getRestaurantePorId/" + PlayerPrefs.GetInt("Restaurante_ID Usuario"));
 
-            textUserRestaurante.text = restaurante.Nombre;
+                // Deserializo la respuesta
+                Restaurante restaurante = JsonConvert.DeserializeObject<Restaurante>(cad);
+
+                textUserRestaurante.text = restaurante.Nombre;
+            }            
         }
 
         public async Task ActualizarDatosTrabajadorPorIdAsync(Trabajador trabajador)
