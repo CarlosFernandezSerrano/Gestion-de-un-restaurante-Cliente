@@ -161,7 +161,7 @@ public class EditarRestauranteController : MonoBehaviour
             // ---------------------------
             //ObtenerDatosRestaurante();
         }
-        else if (NombreOHorasDistintasEnRestaurante() && NombreEsVálidoEIgualQueEnLaBDD())
+        else if (HorasDistintasEnRestaurante() && NombreEsIgualQueEnLaBDD())
         {
             Debug.Log("Hay cambios 2");
             // Poner método aquí para actualizar datos restaurante en la BDD
@@ -174,12 +174,12 @@ public class EditarRestauranteController : MonoBehaviour
         }
     }
 
-    private bool NombreEsVálidoEIgualQueEnLaBDD()
+    private bool NombreEsIgualQueEnLaBDD()
     {
         string nombreRestaurante = inputFieldNombreRestaurante.text.Trim();
         nombreRestaurante = Regex.Replace(nombreRestaurante, @"\s+", " "); // Reemplaza múltiples espacios por uno
 
-        if (nombreRestaurante.Length > 2 && nombreRestaurante.CompareTo(NombreRestaurante) == 0)
+        if (nombreRestaurante.CompareTo(NombreRestaurante) == 0)
         {
             return true;
         }
@@ -235,15 +235,8 @@ public class EditarRestauranteController : MonoBehaviour
         return false;
     }
 
-    private bool NombreOHorasDistintasEnRestaurante()
+    private bool HorasDistintasEnRestaurante()
     {
-        //bool b = await NombreRestauranteDistintoYNoRepetidoEnLaBDD();
-        // Nombre del restaurante cambiado del original.
-        /*if (NombreRestaurante.CompareTo(inputFieldNombreRestaurante.text) != 0)
-        {
-            return true;
-        }*/
-
         // Hora apertura
         string[] horaAperturaArray = HoraApertura.Split(":");
         string hora_Apertura = horaAperturaArray[0].Trim();
@@ -271,7 +264,7 @@ public class EditarRestauranteController : MonoBehaviour
     private void ComprobarSiHayCambios()
     {
         // Hay cambios sin guardar
-        if (NombreOHorasDistintasEnRestaurante())
+        if (HorasDistintasEnRestaurante()) // Cambiar --------- - --- - - -- - -  - - - - - - --  - - -  - - - -  -
         {
             Debug.Log("Hay cambios. ¿Desea guardar antes de irse?");
             DesactivarBotonesDelCanvas();
