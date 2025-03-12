@@ -74,7 +74,7 @@ public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHan
         }
 
         // Crear un nuevo GameObject para el botón
-        GameObject newButtonObj = new GameObject("BotónGenerado");
+        GameObject newButtonObj = new GameObject("Button");
         // El nuevo botón se creará como hijo del contenedor, NO del Canvas
         newButtonObj.transform.SetParent(containerRect, false);
 

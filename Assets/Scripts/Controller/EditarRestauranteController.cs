@@ -30,7 +30,13 @@ public class EditarRestauranteController : MonoBehaviour
     private string NombreRestaurante;
     private string HoraApertura;
     private string HoraCierre;
+    private List<Mesa> Mesas;
 
+    // Contenedor padre donde se agregarán los botones
+    public Transform buttonParent;
+
+    // Sprite que cargo desde Resources.
+    private Sprite mesaSprite;
 
     ButtonMesaController instanceButtonMesaController;
     MétodosAPIController instanceMétodosApiController;
@@ -51,7 +57,7 @@ public class EditarRestauranteController : MonoBehaviour
 
         InicializarValoresDropdowns();
 
-        ObtenerDatosRestaurante();
+        ObtenerDatosRestauranteAsync();
 
     }
 
@@ -76,7 +82,7 @@ public class EditarRestauranteController : MonoBehaviour
         AgregarOpcionesADropdown(minutoCierre, opcionesMinutos);
     }
 
-    private async void ObtenerDatosRestaurante()
+    private async void ObtenerDatosRestauranteAsync()
     {
         string cad = await instanceMétodosApiController.GetDataAsync("restaurante/getRestaurantePorId/" + PlayerPrefs.GetInt("Restaurante_ID Usuario"));
 
@@ -86,16 +92,92 @@ public class EditarRestauranteController : MonoBehaviour
         NombreRestaurante =  restaurante.Nombre;
         HoraApertura = restaurante.HoraApertura;
         HoraCierre = restaurante.HoraCierre;
+        Mesas = restaurante.Mesas;
 
         inputFieldNombreRestaurante.text = NombreRestaurante;
 
-        Debug.Log("Hora Apertura: " + restaurante.HoraApertura);
-        Debug.Log("Hora Cierre: " + restaurante.HoraCierre);
+        Debug.Log("Hora Apertura: " + restaurante.HoraApertura + "; Hora Cierre: " + restaurante.HoraCierre);
 
         AsignarHorasEnDropdowns();
-        
 
+        mesaSprite = Resources.Load<Sprite>("Editar Restaurante/mantelMesa");
+        CrearBotonesMesas();
+    }
 
+    private void CrearBotonesMesas()
+    {
+        // El restaurante tiene mesas
+        if (Mesas.Count > 0)
+        {
+            Debug.Log("Hay mesas");
+            foreach (var mesa in Mesas)
+            {
+                CrearBotonMesa(mesa);
+            }
+        }
+        else
+        {
+            Debug.Log("No hay mesas");
+        }
+    }
+
+    private void CrearBotonMesa(Mesa mesa)
+    {
+        // Crear un GameObject para el botón y asignarle un nombre único.
+        GameObject botonGO = new GameObject("Button" + mesa.Id);
+
+        // Establecer el padre para que se muestre en el UI.
+        botonGO.transform.SetParent(buttonParent, false);
+
+        // Agregar el componente RectTransform (se agrega automáticamente al crear UI, pero lo añadimos explícitamente).
+        RectTransform rt = botonGO.AddComponent<RectTransform>();
+        // Opcional: definir un tamaño por defecto para el botón.
+        rt.sizeDelta = new Vector2(100, 50);
+
+        // Agregar CanvasRenderer para poder renderizar el UI.
+        botonGO.AddComponent<CanvasRenderer>();
+
+        // Agregar el componente Image para mostrar el sprite.
+        UnityEngine.UI.Image imagen = botonGO.AddComponent<UnityEngine.UI.Image>();
+        if (mesaSprite != null)
+        {
+            imagen.sprite = mesaSprite;
+        }
+
+        // Crear el componente Button para gestionar clics.
+        UnityEngine.UI.Button boton = botonGO.AddComponent<UnityEngine.UI.Button>();
+        // Capturamos el id de la mesa para usarlo en el listener.
+        int idMesa = mesa.Id;
+        boton.onClick.AddListener(() => OnMesaButtonClicked(idMesa));
+
+        // Configurar la posición y escala del botón basándose en las propiedades de la mesa.
+        rt.anchoredPosition = new Vector2(mesa.PosX, mesa.PosY);
+        rt.localScale = new Vector3(mesa.ScaleX, mesa.ScaleY, 1f);
+
+        // (Opcional) Crear un objeto hijo para mostrar el texto en el botón.
+        /*GameObject textoGO = new GameObject("Text");
+        textoGO.transform.SetParent(botonGO.transform, false);
+
+        // Agregar el componente Text para mostrar el nombre.
+        Text texto = textoGO.AddComponent<Text>();
+        texto.text = "Button " + mesa.Id;
+        texto.alignment = TextAnchor.MiddleCenter;
+        // Asignar una fuente por defecto (Arial viene integrada en Unity).
+        texto.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+        texto.color = Color.black;
+
+        // Ajustar el RectTransform del texto para que ocupe todo el botón.
+        RectTransform rtTexto = textoGO.GetComponent<RectTransform>();
+        rtTexto.anchorMin = Vector2.zero;
+        rtTexto.anchorMax = Vector2.one;
+        rtTexto.offsetMin = Vector2.zero;
+        rtTexto.offsetMax = Vector2.zero;*/
+    }
+
+    // Método que se ejecuta cuando se hace clic en un botón de mesa.
+    void OnMesaButtonClicked(int id)
+    {
+        Debug.Log("Se ha clicado el botón de la mesa con ID: " + id);
     }
 
     private void AsignarHorasEnDropdowns()
@@ -152,6 +234,7 @@ public class EditarRestauranteController : MonoBehaviour
     private async void GestionarGuardarDatosRestauranteAsync()
     {
         Restaurante restaurante = RellenarRestauranteSiActualizara();
+        Restaurante rest = ObtenerRestauranteConNuevasMesasCreadasParaRegistrar();
         
 
         bool b = await NombreRestauranteVálidoDistintoYNoRepetidoEnLaBDD();
@@ -161,15 +244,30 @@ public class EditarRestauranteController : MonoBehaviour
         {
             Debug.Log("Hay cambios 1 ");
             await ActualizarRestauranteEnBDDAsync(restaurante);
-            
-            ObtenerDatosRestaurante();
+            if (rest.Mesas.Count > 0)
+            {
+                await RegistrarMesasNuevasEnBDDAsync(rest);
+            }
+            else
+            {
+                Debug.Log("No hay mesas nuevas para registrar");
+            }
+
+            ObtenerDatosRestauranteAsync();
         }
-        else if (HorasDistintasEnRestaurante() && NombreEsIgualQueEnLaBDD())
+        else if (HorasDistintasEnRestaurante() && NombreEsIgualQueEnLaBDD() || NombreEsIgualQueEnLaBDD() && MesasDistintasEnRestaurante())
         {
             Debug.Log("Hay cambios 2");
             await ActualizarRestauranteEnBDDAsync(restaurante);
-
-            ObtenerDatosRestaurante();
+            if (rest.Mesas.Count > 0)
+            {
+                await RegistrarMesasNuevasEnBDDAsync(rest);
+            }
+            else
+            {
+                Debug.Log("No hay mesas nuevas para registrar");
+            }
+            ObtenerDatosRestauranteAsync();
         }
         else
         {
@@ -179,7 +277,6 @@ public class EditarRestauranteController : MonoBehaviour
 
     private async Task ActualizarRestauranteEnBDDAsync(Restaurante restaurante)
     {
-        // Poner método aquí para actualizar datos restaurante en la BDD
         string cad = await instanceMétodosApiController.PutDataAsync("restaurante/actualizarRestaurante/", restaurante);
         // Deserializo la respuesta
         Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
@@ -194,6 +291,23 @@ public class EditarRestauranteController : MonoBehaviour
         }
     }
 
+    private async Task RegistrarMesasNuevasEnBDDAsync(Restaurante rest)
+    {
+        string cad = await instanceMétodosApiController.PostDataAsync("restaurante/registrarMesas/", rest);
+
+        // Deserializo la respuesta
+        Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
+
+        if (resultado.Result.Equals(1))
+        {
+            Debug.Log("Registros exitosos");
+        }
+        else
+        {
+            Debug.Log("Error en los registros");
+        }
+    }
+
     private Restaurante RellenarRestauranteSiActualizara()
     {
         int id = PlayerPrefs.GetInt("Restaurante_ID Usuario");
@@ -203,7 +317,83 @@ public class EditarRestauranteController : MonoBehaviour
         string hora_Apertura = horaApertura.options[horaApertura.value].text+" : "+ minutoApertura.options[minutoApertura.value].text;
         string hora_Cierre = horaCierre.options[horaCierre.value].text + " : " + minutoCierre.options[minutoCierre.value].text;
 
-        return new Restaurante(id, nombreRestaurante, hora_Apertura, hora_Cierre, new List<Mesa>(), new List<Trabajador>());
+        List<Mesa> mesas = ObtenerListaDeMesasDelEditorActualizadas();
+
+        return new Restaurante(id, nombreRestaurante, hora_Apertura, hora_Cierre, mesas, new List<Trabajador>());
+    }
+
+    private List<Mesa> ObtenerListaDeMesasDelEditorActualizadas()
+    {
+        List<Mesa> mesasNuevas = new List<Mesa>();
+
+        int restauranteIdUsuario = PlayerPrefs.GetInt("Restaurante_ID Usuario");
+
+        // Recorro cada mesa en la lista del restaurante.
+        foreach (Mesa mesa in Mesas)
+        {
+            // Generamos el nombre que asignamos al botón (por ejemplo, "Button1" para la mesa con Id = 1).
+            string nombreBoton = "Button" + mesa.Id;
+
+            // Buscamos el botón en el contenedor de botones.
+            Transform botonTransform = buttonParent.Find(nombreBoton);
+
+            // Si no se encuentra el botón, se detecta un cambio.
+            if (botonTransform == null)
+            {
+                Debug.Log("Cambio detectado: El botón " + nombreBoton + " no existe, ha sido eliminado.");
+                continue;
+            }
+
+            // Obtengo el RectTransform para acceder a la posición y escala.
+            RectTransform rt = botonTransform.GetComponent<RectTransform>();
+
+            float posX = rt.anchoredPosition.x;
+            float posY = rt.anchoredPosition.y;
+            float scaleX = rt.localScale.x;
+            float scaleY = rt.localScale.y;
+            bool disponible  = mesa.Disponible;
+
+            // Creo una nueva mesa con los datos actualizados del editor, conservando el mismo ID de mesa que hay en la BDD
+            mesasNuevas.Add(new Mesa(mesa.Id, posX, posY, scaleX, scaleY, disponible, restauranteIdUsuario));
+        }
+
+        return mesasNuevas;
+    }
+
+    private Restaurante ObtenerRestauranteConNuevasMesasCreadasParaRegistrar()
+    {
+        List<Mesa> mesasNuevas = new List<Mesa>();
+
+        int restauranteIdUsuario = PlayerPrefs.GetInt("Restaurante_ID Usuario");
+
+        // Recorremos cada hijo del contenedor.
+        foreach (Transform child in buttonParent)
+        {
+            string nombreBoton = child.gameObject.name;
+
+            // Si el último carácter no es un número
+            if (!char.IsDigit(nombreBoton[nombreBoton.Length - 1]))
+            {
+                RectTransform rt = child.GetComponent<RectTransform>();
+                if (rt != null)
+                {
+                    float posX = rt.anchoredPosition.x;
+                    float posY = rt.anchoredPosition.y;
+                    float scaleX = rt.localScale.x;
+                    float scaleY = rt.localScale.y;
+                    bool disponible = true;
+
+                    mesasNuevas.Add(new Mesa(posX, posY, scaleX, scaleY, disponible, restauranteIdUsuario));
+                }
+                else
+                {
+                    Debug.LogWarning("El botón " + nombreBoton + " no tiene RectTransform.");
+                }
+            }
+        }
+
+        return new Restaurante(restauranteIdUsuario, "", "", "", mesasNuevas, new List<Trabajador>());
+
     }
 
     private bool NombreEsIgualQueEnLaBDD()
@@ -220,6 +410,43 @@ public class EditarRestauranteController : MonoBehaviour
             return false;
         }
     }
+
+    private bool MesasDistintasEnRestaurante()
+    {
+        // Recorremos cada mesa en la lista del restaurante.
+        foreach (Mesa mesa in Mesas)
+        {
+            // Generamos el nombre que asignamos al botón (por ejemplo, "Button1" para la mesa con Id = 1).
+            string nombreBoton = "Button" + mesa.Id;
+
+            // Buscamos el botón en el contenedor de botones.
+            Transform botonTransform = buttonParent.Find(nombreBoton);
+
+            // Si no se encuentra el botón, se detecta un cambio.
+            if (botonTransform == null)
+            {
+                Debug.Log("Cambio detectado: El botón " + nombreBoton + " no existe, ha sido eliminado.");
+                return true;
+            }
+
+            // Obtenemos el RectTransform para acceder a la posición y escala.
+            RectTransform rt = botonTransform.GetComponent<RectTransform>();
+
+            // Creamos los valores esperados basados en las propiedades de la mesa.
+            Vector2 posEsperada = new Vector2(mesa.PosX, mesa.PosY);
+            Vector3 escalaEsperada = new Vector3(mesa.ScaleX, mesa.ScaleY, 1f);
+
+            // Comparamos la posición y la escala actuales del botón con las esperadas.
+            if (rt.anchoredPosition != posEsperada || rt.localScale != escalaEsperada)
+            {
+                Debug.Log("Cambio detectado en " + nombreBoton + ": Posición o escala difieren.");
+                return true;
+            }
+        }
+
+        // Si se recorre toda la lista sin encontrar diferencias, se devuelve false.
+        return false;
+     }
 
     private async Task<bool> NombreRestauranteVálidoDistintoYNoRepetidoEnLaBDD()
     {
@@ -295,9 +522,6 @@ public class EditarRestauranteController : MonoBehaviour
 
     private async void ComprobarSiHayCambios()
     {
-        Restaurante restaurante = RellenarRestauranteSiActualizara();
-
-
         bool b = await NombreRestauranteVálidoDistintoYNoRepetidoEnLaBDD();
 
         // Nombre cambiado y comprobado que se puede actualizar porque no existe otro restaurante con ese nuevo nombre
@@ -306,18 +530,12 @@ public class EditarRestauranteController : MonoBehaviour
             Debug.Log("Hay cambios. ¿Desea guardar antes de irse?");
             DesactivarBotonesDelCanvas();
             imgHayCambiosSinGuardar.SetActive(true);
-            //await ActualizarRestauranteEnBDDAsync(restaurante);
-
-            //ObtenerDatosRestaurante();
         }
         else if (HorasDistintasEnRestaurante() && NombreEsIgualQueEnLaBDD())
         {
             Debug.Log("Hay cambios. ¿Desea guardar antes de irse?");
             DesactivarBotonesDelCanvas();
             imgHayCambiosSinGuardar.SetActive(true);
-            //await ActualizarRestauranteEnBDDAsync(restaurante);
-
-            //ObtenerDatosRestaurante();
         }
         else
         {

@@ -5005,6 +5005,7 @@ MonoBehaviour:
   buttonGuardar: {fileID: 416355082}
   buttonVolver: {fileID: 1551697203}
   "buttonA\xF1adirMesa": {fileID: 1107252670}
+  buttonParent: {fileID: 99731598}
 --- !u!1 &1525870345
 GameObject:
   m_ObjectHideFlags: 0
