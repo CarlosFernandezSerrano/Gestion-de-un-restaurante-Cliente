@@ -15,7 +15,7 @@ public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHan
     // Nombre de la imagen en Resources que se usará en el botón
     private string ImageName = "mantelMesa";
 
-    private RectTransform rectTransform; // RectTransform del botón generado
+    public RectTransform rectTransform; // RectTransform del botón generado
     private bool isDragging = false;
 
     public static ButtonMesaController InstanceButtonMesaController { get; private set; }

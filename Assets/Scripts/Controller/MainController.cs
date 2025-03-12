@@ -65,7 +65,10 @@ public class MainController : MonoBehaviour
 
         // Método para prevenir
         QuitarYPonerBotonesSegúnElTrabajador();
-        
+
+        float width = botónCerrarSesión.gameObject.GetComponent<RectTransform>().rect.width;
+        float height = botónCerrarSesión.gameObject.GetComponent<RectTransform>().rect.height;
+        Debug.Log("Width: " + width + " Y Height: " + height);
     }
 
     

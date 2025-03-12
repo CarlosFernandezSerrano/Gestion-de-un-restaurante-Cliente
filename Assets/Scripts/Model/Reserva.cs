@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -31,6 +32,7 @@ namespace Assets.Scripts.Model
             this.Mesa_Id = mesa;
         }
 
+        [JsonConstructor]
         public Reserva(int id, string fecha, string hora, EstadoReserva estado, int cliente, int mesa)
         {
             this.Id = id;

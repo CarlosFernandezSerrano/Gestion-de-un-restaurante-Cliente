@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -33,7 +34,7 @@ public class EditarRestauranteController : MonoBehaviour
     private List<Mesa> Mesas;
 
     // Contenedor padre donde se agregarán los botones
-    public Transform buttonParent;
+    public RectTransform buttonParent;
 
     // Sprite que cargo desde Resources.
     private Sprite mesaSprite;
@@ -57,6 +58,7 @@ public class EditarRestauranteController : MonoBehaviour
 
         InicializarValoresDropdowns();
 
+        
         ObtenerDatosRestauranteAsync();
 
     }
@@ -84,6 +86,8 @@ public class EditarRestauranteController : MonoBehaviour
 
     private async void ObtenerDatosRestauranteAsync()
     {
+        EliminarObjetosHijoDeFondoDeEdición();
+
         string cad = await instanceMétodosApiController.GetDataAsync("restaurante/getRestaurantePorId/" + PlayerPrefs.GetInt("Restaurante_ID Usuario"));
 
         // Deserializo la respuesta
@@ -102,6 +106,15 @@ public class EditarRestauranteController : MonoBehaviour
 
         mesaSprite = Resources.Load<Sprite>("Editar Restaurante/mantelMesa");
         CrearBotonesMesas();
+    }
+
+    // Elimino todos los botones mesa antes de actualizar el fondo de edición, para que no sea un caos y se pongan unos encima de otros, además de su gestión luego.
+    private void EliminarObjetosHijoDeFondoDeEdición()
+    {
+        foreach (Transform hijo in buttonParent)
+        {
+            Destroy(hijo.gameObject);
+        }
     }
 
     private void CrearBotonesMesas()
@@ -132,7 +145,7 @@ public class EditarRestauranteController : MonoBehaviour
         // Agregar el componente RectTransform (se agrega automáticamente al crear UI, pero lo añadimos explícitamente).
         RectTransform rt = botonGO.AddComponent<RectTransform>();
         // Opcional: definir un tamaño por defecto para el botón.
-        rt.sizeDelta = new Vector2(100, 50);
+        rt.sizeDelta = new Vector2(mesa.Width, mesa.Height);
 
         // Agregar CanvasRenderer para poder renderizar el UI.
         botonGO.AddComponent<CanvasRenderer>();
@@ -144,40 +157,17 @@ public class EditarRestauranteController : MonoBehaviour
             imagen.sprite = mesaSprite;
         }
 
-        // Crear el componente Button para gestionar clics.
-        UnityEngine.UI.Button boton = botonGO.AddComponent<UnityEngine.UI.Button>();
-        // Capturamos el id de la mesa para usarlo en el listener.
-        int idMesa = mesa.Id;
-        boton.onClick.AddListener(() => OnMesaButtonClicked(idMesa));
-
         // Configurar la posición y escala del botón basándose en las propiedades de la mesa.
         rt.anchoredPosition = new Vector2(mesa.PosX, mesa.PosY);
         rt.localScale = new Vector3(mesa.ScaleX, mesa.ScaleY, 1f);
 
-        // (Opcional) Crear un objeto hijo para mostrar el texto en el botón.
-        /*GameObject textoGO = new GameObject("Text");
-        textoGO.transform.SetParent(botonGO.transform, false);
+        // Agrego un componente Button para que sea interactivo
+        botonGO.AddComponent<UnityEngine.UI.Button>();
 
-        // Agregar el componente Text para mostrar el nombre.
-        Text texto = textoGO.AddComponent<Text>();
-        texto.text = "Button " + mesa.Id;
-        texto.alignment = TextAnchor.MiddleCenter;
-        // Asignar una fuente por defecto (Arial viene integrada en Unity).
-        texto.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-        texto.color = Color.black;
-
-        // Ajustar el RectTransform del texto para que ocupe todo el botón.
-        RectTransform rtTexto = textoGO.GetComponent<RectTransform>();
-        rtTexto.anchorMin = Vector2.zero;
-        rtTexto.anchorMax = Vector2.one;
-        rtTexto.offsetMin = Vector2.zero;
-        rtTexto.offsetMax = Vector2.zero;*/
-    }
-
-    // Método que se ejecuta cuando se hace clic en un botón de mesa.
-    void OnMesaButtonClicked(int id)
-    {
-        Debug.Log("Se ha clicado el botón de la mesa con ID: " + id);
+        // Agrego este script al nuevo botón para dotarlo de funcionalidad de arrastre y escala
+        ButtonMesaController bm = botonGO.AddComponent<ButtonMesaController>();
+        bm.containerRect = this.buttonParent;  // Asigna el mismo contenedor
+        bm.rectTransform = rt; // Asigna el RectTransform del nuevo botón
     }
 
     private void AsignarHorasEnDropdowns()
@@ -254,7 +244,7 @@ public class EditarRestauranteController : MonoBehaviour
             }
 
             ObtenerDatosRestauranteAsync();
-        }
+        }// Comprobar bien el método MesasDistintasEnRestaurante() si es suficiente -----------------------------------     - --  -- - -- - - - - -  - -- - - - -- 
         else if (HorasDistintasEnRestaurante() && NombreEsIgualQueEnLaBDD() || NombreEsIgualQueEnLaBDD() && MesasDistintasEnRestaurante())
         {
             Debug.Log("Hay cambios 2");
@@ -349,12 +339,14 @@ public class EditarRestauranteController : MonoBehaviour
 
             float posX = rt.anchoredPosition.x;
             float posY = rt.anchoredPosition.y;
+            float width = rt.rect.width;
+            float height = rt.rect.height;
             float scaleX = rt.localScale.x;
             float scaleY = rt.localScale.y;
             bool disponible  = mesa.Disponible;
 
             // Creo una nueva mesa con los datos actualizados del editor, conservando el mismo ID de mesa que hay en la BDD
-            mesasNuevas.Add(new Mesa(mesa.Id, posX, posY, scaleX, scaleY, disponible, restauranteIdUsuario));
+            mesasNuevas.Add(new Mesa(mesa.Id, posX, posY, width, height, scaleX, scaleY, disponible, restauranteIdUsuario));
         }
 
         return mesasNuevas;
@@ -379,11 +371,17 @@ public class EditarRestauranteController : MonoBehaviour
                 {
                     float posX = rt.anchoredPosition.x;
                     float posY = rt.anchoredPosition.y;
+                    float width = rt.rect.width;
+                    float height = rt.rect.height;
                     float scaleX = rt.localScale.x;
                     float scaleY = rt.localScale.y;
                     bool disponible = true;
 
-                    mesasNuevas.Add(new Mesa(posX, posY, scaleX, scaleY, disponible, restauranteIdUsuario));
+                    //float width = botónCerrarSesión.gameObject.GetComponent<RectTransform>().rect.width;
+                    //float height = botónCerrarSesión.gameObject.GetComponent<RectTransform>().rect.height;
+                    Debug.Log("Width: " + width + " Y Height: " + height);
+
+                    mesasNuevas.Add(new Mesa(posX, posY, width, height, scaleX, scaleY, disponible, restauranteIdUsuario));
                 }
                 else
                 {
@@ -413,39 +411,68 @@ public class EditarRestauranteController : MonoBehaviour
 
     private bool MesasDistintasEnRestaurante()
     {
-        // Recorremos cada mesa en la lista del restaurante.
-        foreach (Mesa mesa in Mesas)
+        if (Mesas.Count > 0)
         {
-            // Generamos el nombre que asignamos al botón (por ejemplo, "Button1" para la mesa con Id = 1).
-            string nombreBoton = "Button" + mesa.Id;
-
-            // Buscamos el botón en el contenedor de botones.
-            Transform botonTransform = buttonParent.Find(nombreBoton);
-
-            // Si no se encuentra el botón, se detecta un cambio.
-            if (botonTransform == null)
+            // Recorremos cada mesa en la lista del restaurante.
+            foreach (Mesa mesa in Mesas)
             {
-                Debug.Log("Cambio detectado: El botón " + nombreBoton + " no existe, ha sido eliminado.");
-                return true;
+                // Generamos el nombre que asignamos al botón (por ejemplo, "Button1" para la mesa con Id = 1).
+                string nombreBoton = "Button" + mesa.Id;
+
+                // Buscamos el botón en el contenedor de botones.
+                Transform botonTransform = buttonParent.Find(nombreBoton);
+
+                // Si no se encuentra el botón, se detecta un cambio.
+                if (botonTransform == null)
+                {
+                    Debug.Log("Cambio detectado: El botón " + nombreBoton + " no existe, ha sido eliminado.");
+                    return true;
+                }
+
+                // Obtenemos el RectTransform para acceder a la posición y escala.
+                RectTransform rt = botonTransform.GetComponent<RectTransform>();
+
+                // Creamos los valores esperados basados en las propiedades de la mesa.
+                Vector2 posEsperada = new Vector2(mesa.PosX, mesa.PosY);
+                Vector3 escalaEsperada = new Vector3(mesa.ScaleX, mesa.ScaleY, 1f);
+
+                // Comparamos la posición y la escala actuales del botón con las esperadas.
+                if (rt.anchoredPosition != posEsperada || rt.localScale != escalaEsperada)
+                {
+                    Debug.Log("Cambio detectado en " + nombreBoton + ": Posición o escala difieren.");
+                    return true;
+                }
             }
 
-            // Obtenemos el RectTransform para acceder a la posición y escala.
-            RectTransform rt = botonTransform.GetComponent<RectTransform>();
-
-            // Creamos los valores esperados basados en las propiedades de la mesa.
-            Vector2 posEsperada = new Vector2(mesa.PosX, mesa.PosY);
-            Vector3 escalaEsperada = new Vector3(mesa.ScaleX, mesa.ScaleY, 1f);
-
-            // Comparamos la posición y la escala actuales del botón con las esperadas.
-            if (rt.anchoredPosition != posEsperada || rt.localScale != escalaEsperada)
-            {
-                Debug.Log("Cambio detectado en " + nombreBoton + ": Posición o escala difieren.");
-                return true;
-            }
+            // Si se recorre toda la lista sin encontrar diferencias, se devuelve false.
+            //return false;
         }
 
-        // Si se recorre toda la lista sin encontrar diferencias, se devuelve false.
-        return false;
+        
+            // Buscamos el botón en el contenedor de botones.
+            Transform botonTransform2 = buttonParent.Find("Button");
+
+            // Si no se encuentra el botón, no hay botones nuevos creados
+            if (botonTransform2 == null)
+            {
+
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+            /*if (buttonParent.childCount > 0)
+            {
+                Debug.Log("El GameObject padre tiene al menos un hijo.");
+                return true;
+            }
+            else
+            {
+                Debug.Log("El GameObject padre no tiene hijos.");
+                return false;
+            }*/
+        
      }
 
     private async Task<bool> NombreRestauranteVálidoDistintoYNoRepetidoEnLaBDD()
