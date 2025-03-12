@@ -166,8 +166,8 @@ public class EditarRestauranteController : MonoBehaviour
 
         // Agrego este script al nuevo botón para dotarlo de funcionalidad de arrastre y escala
         ButtonMesaController bm = botonGO.AddComponent<ButtonMesaController>();
-        bm.containerRect = this.buttonParent;  // Asigna el mismo contenedor
-        bm.rectTransform = rt; // Asigna el RectTransform del nuevo botón
+        bm.containerRect = this.buttonParent;  // Asigno el mismo contenedor
+        bm.rectTransform = rt; // Asigno el RectTransform del nuevo botón
     }
 
     private void AsignarHorasEnDropdowns()
@@ -558,7 +558,7 @@ public class EditarRestauranteController : MonoBehaviour
             DesactivarBotonesDelCanvas();
             imgHayCambiosSinGuardar.SetActive(true);
         }
-        else if (HorasDistintasEnRestaurante() && NombreEsIgualQueEnLaBDD())
+        else if (HorasDistintasEnRestaurante() && NombreEsIgualQueEnLaBDD() || NombreEsIgualQueEnLaBDD() && MesasDistintasEnRestaurante())
         {
             Debug.Log("Hay cambios. ¿Desea guardar antes de irse?");
             DesactivarBotonesDelCanvas();
