@@ -252,7 +252,7 @@ public class EditarRestauranteController : MonoBehaviour
             }
 
             ObtenerDatosRestauranteAsync();
-        }// Comprobar bien el método MesasDistintasEnRestaurante() si es suficiente -----------------------------------     - --  -- - -- - - - - -  - -- - - - -- 
+        } 
         else if (HorasDistintasEnRestaurante() && NombreEsIgualQueEnLaBDD() || NombreEsIgualQueEnLaBDD() && MesasDistintasEnRestaurante())
         {
             Debug.Log("Hay cambios 2");
@@ -270,6 +270,7 @@ public class EditarRestauranteController : MonoBehaviour
         else
         {
             Debug.Log("No hay cambios");
+            inputFieldNombreRestaurante.text = NombreRestaurante;
         }
     }
 
@@ -512,7 +513,7 @@ public class EditarRestauranteController : MonoBehaviour
                         else
                         {
                             Debug.Log("El restaurante ya existe.");
-                            string cad3 = "No se puede cambiar el nombre, ya existe";
+                            string cad3 = "The name cannot be changed, it already exists.";
                             StartCoroutine(MovimientoCartelDeMadera(2f, cad3, 8.4f));
                         }
                         return false;

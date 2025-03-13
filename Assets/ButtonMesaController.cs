@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHandler, IScrollHandler
 {
-    public static ButtonMesaController buttonSeleccionado;
+    public static ButtonMesaController buttonSeleccionadoParaBorrar;
 
     [Header("Referencias")]
     // Imagen contenedora que limitará los botones (debe tener RectTransform)
@@ -128,7 +128,7 @@ public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHan
         if (eventData.button == PointerEventData.InputButton.Right)
         {
             // Actualizamos la referencia del botón seleccionado
-            buttonSeleccionado = this;
+            buttonSeleccionadoParaBorrar = this;
             Debug.Log("Botón marcado: " + gameObject.name);
             
             instanceEditarRestauranteController.ActivarPapelera();
@@ -145,7 +145,7 @@ public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHan
             {
                 // Si se ha marcado algún botón previamente y se hace clic en otro elemento,
                 // se deselecciona el botón marcado.
-                buttonSeleccionado = null;
+                buttonSeleccionadoParaBorrar = null;
                 instanceEditarRestauranteController.DesactivarPapelera();
                 Debug.Log("Selección desmarcada");
             }
@@ -288,18 +288,21 @@ public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHan
 
     public void GestionarPapelera()
     {
-        Debug.Log("He pulsado papelera; Botón marcado: " + buttonSeleccionado.gameObject.name);
+        Debug.Log("He pulsado papelera; Botón marcado: " + buttonSeleccionadoParaBorrar.gameObject.name);
 
-        string nombreBotón = buttonSeleccionado.gameObject.name;
+        string nombreBotón = buttonSeleccionadoParaBorrar.gameObject.name;
+        // Si el botón seleccionado para borrar no está registrado en la BDD, lo eliino sólo en la memoria.
         if (nombreBotón.CompareTo("Button") == 0)
         {
-            Destroy(buttonSeleccionado.gameObject);
+            Destroy(buttonSeleccionadoParaBorrar.gameObject);
         }
-        else
+        else // El botón seleccionado para eliminar/borrar está registrado en la BDD 
         {
             Debug.Log("Button con número");
+
         }
 
-        
+        // Una vez usada la papelera, la desactivo
+        instanceEditarRestauranteController.DesactivarPapelera();
     }
 }
