@@ -25,7 +25,8 @@ public class EditarRestauranteController : MonoBehaviour
     [SerializeField] private UnityEngine.UI.Button buttonGuardar;
     [SerializeField] private UnityEngine.UI.Button buttonVolver;
     [SerializeField] private UnityEngine.UI.Button buttonAñadirMesa;
-
+    [SerializeField] private RectTransform imgCartel;
+    [SerializeField] private TMP_Text textError;
 
 
     private string NombreRestaurante;
@@ -498,23 +499,26 @@ public class EditarRestauranteController : MonoBehaviour
                         if (PlayerPrefs.GetString("TipoIdioma").CompareTo("Español") == 0 || PlayerPrefs.GetString("TipoIdioma") == null)
                         {
                             Debug.Log("El restaurante ya existe.");
-                            //textoErrorRegistro.text = "El restaurante ya existe.";
-                            //StartCoroutine(MostrarManoError(2f));
+                            textError.text = "No se puede cambiar el nombre, ya existe";
+                            StartCoroutine(MovimientoCartelDeMadera());
                         }
                         else
                         {
                             Debug.Log("El restaurante ya existe.");
-                            //textoErrorRegistro.text = "The restaurant already exists.";
-                            //StartCoroutine(MostrarManoError(2f));
+                            textError.text = "No se puede cambiar el nombre, ya existe";
+                            StartCoroutine(MovimientoCartelDeMadera());
                         }
                         return false;
                 }
             }
             else
             {
+                RectTransform rt = textError.gameObject.GetComponent<RectTransform>();
+                rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, 0f); // Cambio la "y" del texto para que se vea bien en el cartel
+
+                textError.text = "Nombre tiene menos de 3 caracteres";
+                StartCoroutine(MovimientoCartelDeMadera());
                 Debug.Log("Nombre tiene menos de 3 caracteres");
-                //textoErrorRegistro.text = "El nombre tiene menos de 3 caracteres.";
-                //StartCoroutine(MostrarManoError(2f));
                 return false;
             }
         }
@@ -599,5 +603,39 @@ public class EditarRestauranteController : MonoBehaviour
         SceneManager.LoadScene("Main");
     }
 
-    
+    private IEnumerator MovimientoCartelDeMadera()
+    {
+        buttonGuardar.interactable = false;
+
+        // Subo el cartel
+        for (int i = 0; i < 180; i++)
+        {
+            // Actualizo
+            float j = imgCartel.localEulerAngles.z - 1;
+
+            // Pinto 
+            imgCartel.localEulerAngles = new Vector3(0, 0, j);
+
+            // Espero
+            yield return new WaitForSeconds(0.001f);
+        }
+
+        // Espero 2 segundos
+        yield return new WaitForSeconds(2f);
+
+        // Bajo el cartel
+        for (int i = 0; i < 180; i++)
+        {
+            // Actualizo
+            float k = imgCartel.localEulerAngles.z - 1;
+
+            // Pinto 
+            imgCartel.localEulerAngles = new Vector3(0, 0, k);
+
+            // Espero
+            yield return new WaitForSeconds(0.001f);
+        }
+
+        buttonGuardar.interactable = true;
+    }
 }
