@@ -28,6 +28,7 @@ public class EditarRestauranteController : MonoBehaviour
     [SerializeField] private RectTransform imgCartel;
     [SerializeField] private TMP_Text textError;
     [SerializeField] private UnityEngine.UI.Button botónPapelera;
+    [SerializeField] private RectTransform rtManosAdvertencia;
 
     private string NombreRestaurante;
     private string HoraApertura;
@@ -226,6 +227,7 @@ public class EditarRestauranteController : MonoBehaviour
 
     public void Guardar()
     {
+        StartCoroutine(MostrarManosAdvertencia(1f,"","")); //Par ver cómo se ve, luego quitar línea de aquí
         GestionarGuardarDatosRestauranteAsync();
     }
 
@@ -657,5 +659,21 @@ public class EditarRestauranteController : MonoBehaviour
     public void DesactivarPapelera()
     {
         botónPapelera.interactable = false;
+    }
+
+    public IEnumerator MostrarManosAdvertencia(float tiempoDeEspera, string cad1, string cad2)
+    {
+        for (int i = 0; i < 710; i++)
+        {
+            // Actualizo 
+            float y = rtManosAdvertencia.anchoredPosition.y + 1;
+
+            // Pinto
+            rtManosAdvertencia.anchoredPosition = new Vector2(rtManosAdvertencia.anchoredPosition.x, y);
+
+            // Espero
+            yield return null;
+
+        }
     }
 }
