@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -17,6 +18,8 @@ public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHan
     public RectTransform rectTransform; // RectTransform del botón generado
     private bool isDragging = false;
 
+    EditarRestauranteController instanceEditarRestauranteController;
+
     public static ButtonMesaController InstanceButtonMesaController { get; private set; }
 
     void Awake()
@@ -30,7 +33,7 @@ public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHan
     // Start is called before the first frame update
     void Start()
     {
-        
+        instanceEditarRestauranteController = EditarRestauranteController.InstanceEditarRestauranteController;
     }
 
     // Update is called once per frame
@@ -68,6 +71,9 @@ public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHan
             if (Mathf.Abs(otherPos.x - spawnPos.x) < marginX && Mathf.Abs(otherPos.y - spawnPos.y) < marginY)
             {
                 Debug.Log("Ya existe un botón en el centro. No se creará uno nuevo.");
+
+                string cad = "Ya existe un botón en el centro.";
+                StartCoroutine(instanceEditarRestauranteController.MovimientoCartelDeMadera(2f, cad, 0f));
                 return;
             }
         }

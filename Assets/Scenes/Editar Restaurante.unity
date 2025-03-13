@@ -7342,6 +7342,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcd0b389e2c47244fbe38852dc15277a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  textError: {fileID: 981127894}
   containerRect: {fileID: 99731598}
   rectTransform: {fileID: 0}
 --- !u!1 &1948376703

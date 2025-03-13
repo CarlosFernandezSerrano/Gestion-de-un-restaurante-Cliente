@@ -43,9 +43,16 @@ public class EditarRestauranteController : MonoBehaviour
     ButtonMesaController instanceButtonMesaController;
     MétodosAPIController instanceMétodosApiController;
 
+    public static EditarRestauranteController InstanceEditarRestauranteController { get; private set; }
+
 
     void Awake()
     {
+        if (InstanceEditarRestauranteController == null)
+        {
+            InstanceEditarRestauranteController = this;
+        }
+
         SceneManager.LoadSceneAsync("General Controller", LoadSceneMode.Additive);
     }
 
@@ -499,25 +506,22 @@ public class EditarRestauranteController : MonoBehaviour
                         if (PlayerPrefs.GetString("TipoIdioma").CompareTo("Español") == 0 || PlayerPrefs.GetString("TipoIdioma") == null)
                         {
                             Debug.Log("El restaurante ya existe.");
-                            textError.text = "No se puede cambiar el nombre, ya existe";
-                            StartCoroutine(MovimientoCartelDeMadera());
+                            string cad2 = "No se puede cambiar el nombre, ya existe";
+                            StartCoroutine(MovimientoCartelDeMadera(2f, cad2, 8.4f));
                         }
                         else
                         {
                             Debug.Log("El restaurante ya existe.");
-                            textError.text = "No se puede cambiar el nombre, ya existe";
-                            StartCoroutine(MovimientoCartelDeMadera());
+                            string cad3 = "No se puede cambiar el nombre, ya existe";
+                            StartCoroutine(MovimientoCartelDeMadera(2f, cad3, 8.4f));
                         }
                         return false;
                 }
             }
             else
             {
-                RectTransform rt = textError.gameObject.GetComponent<RectTransform>();
-                rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, 0f); // Cambio la "y" del texto para que se vea bien en el cartel
-
-                textError.text = "Nombre tiene menos de 3 caracteres";
-                StartCoroutine(MovimientoCartelDeMadera());
+                string cad4 = "Nombre tiene menos de 3 caracteres";
+                StartCoroutine(MovimientoCartelDeMadera(2f, cad4, 0f));
                 Debug.Log("Nombre tiene menos de 3 caracteres");
                 return false;
             }
@@ -603,9 +607,14 @@ public class EditarRestauranteController : MonoBehaviour
         SceneManager.LoadScene("Main");
     }
 
-    private IEnumerator MovimientoCartelDeMadera()
+    public IEnumerator MovimientoCartelDeMadera(float tiempoDeEspera, string cad, float posYTexto)
     {
         buttonGuardar.interactable = false;
+
+        RectTransform rt = textError.gameObject.GetComponent<RectTransform>();
+        rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, posYTexto); // Cambio la "y" del texto para que se vea bien en el cartel
+
+        textError.text = cad;
 
         // Subo el cartel
         for (int i = 0; i < 180; i++)
@@ -620,8 +629,8 @@ public class EditarRestauranteController : MonoBehaviour
             yield return new WaitForSeconds(0.001f);
         }
 
-        // Espero 2 segundos
-        yield return new WaitForSeconds(2f);
+        // Espero X segundos
+        yield return new WaitForSeconds(tiempoDeEspera);
 
         // Bajo el cartel
         for (int i = 0; i < 180; i++)
