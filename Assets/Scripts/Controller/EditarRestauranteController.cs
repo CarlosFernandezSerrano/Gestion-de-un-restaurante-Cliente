@@ -27,7 +27,7 @@ public class EditarRestauranteController : MonoBehaviour
     [SerializeField] private UnityEngine.UI.Button buttonAñadirMesa;
     [SerializeField] private RectTransform imgCartel;
     [SerializeField] private TMP_Text textError;
-
+    [SerializeField] private UnityEngine.UI.Button botónPapelera;
 
     private string NombreRestaurante;
     private string HoraApertura;
@@ -646,5 +646,15 @@ public class EditarRestauranteController : MonoBehaviour
         }
 
         buttonGuardar.interactable = true;
+    }
+
+    public void ActivarPapelera()
+    {
+        botónPapelera.interactable = true;
+    }
+
+    public void DesactivarPapelera()
+    {
+        botónPapelera.interactable = false;
     }
 }

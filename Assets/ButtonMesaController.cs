@@ -8,6 +8,8 @@ using UnityEngine.UI;
 
 public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHandler, IScrollHandler
 {
+    public static ButtonMesaController buttonSeleccionado;
+
     [Header("Referencias")]
     // Imagen contenedora que limitará los botones (debe tener RectTransform)
     public RectTransform containerRect;
@@ -113,7 +115,42 @@ public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHan
     // Detecta cuando se presiona el botón (inicia el arrastre)
     public void OnPointerDown(PointerEventData eventData)
     {
-        isDragging = true;
+        //isDragging = true;
+
+        // Verificar si este objeto es hijo del contenedorPadre
+        if (transform.parent != containerRect.transform)
+        {
+            Debug.Log("Este botón no es hijo del contenedor permitido.");
+            return; // Salir si no es hijo
+        }
+
+        // Si se pulsa con clic derecho, se marca este botón
+        if (eventData.button == PointerEventData.InputButton.Right)
+        {
+            // Actualizamos la referencia del botón seleccionado
+            buttonSeleccionado = this;
+            Debug.Log("Botón marcado: " + gameObject.name);
+            
+            instanceEditarRestauranteController.ActivarPapelera();
+            // (Opcional) Aquí puedes cambiar el color o aplicar alguna animación para indicar selección.
+            isDragging = false; // No queremos que inicie un arrastre con clic derecho.
+            return;
+        }
+        // Si se pulsa con clic izquierdo
+        else if (eventData.button == PointerEventData.InputButton.Left)
+        {
+            // Si el clic izquierdo es en algo que no es el botón papelera, se desmarca
+            // Aquí asumimos que al botón papelera le asignarás un Tag, por ejemplo "TrashButton"
+            if (!gameObject.CompareTag("TrashButton"))
+            {
+                // Si se ha marcado algún botón previamente y se hace clic en otro elemento,
+                // se deselecciona el botón marcado.
+                buttonSeleccionado = null;
+                instanceEditarRestauranteController.DesactivarPapelera();
+                Debug.Log("Selección desmarcada");
+            }
+            isDragging = true;
+        }
     }
 
     // Mientras se arrastra, actualiza la posición y la limita al contenedor
@@ -247,5 +284,22 @@ public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHan
                 return true;
         }
         return false;
+    }
+
+    public void GestionarPapelera()
+    {
+        Debug.Log("He pulsado papelera; Botón marcado: " + buttonSeleccionado.gameObject.name);
+
+        string nombreBotón = buttonSeleccionado.gameObject.name;
+        if (nombreBotón.CompareTo("Button") == 0)
+        {
+            Destroy(buttonSeleccionado.gameObject);
+        }
+        else
+        {
+            Debug.Log("Button con número");
+        }
+
+        
     }
 }
