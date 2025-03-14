@@ -75,7 +75,7 @@ public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHan
                 Debug.Log("Ya existe un botón en el centro. No se creará uno nuevo.");
 
                 string cad = "Ya existe un botón en el centro.";
-                StartCoroutine(instanceEditarRestauranteController.MovimientoCartelDeMadera(2f, cad, 0f));
+                StartCoroutine(instanceEditarRestauranteController.MovimientoCartelDeMadera(2f, cad, 0f, 12f));
                 return;
             }
         }

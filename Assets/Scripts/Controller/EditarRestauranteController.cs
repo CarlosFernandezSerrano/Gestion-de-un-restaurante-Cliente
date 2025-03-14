@@ -227,7 +227,6 @@ public class EditarRestauranteController : MonoBehaviour
 
     public void Guardar()
     {
-        StartCoroutine(MostrarManosAdvertencia(1f,"","")); //Par ver cómo se ve, luego quitar línea de aquí
         GestionarGuardarDatosRestauranteAsync();
     }
 
@@ -433,11 +432,11 @@ public class EditarRestauranteController : MonoBehaviour
                 // Buscamos el botón en el contenedor de botones.
                 Transform botonTransform = buttonParent.Find(nombreBoton);
 
-                // Si no se encuentra el botón, se detecta un cambio.
+                // Si no se encuentra el botón, se detecta un cambio, pero no lo guardo porque cuando elimino se guarda ese cambio en la BDD.
                 if (botonTransform == null)
                 {
                     Debug.Log("Cambio detectado: El botón " + nombreBoton + " no existe, ha sido eliminado.");
-                    return true;
+                    continue;
                 }
 
                 // Obtenemos el RectTransform para acceder a la posición y escala.
@@ -510,13 +509,13 @@ public class EditarRestauranteController : MonoBehaviour
                         {
                             Debug.Log("El restaurante ya existe.");
                             string cad2 = "No se puede cambiar el nombre, ya existe";
-                            StartCoroutine(MovimientoCartelDeMadera(2f, cad2, 8.4f));
+                            StartCoroutine(MovimientoCartelDeMadera(2f, cad2, 8.4f, 12f));
                         }
                         else
                         {
                             Debug.Log("El restaurante ya existe.");
                             string cad3 = "The name cannot be changed, it already exists.";
-                            StartCoroutine(MovimientoCartelDeMadera(2f, cad3, 8.4f));
+                            StartCoroutine(MovimientoCartelDeMadera(2f, cad3, 6f, 11f));
                         }
                         return false;
                 }
@@ -524,7 +523,7 @@ public class EditarRestauranteController : MonoBehaviour
             else
             {
                 string cad4 = "Nombre tiene menos de 3 caracteres";
-                StartCoroutine(MovimientoCartelDeMadera(2f, cad4, 0f));
+                StartCoroutine(MovimientoCartelDeMadera(2f, cad4, 0f, 12f));
                 Debug.Log("Nombre tiene menos de 3 caracteres");
                 return false;
             }
@@ -610,13 +609,14 @@ public class EditarRestauranteController : MonoBehaviour
         SceneManager.LoadScene("Main");
     }
 
-    public IEnumerator MovimientoCartelDeMadera(float tiempoDeEspera, string cad, float posYTexto)
+    public IEnumerator MovimientoCartelDeMadera(float tiempoDeEspera, string cad, float posYTexto, float tamañoLetra)
     {
         buttonGuardar.interactable = false;
 
         RectTransform rt = textError.gameObject.GetComponent<RectTransform>();
         rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, posYTexto); // Cambio la "y" del texto para que se vea bien en el cartel
 
+        textError.fontSize = tamañoLetra; // Pongo el tamaño de letra que quiero
         textError.text = cad;
 
         // Subo el cartel
@@ -677,11 +677,11 @@ public class EditarRestauranteController : MonoBehaviour
         }
     }
 
-    public async void GestionarEliminarMesaEnBDDAsync(int numMesa)
+    public async void GestionarEliminarMesaEnBDDAsync(int idMesa)
     {
-        Debug.Log("Número obtenido del botón que se quiere eliminar:" + numMesa + "*");
+        Debug.Log("Número obtenido del botón que se quiere eliminar:" + idMesa + "*");
         //Compruebo si tiene reservas esa mesa
-        string cad = await instanceMétodosApiController.GetDataAsync("reserva/existe/"+numMesa);
+        string cad = await instanceMétodosApiController.GetDataAsync("reserva/existe/"+idMesa);
 
         // Deserializo la respuesta
         Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
@@ -693,19 +693,24 @@ public class EditarRestauranteController : MonoBehaviour
         }
         else // La mesa no tiene ninguna reserva, se puede eliminar de la BDD sin problemas
         {
-            string cad2 = await instanceMétodosApiController.DeleteDataAsync();
+            string cad2 = await instanceMétodosApiController.DeleteDataAsync("mesa/borrarxid/"+idMesa);
 
             // Deserializo la respuesta
-            Resultado resultado2 = JsonConvert.DeserializeObject<Resultado>(cad);
+            Resultado resultado2 = JsonConvert.DeserializeObject<Resultado>(cad2);
 
             // Mesa eliminada correctamente
             if (resultado2.Result.Equals(1))
             {
-                Debug.Log("Mesa eliminado correctamente");
+                Debug.Log("Mesa "+idMesa+ " eliminada correctamente en la BDD.");
+                
+                //Elimino también la mesa en el editor del restaurante
+                // Busco el botón en el contenedor de botones.
+                Transform botonTransform = buttonParent.Find("Button-"+idMesa);
+                Destroy(botonTransform.gameObject);
             }
             else
             {
-                Debug.Log("Fallo al intentar eliminar mesa");
+                Debug.Log("Fallo al intentar eliminar mesa: "+idMesa+" en la BDD.");
             }
         }
     }

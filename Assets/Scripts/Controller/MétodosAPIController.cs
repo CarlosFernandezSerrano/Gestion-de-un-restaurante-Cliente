@@ -180,41 +180,38 @@ public class MétodosAPIController : MonoBehaviour
         }
     }
 
-    public async Task<string> DeleteDataAsync(string cad, object objeto)
+    public async Task<string> DeleteDataAsync(string cad)
     {
         string url = "https://localhost:7233/" + cad;
 
-        // Convierto el objeto a JSON
-        string json = JsonConvert.SerializeObject(objeto);
-        byte[] jsonBytes = Encoding.UTF8.GetBytes(json);
-        Debug.Log("JSON enviado: " + json);
-
-        // Creo la solicitud POST
-        using (UnityWebRequest request = new UnityWebRequest(url, "DELETE"))
+        // Usamos el método Delete que ya configura la petición DELETE sin cuerpo.
+        using (UnityWebRequest request = UnityWebRequest.Delete(url))
         {
-            request.uploadHandler = new UploadHandlerRaw(jsonBytes);
+            // Asignamos un DownloadHandler para poder recibir respuesta
             request.downloadHandler = new DownloadHandlerBuffer();
+
+            // Si el servidor requiere el header Content-Type, se puede agregar.
             request.SetRequestHeader("Content-Type", "application/json");
 
-            // Enviamos la solicitud
+            // Enviamos la solicitud de forma asíncrona
             var operation = request.SendWebRequest();
 
-            // Espero sin bloquear el hilo principal
+            // Esperamos sin bloquear el hilo principal
             while (!operation.isDone)
             {
                 await Task.Yield();
             }
 
-            // Verifico si hubo un error
+            // Verificamos si hubo error en la petición
             if (request.result != UnityWebRequest.Result.Success)
             {
                 Debug.LogError("Error: " + request.error);
                 return null;
             }
 
-            // Obtengo la respuesta JSON
+            // Obtenemos la respuesta del servidor
             string jsonResponse = request.downloadHandler.text;
-            Debug.Log("Respuesta PUT en JSON: " + jsonResponse);
+            Debug.Log("Respuesta DELETE en JSON: " + jsonResponse);
 
             return jsonResponse;
         }
