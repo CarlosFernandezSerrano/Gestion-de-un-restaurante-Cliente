@@ -250,7 +250,7 @@ public class MainController : MonoBehaviour
     }
 
     // Intercepta el intento de cerrar la aplicación (por ejemplo, con Alt + F4 o clic en el botón de cierre de la ventana).
-    private bool OnWantsToQuitAsync() //Hacer que no funcione este método hasta que una parte del programa cargue que es la generación del lobby (creo, no estoy seguro)
+    private bool OnWantsToQuitAsync() // Hacer que no funcione este método hasta que una parte del programa cargue que es la generación del lobby (creo, no estoy seguro)
     {
         Debug.Log("Interceptando Alt + F4 o cierre manual.");
         

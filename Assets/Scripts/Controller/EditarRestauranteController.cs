@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TMPro;
@@ -29,6 +30,9 @@ public class EditarRestauranteController : MonoBehaviour
     [SerializeField] private TMP_Text textError;
     [SerializeField] private UnityEngine.UI.Button botónPapelera;
     [SerializeField] private RectTransform rtManosAdvertencia;
+    [SerializeField] private RectTransform rtObjetoSello;
+    [SerializeField] private RawImage imgSelloTintaEN;
+    [SerializeField] private RawImage imgSelloTintaES;
 
     private string NombreRestaurante;
     private string HoraApertura;
@@ -284,6 +288,7 @@ public class EditarRestauranteController : MonoBehaviour
         if (resultado.Result.Equals(1))
         {
             Debug.Log("Actualización exitosa");
+            StartCoroutine(MostrarObjetoSello());
         }
         else
         {
@@ -713,5 +718,95 @@ public class EditarRestauranteController : MonoBehaviour
                 Debug.Log("Fallo al intentar eliminar mesa: "+idMesa+" en la BDD.");
             }
         }
+    }
+
+    private IEnumerator MostrarObjetoSello()
+    {
+        // Muevo el sello hacia la izquierda
+        while (rtObjetoSello.anchoredPosition.x > 0)
+        {
+            // Actualizo 
+            float x = rtObjetoSello.anchoredPosition.x - 2;
+
+            // Pinto
+            rtObjetoSello.anchoredPosition = new Vector2(x, rtObjetoSello.anchoredPosition.y);
+
+            // Espero
+            yield return null;
+        }
+
+        // Reducir la escala del sello
+        for (int i = 0; i < 20; i++)
+        {
+            // Actualizo
+            float x = rtObjetoSello.localScale.x - 0.005f;
+            float y = rtObjetoSello.localScale.y - 0.005f;
+
+            // Pinto
+            rtObjetoSello.localScale = new Vector3(x, y, rtObjetoSello.localScale.z);
+
+            // Espero
+            yield return new WaitForSeconds(0.003f);
+        }
+
+        if (PlayerPrefs.GetString("TipoIdioma", "Español").CompareTo("Español") == 0)
+        {
+            imgSelloTintaES.gameObject.SetActive(true);
+            StartCoroutine(HacerDesaparecerLentamenteElTextoAAdivinar(1, imgSelloTintaES));
+        }
+        else
+        {
+            imgSelloTintaEN.gameObject.SetActive(true);
+            StartCoroutine(HacerDesaparecerLentamenteElTextoAAdivinar(1, imgSelloTintaEN));
+        }
+
+        // Aumentar la escala del sello
+        for (int i = 0; i < 20; i++)
+        {
+            // Actualizo
+            float x = rtObjetoSello.localScale.x + 0.005f;
+            float y = rtObjetoSello.localScale.y + 0.005f;
+
+            // Pinto
+            rtObjetoSello.localScale = new Vector3(x, y, rtObjetoSello.localScale.z);
+
+            // Espero
+            yield return new WaitForSeconds(0.003f);
+        }
+
+        // Muevo el sello hacia la derecha
+        while (rtObjetoSello.anchoredPosition.x < 1295)
+        {
+            // Actualizo 
+            float x = rtObjetoSello.anchoredPosition.x + 2;
+
+            // Pinto
+            rtObjetoSello.anchoredPosition = new Vector2(x, rtObjetoSello.anchoredPosition.y);
+
+            // Espero
+            yield return null;
+        }
+    }
+
+    private IEnumerator HacerDesaparecerLentamenteElTextoAAdivinar(int duration, RawImage rawImage)
+    {
+        // Hago la imagen visible primero poniendo el valor a = "Alpha" en 1
+        rawImage.color = new UnityEngine.Color(rawImage.color.r, rawImage.color.g, rawImage.color.b, 1f);
+        
+        yield return new WaitForSeconds(0.5f); // Espero x segundos para que se vea bien la imagen antes de hacerla desaparecer.
+
+        // Muestro la tinta del sello lentamente
+        float elapsedTime = 0f;
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float alpha = Mathf.Lerp(1f, 0f, elapsedTime / duration); // Interpola de 1 a 0 (totalmente visible a invisible)
+
+            // Aplico el valor alfa interpolado a cada imagen
+            rawImage.color = new UnityEngine.Color(rawImage.color.r, rawImage.color.g, rawImage.color.b, alpha);
+
+            yield return null; // Espera un frame antes de continuar el bucle
+        }
+        rawImage.gameObject.SetActive(false);
     }
 }
