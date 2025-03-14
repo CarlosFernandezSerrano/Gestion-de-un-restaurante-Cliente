@@ -39,6 +39,8 @@ public class EditarRestauranteController : MonoBehaviour
     private string HoraCierre;
     private List<Mesa> Mesas;
 
+    private int idMesaAEliminar;
+
     // Contenedor padre donde se agregarán los botones
     public RectTransform buttonParent;
 
@@ -684,6 +686,7 @@ public class EditarRestauranteController : MonoBehaviour
 
     public async void GestionarEliminarMesaEnBDDAsync(int idMesa)
     {
+        idMesaAEliminar = idMesa;
         Debug.Log("Número obtenido del botón que se quiere eliminar:" + idMesa + "*");
         //Compruebo si tiene reservas esa mesa
         string cad = await instanceMétodosApiController.GetDataAsync("reserva/existe/"+idMesa);
@@ -698,25 +701,7 @@ public class EditarRestauranteController : MonoBehaviour
         }
         else // La mesa no tiene ninguna reserva, se puede eliminar de la BDD sin problemas
         {
-            string cad2 = await instanceMétodosApiController.DeleteDataAsync("mesa/borrarxid/"+idMesa);
-
-            // Deserializo la respuesta
-            Resultado resultado2 = JsonConvert.DeserializeObject<Resultado>(cad2);
-
-            // Mesa eliminada correctamente
-            if (resultado2.Result.Equals(1))
-            {
-                Debug.Log("Mesa "+idMesa+ " eliminada correctamente en la BDD.");
-                
-                //Elimino también la mesa en el editor del restaurante
-                // Busco el botón en el contenedor de botones.
-                Transform botonTransform = buttonParent.Find("Button-"+idMesa);
-                Destroy(botonTransform.gameObject);
-            }
-            else
-            {
-                Debug.Log("Fallo al intentar eliminar mesa: "+idMesa+" en la BDD.");
-            }
+            EliminarMesaEnBDDAsync(idMesa);
         }
     }
 
@@ -808,5 +793,48 @@ public class EditarRestauranteController : MonoBehaviour
             yield return null; // Espera un frame antes de continuar el bucle
         }
         rawImage.gameObject.SetActive(false);
+    }
+
+    public void CancelarEliminarMesaConReservas()
+    {
+        EsconderManosAdvertencia();
+    }
+
+    private void EsconderManosAdvertencia()
+    {
+        rtManosAdvertencia.gameObject.SetActive(false);
+        rtManosAdvertencia.anchoredPosition = new Vector2(rtManosAdvertencia.anchoredPosition.x, -898f);
+        rtManosAdvertencia.gameObject.SetActive(true);
+    }
+
+    public void EliminarMesaConReservas()
+    {
+        Debug.Log("Ver si pillo correctamente el nombre del id que quiero eliminar: " + idMesaAEliminar);
+        EliminarMesaEnBDDAsync(idMesaAEliminar);
+    }
+
+    private async void EliminarMesaEnBDDAsync(int idMesa)
+    {
+        string cad2 = await instanceMétodosApiController.DeleteDataAsync("mesa/borrarxid/" + idMesaAEliminar);
+
+        // Deserializo la respuesta
+        Resultado resultado2 = JsonConvert.DeserializeObject<Resultado>(cad2);
+
+        // Mesa eliminada correctamente
+        if (resultado2.Result.Equals(1))
+        {
+            Debug.Log("Mesa " + idMesa + " eliminada correctamente en la BDD.");
+
+            //Elimino también la mesa en el editor del restaurante
+            // Busco el botón en el contenedor de botones.
+            Transform botonTransform = buttonParent.Find("Button-" + idMesa);
+            Destroy(botonTransform.gameObject);
+        }
+        else
+        {
+            Debug.Log("Fallo al intentar eliminar mesa: " + idMesa + " en la BDD.");
+        }
+
+        EsconderManosAdvertencia(); // Por si las manos de advertencia se están mostrando
     }
 }
