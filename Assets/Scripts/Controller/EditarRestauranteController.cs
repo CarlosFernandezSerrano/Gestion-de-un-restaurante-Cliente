@@ -146,7 +146,7 @@ public class EditarRestauranteController : MonoBehaviour
     private void CrearBotonMesa(Mesa mesa)
     {
         // Crear un GameObject para el botón y asignarle un nombre único.
-        GameObject botonGO = new GameObject("Button" + mesa.Id);
+        GameObject botonGO = new GameObject("Button-" + mesa.Id);
 
         // Establecer el padre para que se muestre en el UI.
         botonGO.transform.SetParent(buttonParent, false);
@@ -332,8 +332,8 @@ public class EditarRestauranteController : MonoBehaviour
         // Recorro cada mesa en la lista del restaurante.
         foreach (Mesa mesa in Mesas)
         {
-            // Generamos el nombre que asignamos al botón (por ejemplo, "Button1" para la mesa con Id = 1).
-            string nombreBoton = "Button" + mesa.Id;
+            // Generamos el nombre que asignamos al botón (por ejemplo, "Button-1" para la mesa con Id = 1).
+            string nombreBoton = "Button-" + mesa.Id;
 
             // Buscamos el botón en el contenedor de botones.
             Transform botonTransform = buttonParent.Find(nombreBoton);
@@ -428,7 +428,7 @@ public class EditarRestauranteController : MonoBehaviour
             foreach (Mesa mesa in Mesas)
             {
                 // Generamos el nombre que asignamos al botón (por ejemplo, "Button1" para la mesa con Id = 1).
-                string nombreBoton = "Button" + mesa.Id;
+                string nombreBoton = "Button-" + mesa.Id;
 
                 // Buscamos el botón en el contenedor de botones.
                 Transform botonTransform = buttonParent.Find(nombreBoton);
@@ -674,6 +674,39 @@ public class EditarRestauranteController : MonoBehaviour
             // Espero
             yield return null;
 
+        }
+    }
+
+    public async void GestionarEliminarMesaEnBDDAsync(int numMesa)
+    {
+        Debug.Log("Número obtenido del botón que se quiere eliminar:" + numMesa + "*");
+        //Compruebo si tiene reservas esa mesa
+        string cad = await instanceMétodosApiController.GetDataAsync("reserva/existe/"+numMesa);
+
+        // Deserializo la respuesta
+        Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
+
+        // La mesa tiene una o varias reservas en la BDD
+        if (resultado.Result.Equals(1))
+        {
+            StartCoroutine(MostrarManosAdvertencia(1f, "", ""));
+        }
+        else // La mesa no tiene ninguna reserva, se puede eliminar de la BDD sin problemas
+        {
+            string cad2 = await instanceMétodosApiController.DeleteDataAsync();
+
+            // Deserializo la respuesta
+            Resultado resultado2 = JsonConvert.DeserializeObject<Resultado>(cad);
+
+            // Mesa eliminada correctamente
+            if (resultado2.Result.Equals(1))
+            {
+                Debug.Log("Mesa eliminado correctamente");
+            }
+            else
+            {
+                Debug.Log("Fallo al intentar eliminar mesa");
+            }
         }
     }
 }

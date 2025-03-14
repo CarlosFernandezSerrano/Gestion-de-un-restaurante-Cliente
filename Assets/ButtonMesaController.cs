@@ -291,15 +291,19 @@ public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHan
         Debug.Log("He pulsado papelera; Botón marcado: " + buttonSeleccionadoParaBorrar.gameObject.name);
 
         string nombreBotón = buttonSeleccionadoParaBorrar.gameObject.name;
-        // Si el botón seleccionado para borrar no está registrado en la BDD, lo eliino sólo en la memoria.
+        // Si el botón seleccionado para ser borrado no está registrado en la BDD, lo eliino sólo en la memoria.
         if (nombreBotón.CompareTo("Button") == 0)
         {
             Destroy(buttonSeleccionadoParaBorrar.gameObject);
         }
-        else // El botón seleccionado para eliminar/borrar está registrado en la BDD 
+        else // El botón seleccionado para ser eliminado/borrado está registrado en la BDD 
         {
             Debug.Log("Button con número");
 
+            string[] array = nombreBotón.Split("-");
+            Debug.Log("Número:" + array[1] + "*");
+            int num = int.Parse(array[1]);
+            instanceEditarRestauranteController.GestionarEliminarMesaEnBDDAsync(num);
         }
 
         // Una vez usada la papelera, la desactivo
