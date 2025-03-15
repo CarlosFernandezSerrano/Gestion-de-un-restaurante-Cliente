@@ -670,18 +670,23 @@ public class EditarRestauranteController : MonoBehaviour
 
     public IEnumerator MostrarManosAdvertencia(float tiempoDeEspera, string cad1, string cad2)
     {
-        for (int i = 0; i < 710; i++)
+        float y = rtManosAdvertencia.anchoredPosition.y;
+        Debug.Log("Y: " + y);
+        while (y < -188)
         {
             // Actualizo 
-            float y = rtManosAdvertencia.anchoredPosition.y + 1;
+            y = rtManosAdvertencia.anchoredPosition.y + 2;
 
             // Pinto
             rtManosAdvertencia.anchoredPosition = new Vector2(rtManosAdvertencia.anchoredPosition.x, y);
 
             // Espero
             yield return null;
-
         }
+        
+        /*for (int i = 0; i < 710; i++)
+        {
+        }*/
     }
 
     public async void GestionarEliminarMesaEnBDDAsync(int idMesa)
