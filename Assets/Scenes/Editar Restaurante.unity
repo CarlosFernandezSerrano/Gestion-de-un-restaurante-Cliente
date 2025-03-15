@@ -1356,7 +1356,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &194037518
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6487,7 +6487,7 @@ MonoBehaviour:
   textError: {fileID: 981127894}
   "bot\xF3nPapelera": {fileID: 609120621}
   rtManosAdvertencia: {fileID: 252994139}
-  rtObjetoSello: {fileID: 194037518}
+  rtImgObjetoSello: {fileID: 194037518}
   imgSelloTintaEN: {fileID: 1006258031}
   imgSelloTintaES: {fileID: 96551129}
   buttonParent: {fileID: 99731598}

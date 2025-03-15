@@ -30,7 +30,7 @@ public class EditarRestauranteController : MonoBehaviour
     [SerializeField] private TMP_Text textError;
     [SerializeField] private UnityEngine.UI.Button botónPapelera;
     [SerializeField] private RectTransform rtManosAdvertencia;
-    [SerializeField] private RectTransform rtObjetoSello;
+    [SerializeField] private RectTransform rtImgObjetoSello;
     [SerializeField] private RawImage imgSelloTintaEN;
     [SerializeField] private RawImage imgSelloTintaES;
 
@@ -707,14 +707,16 @@ public class EditarRestauranteController : MonoBehaviour
 
     private IEnumerator MostrarObjetoSello()
     {
+        rtImgObjetoSello.gameObject.SetActive(true);
+
         // Muevo el sello hacia la izquierda
-        while (rtObjetoSello.anchoredPosition.x > 0)
+        while (rtImgObjetoSello.anchoredPosition.x > 0)
         {
             // Actualizo 
-            float x = rtObjetoSello.anchoredPosition.x - 2;
+            float x = rtImgObjetoSello.anchoredPosition.x - 2;
 
             // Pinto
-            rtObjetoSello.anchoredPosition = new Vector2(x, rtObjetoSello.anchoredPosition.y);
+            rtImgObjetoSello.anchoredPosition = new Vector2(x, rtImgObjetoSello.anchoredPosition.y);
 
             // Espero
             yield return null;
@@ -724,11 +726,11 @@ public class EditarRestauranteController : MonoBehaviour
         for (int i = 0; i < 20; i++)
         {
             // Actualizo
-            float x = rtObjetoSello.localScale.x - 0.005f;
-            float y = rtObjetoSello.localScale.y - 0.005f;
+            float x = rtImgObjetoSello.localScale.x - 0.005f;
+            float y = rtImgObjetoSello.localScale.y - 0.005f;
 
             // Pinto
-            rtObjetoSello.localScale = new Vector3(x, y, rtObjetoSello.localScale.z);
+            rtImgObjetoSello.localScale = new Vector3(x, y, rtImgObjetoSello.localScale.z);
 
             // Espero
             yield return new WaitForSeconds(0.003f);
@@ -749,28 +751,30 @@ public class EditarRestauranteController : MonoBehaviour
         for (int i = 0; i < 20; i++)
         {
             // Actualizo
-            float x = rtObjetoSello.localScale.x + 0.005f;
-            float y = rtObjetoSello.localScale.y + 0.005f;
+            float x = rtImgObjetoSello.localScale.x + 0.005f;
+            float y = rtImgObjetoSello.localScale.y + 0.005f;
 
             // Pinto
-            rtObjetoSello.localScale = new Vector3(x, y, rtObjetoSello.localScale.z);
+            rtImgObjetoSello.localScale = new Vector3(x, y, rtImgObjetoSello.localScale.z);
 
             // Espero
             yield return new WaitForSeconds(0.003f);
         }
 
         // Muevo el sello hacia la derecha
-        while (rtObjetoSello.anchoredPosition.x < 1295)
+        while (rtImgObjetoSello.anchoredPosition.x < 1295)
         {
             // Actualizo 
-            float x = rtObjetoSello.anchoredPosition.x + 2;
+            float x = rtImgObjetoSello.anchoredPosition.x + 2;
 
             // Pinto
-            rtObjetoSello.anchoredPosition = new Vector2(x, rtObjetoSello.anchoredPosition.y);
+            rtImgObjetoSello.anchoredPosition = new Vector2(x, rtImgObjetoSello.anchoredPosition.y);
 
             // Espero
             yield return null;
         }
+
+        rtImgObjetoSello.gameObject.SetActive(false);
     }
 
     private IEnumerator HacerDesaparecerLentamenteElTextoAAdivinar(int duration, RawImage rawImage)
