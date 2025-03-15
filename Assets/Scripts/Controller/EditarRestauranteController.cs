@@ -671,7 +671,7 @@ public class EditarRestauranteController : MonoBehaviour
     public IEnumerator MostrarManosAdvertencia(float tiempoDeEspera, string cad1, string cad2)
     {
         float y = rtManosAdvertencia.anchoredPosition.y;
-        Debug.Log("Y: " + y);
+
         while (y < -188)
         {
             // Actualizo 
@@ -682,11 +682,7 @@ public class EditarRestauranteController : MonoBehaviour
 
             // Espero
             yield return null;
-        }
-        
-        /*for (int i = 0; i < 710; i++)
-        {
-        }*/
+        }        
     }
 
     public async void GestionarEliminarMesaEnBDDAsync(int idMesa)
@@ -845,5 +841,10 @@ public class EditarRestauranteController : MonoBehaviour
         }
 
         EsconderManosAdvertencia(); // Por si las manos de advertencia se están mostrando
+    }
+
+    public void GestionarCrearNuevoBotón()
+    {
+        throw new NotImplementedException();
     }
 }

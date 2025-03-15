@@ -80,6 +80,9 @@ public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHan
             }
         }
 
+        // Gestionar cantidad de comensales a la mesa
+        instanceEditarRestauranteController.GestionarCrearNuevoBotón();
+        /*
         // Crear un nuevo GameObject para el botón
         GameObject newButtonObj = new GameObject("Button");
         // El nuevo botón se creará como hijo del contenedor, NO del Canvas
@@ -110,6 +113,7 @@ public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHan
         ButtonMesaController bm = newButtonObj.AddComponent<ButtonMesaController>();
         bm.containerRect = this.containerRect;  // Asigna el mismo contenedor
         bm.rectTransform = newRect;              // Asigna el RectTransform del nuevo botón
+        */
     }
 
     // Detecta cuando se presiona el botón (inicia el arrastre)
