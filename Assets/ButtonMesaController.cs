@@ -14,9 +14,6 @@ public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHan
     // Imagen contenedora que limitará los botones (debe tener RectTransform)
     public RectTransform containerRect;
 
-    // Nombre de la imagen en Resources que se usará en el botón
-    private string ImageName = "mantelMesa";
-
     public RectTransform rectTransform; // RectTransform del botón generado
     private bool isDragging = false;
 

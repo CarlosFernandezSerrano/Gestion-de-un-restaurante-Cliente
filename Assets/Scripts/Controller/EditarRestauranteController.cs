@@ -8,13 +8,9 @@ using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
-using static UnityEngine.GraphicsBuffer;
 using Image = UnityEngine.UI.Image;
 
 public class EditarRestauranteController : MonoBehaviour
@@ -879,7 +875,6 @@ public class EditarRestauranteController : MonoBehaviour
 
         // Crear un nuevo GameObject, la imagen del botón
         CrearImgsDelButton(rectButton);
-        
 
         StartCoroutine(CrearUnHijoInputFieldDelBotónMesa(newButtonObj, cantComensales));
 
@@ -892,6 +887,12 @@ public class EditarRestauranteController : MonoBehaviour
 
     private void CrearImgsDelButton(RectTransform newRect)
     {
+        CrearImgCircle(newRect);
+        CrearImgRectangle(newRect);
+    }    
+
+    private void CrearImgCircle(RectTransform newRect)
+    {
         // Creo el objeto
         GameObject imgObject = new GameObject("Imagen");
         // El nuevo botón se creará como hijo del contenedor, NO del Canvas
@@ -900,7 +901,7 @@ public class EditarRestauranteController : MonoBehaviour
         // Agrego y configuro el RectTransform: posición central y tamaño predeterminado
         RectTransform rectButton = imgObject.AddComponent<RectTransform>();
         rectButton.anchoredPosition = Vector2.zero;
-        rectButton.sizeDelta = new Vector2(85, 85); // Ejemplo de tamaño
+        rectButton.sizeDelta = new Vector2(85, 85); // Tamaño (ancho/alto)
 
         // Agrego un componente Image
         Image img = imgObject.AddComponent<Image>();
@@ -913,6 +914,49 @@ public class EditarRestauranteController : MonoBehaviour
         {
             Debug.LogWarning("No se encontró la imagen en Resources: circle perfect 1.0");
         }
+    }
+
+    private void CrearImgRectangle(RectTransform newRect)
+    {
+        // Creo el objeto
+        GameObject imgObject = new GameObject("Imagen");
+        // El nuevo botón se creará como hijo del contenedor, NO del Canvas
+        imgObject.transform.SetParent(newRect, false);
+
+        // Agrego y configuro el RectTransform: posición central y tamaño predeterminado
+        RectTransform rectImg = imgObject.AddComponent<RectTransform>();
+        rectImg.anchoredPosition = new Vector2(-60, 33); // x e y
+        rectImg.sizeDelta = new Vector2(30, 20); // Tamaño (ancho/alto)
+
+        // Agrego un componente Image
+        Image img = imgObject.AddComponent<Image>();
+        /*Sprite newSprite = Resources.Load<Sprite>("Editar Restaurante/circle perfect 1.0");
+        if (newSprite != null)
+        {
+            img.sprite = newSprite;
+        }
+        else
+        {
+            Debug.LogWarning("No se encontró la imagen en Resources: circle perfect 1.0");
+        }*/
+
+        // Creo un gameObject TMP_Text y lo pongo de hijo en el objeto imagen rectángulo
+        GameObject textObject = new GameObject("Text");
+        // El nuevo botón se creará como hijo del contenedor, NO del Canvas
+        textObject.transform.SetParent(rectImg, false);
+
+        // Agrego y configuro el RectTransform: posición central y tamaño predeterminado
+        RectTransform rectText = textObject.AddComponent<RectTransform>();
+        rectText.anchoredPosition = Vector2.zero;
+        rectText.sizeDelta = new Vector2(40, 30); // Tamaño (ancho/alto)
+
+        // Agrego un componente Image
+        TMP_Text text = textObject.AddComponent<TextMeshProUGUI>();
+        text.alignment = TextAlignmentOptions.Center; // Centro el texto
+        text.text = "22";
+        text.fontSize = 32;
+        text.fontStyle = FontStyles.Bold;
+
     }
 
     private IEnumerator CrearUnHijoInputFieldDelBotónMesa(GameObject newButtonObj, int cantComensales)
@@ -973,13 +1017,17 @@ public class EditarRestauranteController : MonoBehaviour
             Debug.Log("Error: "+ex);
         }
         // Si se ha puesto un número superior a 0, se crea el botón y se cierra el contenedor de asignar comensales a una mesa nueva.
-        if (i > 0)
+        if (i > 0 && i < 100)
         {
             Debug.Log("I: " + i);
             GestionarCrearNuevoBotón(i);
 
             contenedorAsignarComensalesAMesa.SetActive(false);
             buttonAñadirMesa.interactable = true;
+        }
+        else
+        {
+            textErrorComensales.SetActive(true);
         }
         
     }
