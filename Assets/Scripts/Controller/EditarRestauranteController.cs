@@ -14,6 +14,8 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+using static UnityEngine.GraphicsBuffer;
+using Image = UnityEngine.UI.Image;
 
 public class EditarRestauranteController : MonoBehaviour
 {
@@ -33,6 +35,10 @@ public class EditarRestauranteController : MonoBehaviour
     [SerializeField] private RectTransform rtImgObjetoSello;
     [SerializeField] private RawImage imgSelloTintaEN;
     [SerializeField] private RawImage imgSelloTintaES;
+    [SerializeField] private GameObject contenedorAsignarComensalesAMesa;
+    [SerializeField] private TMP_InputField inputFieldCantComensales;
+    [SerializeField] private GameObject textErrorComensales;
+    [SerializeField] private GameObject tmpInputFieldPrefab; // Prefab de InputField TMP
 
     private string NombreRestaurante;
     private string HoraApertura;
@@ -42,7 +48,7 @@ public class EditarRestauranteController : MonoBehaviour
     private int idMesaAEliminar;
 
     // Contenedor padre donde se agregarán los botones
-    public RectTransform buttonParent;
+    public RectTransform padreDeLosBotonesMesa;
 
     // Sprite que cargo desde Resources.
     private Sprite mesaSprite;
@@ -126,7 +132,7 @@ public class EditarRestauranteController : MonoBehaviour
     // Elimino todos los botones mesa antes de actualizar el fondo de edición, para que no sea un caos y se pongan unos encima de otros, además de su gestión luego.
     private void EliminarObjetosHijoDeFondoDeEdición()
     {
-        foreach (Transform hijo in buttonParent)
+        foreach (Transform hijo in padreDeLosBotonesMesa)
         {
             Destroy(hijo.gameObject);
         }
@@ -155,7 +161,7 @@ public class EditarRestauranteController : MonoBehaviour
         GameObject botonGO = new GameObject("Button-" + mesa.Id);
 
         // Establecer el padre para que se muestre en el UI.
-        botonGO.transform.SetParent(buttonParent, false);
+        botonGO.transform.SetParent(padreDeLosBotonesMesa, false);
 
         // Agregar el componente RectTransform (se agrega automáticamente al crear UI, pero lo añadimos explícitamente).
         RectTransform rt = botonGO.AddComponent<RectTransform>();
@@ -181,7 +187,7 @@ public class EditarRestauranteController : MonoBehaviour
 
         // Agrego este script al nuevo botón para dotarlo de funcionalidad de arrastre y escala
         ButtonMesaController bm = botonGO.AddComponent<ButtonMesaController>();
-        bm.containerRect = this.buttonParent;  // Asigno el mismo contenedor
+        bm.containerRect = this.padreDeLosBotonesMesa;  // Asigno el mismo contenedor
         bm.rectTransform = rt; // Asigno el RectTransform del nuevo botón
     }
 
@@ -342,7 +348,7 @@ public class EditarRestauranteController : MonoBehaviour
             string nombreBoton = "Button-" + mesa.Id;
 
             // Buscamos el botón en el contenedor de botones.
-            Transform botonTransform = buttonParent.Find(nombreBoton);
+            Transform botonTransform = padreDeLosBotonesMesa.Find(nombreBoton);
 
             // Si no se encuentra el botón, se detecta un cambio.
             if (botonTransform == null)
@@ -376,7 +382,7 @@ public class EditarRestauranteController : MonoBehaviour
         int restauranteIdUsuario = PlayerPrefs.GetInt("Restaurante_ID Usuario");
 
         // Recorremos cada hijo del contenedor.
-        foreach (Transform child in buttonParent)
+        foreach (Transform child in padreDeLosBotonesMesa)
         {
             string nombreBoton = child.gameObject.name;
 
@@ -437,7 +443,7 @@ public class EditarRestauranteController : MonoBehaviour
                 string nombreBoton = "Button-" + mesa.Id;
 
                 // Buscamos el botón en el contenedor de botones.
-                Transform botonTransform = buttonParent.Find(nombreBoton);
+                Transform botonTransform = padreDeLosBotonesMesa.Find(nombreBoton);
 
                 // Si no se encuentra el botón, se detecta un cambio, pero no lo guardo porque cuando elimino se guarda ese cambio en la BDD.
                 if (botonTransform == null)
@@ -467,7 +473,7 @@ public class EditarRestauranteController : MonoBehaviour
 
         
             // Buscamos el botón en el contenedor de botones.
-            Transform botonTransform2 = buttonParent.Find("Button");
+            Transform botonTransform2 = padreDeLosBotonesMesa.Find("Button");
 
             // Si no se encuentra el botón, no hay botones nuevos creados
             if (botonTransform2 == null)
@@ -832,7 +838,7 @@ public class EditarRestauranteController : MonoBehaviour
 
             //Elimino también la mesa en el editor del restaurante
             // Busco el botón en el contenedor de botones.
-            Transform botonTransform = buttonParent.Find("Button-" + idMesa);
+            Transform botonTransform = padreDeLosBotonesMesa.Find("Button-" + idMesa);
             Destroy(botonTransform.gameObject);
         }
         else
@@ -843,8 +849,148 @@ public class EditarRestauranteController : MonoBehaviour
         EsconderManosAdvertencia(); // Por si las manos de advertencia se están mostrando
     }
 
-    public void GestionarCrearNuevoBotón()
+    public void GestionarCrearNuevoBotón(int cantComensales)
     {
-        throw new NotImplementedException();
+        // Crear un nuevo GameObject para el botón
+        GameObject newButtonObj = new GameObject("Button");
+        // El nuevo botón se creará como hijo del contenedor, NO del Canvas
+        newButtonObj.transform.SetParent(padreDeLosBotonesMesa, false);
+
+        // Agregar y configurar el RectTransform: posición central y tamaño predeterminado
+        RectTransform rectButton = newButtonObj.AddComponent<RectTransform>();
+        rectButton.anchoredPosition = Vector2.zero;
+        rectButton.sizeDelta = new Vector2(180, 100); // Tamaño (ancho/alto)
+
+        // Agregar un Image y cargar la imagen desde Resources (incluyendo la subcarpeta si es necesario)
+        UnityEngine.UI.Image img = newButtonObj.AddComponent<UnityEngine.UI.Image>();
+        Sprite newSprite = Resources.Load<Sprite>("Editar Restaurante/mantelMesa");
+        if (newSprite != null)
+        {
+            img.sprite = newSprite;
+        }
+        else
+        {
+            Debug.LogWarning("No se encontró la imagen en Resources: mantelMesa");
+        }
+
+        
+        // Agrego un componente Button para que sea interactivo
+        newButtonObj.AddComponent<UnityEngine.UI.Button>();
+
+        // Crear un nuevo GameObject, la imagen del botón
+        CrearImgsDelButton(rectButton);
+        
+
+        StartCoroutine(CrearUnHijoInputFieldDelBotónMesa(newButtonObj, cantComensales));
+
+        // 3 líneas esenciales
+        // Agrego este script al nuevo botón para dotarlo de funcionalidad de arrastre y escala
+        ButtonMesaController bm = newButtonObj.AddComponent<ButtonMesaController>();
+        bm.containerRect = this.padreDeLosBotonesMesa;  // Asigna el mismo contenedor
+        bm.rectTransform = rectButton;              // Asigna el RectTransform del nuevo botón
+    }
+
+    private void CrearImgsDelButton(RectTransform newRect)
+    {
+        // Creo el objeto
+        GameObject imgObject = new GameObject("Imagen");
+        // El nuevo botón se creará como hijo del contenedor, NO del Canvas
+        imgObject.transform.SetParent(newRect, false);
+
+        // Agrego y configuro el RectTransform: posición central y tamaño predeterminado
+        RectTransform rectButton = imgObject.AddComponent<RectTransform>();
+        rectButton.anchoredPosition = Vector2.zero;
+        rectButton.sizeDelta = new Vector2(85, 85); // Ejemplo de tamaño
+
+        // Agrego un componente Image
+        Image img = imgObject.AddComponent<Image>();
+        Sprite newSprite = Resources.Load<Sprite>("Editar Restaurante/circle perfect 1.0");
+        if (newSprite != null)
+        {
+            img.sprite = newSprite;
+        }
+        else
+        {
+            Debug.LogWarning("No se encontró la imagen en Resources: circle perfect 1.0");
+        }
+    }
+
+    private IEnumerator CrearUnHijoInputFieldDelBotónMesa(GameObject newButtonObj, int cantComensales)
+    {
+        GameObject inputFieldInstance = Instantiate(tmpInputFieldPrefab, newButtonObj.transform, false);
+
+        TMP_Text textComponent = inputFieldInstance.transform.Find("Text Area/Text").GetComponent<TMP_Text>();
+        TMP_Text textPlaceHolder = inputFieldInstance.transform.Find("Text Area/Placeholder").GetComponent<TMP_Text>();
+
+        //inputFieldInstance.GetComponent<TMP_InputField>().interactable = false; // Pongo el inputField en no interactuable
+        textComponent.alignment = TextAlignmentOptions.Center; // Centro el texto
+        textComponent.fontSize = 56;
+        textComponent.fontStyle = FontStyles.Bold;
+        textComponent.color = UnityEngine.Color.white;
+        RectTransform rtInputField = inputFieldInstance.GetComponent<RectTransform>();
+        rtInputField.sizeDelta = new Vector2(100, 55);
+        inputFieldInstance.GetComponent<TMP_InputField>().text = ""+cantComensales; // Asigno la cantidad de comensales a la mesa
+        inputFieldInstance.GetComponent<Image>().enabled = false; // Quito la imagen del inputField (la pongo en invisible)
+        // Espero un frame para que se cree el Caret
+        yield return null;
+
+        // Desactivo Raycast Target para que no bloqueen interacción con el botón
+        TMP_SelectionCaret caret = inputFieldInstance.GetComponentInChildren<TMP_SelectionCaret>();
+        if (caret != null)
+        {
+            // Desactivamos raycastTarget del Caret
+            caret.raycastTarget = false;
+        }
+        else
+        {
+            Debug.Log("Caret no encontrado!!!!!!!!!!!!!!!!!");
+        }
+
+        inputFieldInstance.GetComponent<Image>().raycastTarget = false;
+        textPlaceHolder.raycastTarget = false;
+        textComponent.raycastTarget = false;
+    }
+
+    public void CancelarCrearBotónMesa()
+    {
+        contenedorAsignarComensalesAMesa.SetActive(false);
+        buttonAñadirMesa.interactable = true;
+        textErrorComensales.SetActive(false);
+    }
+
+    public void ConfirmarCantidadComensalesQueTieneLaMesa()
+    {
+        textErrorComensales.SetActive(false);
+        string cad = inputFieldCantComensales.text;
+
+        int i = 0;
+        try
+        {
+            i = int.Parse(cad.Trim());
+        }catch (Exception ex)
+        {
+            textErrorComensales.SetActive(true);
+            Debug.Log("Error: "+ex);
+        }
+        // Si se ha puesto un número superior a 0, se crea el botón y se cierra el contenedor de asignar comensales a una mesa nueva.
+        if (i > 0)
+        {
+            Debug.Log("I: " + i);
+            GestionarCrearNuevoBotón(i);
+
+            contenedorAsignarComensalesAMesa.SetActive(false);
+            buttonAñadirMesa.interactable = true;
+        }
+        
+    }
+
+    public GameObject GetContenedorAsignarComensales()
+    {
+        return contenedorAsignarComensalesAMesa;
+    }
+
+    public UnityEngine.UI.Button GetButtonAñadirMesa()
+    {
+        return buttonAñadirMesa;
     }
 }

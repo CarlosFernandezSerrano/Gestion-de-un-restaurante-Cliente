@@ -2954,7 +2954,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -375, y: -205}
+  m_AnchoredPosition: {x: -384, y: -191}
   m_SizeDelta: {x: 335.4133, y: 303.3735}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &441516994
@@ -4825,7 +4825,7 @@ MonoBehaviour:
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
   m_Text: 
   m_CaretBlinkRate: 0.85
-  m_CaretWidth: 1
+  m_CaretWidth: 3
   m_ReadOnly: 0
   m_RichText: 1
   m_GlobalFontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4848,7 +4848,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.33333334}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5292,7 +5292,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &956298537
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5314,7 +5314,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 615.3318, y: 0}
+  m_AnchoredPosition: {x: 615.3, y: 0}
   m_SizeDelta: {x: 435.3362, y: 343.2159}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &956298538
@@ -5523,7 +5523,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 130, y: -214.00006}
-  m_SizeDelta: {x: 211.1426, y: 62.3005}
+  m_SizeDelta: {x: 240, y: 62.3005}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &994485622
 MonoBehaviour:
@@ -6865,7 +6865,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 413, y: -127}
+  m_AnchoredPosition: {x: 413, y: -148}
   m_SizeDelta: {x: 279.1113, y: 306.4499}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1442484257
@@ -6915,8 +6915,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 48
-  m_fontSizeBase: 48
+  m_fontSize: 47
+  m_fontSizeBase: 47
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -7047,7 +7047,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1462876015}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1499560293}
+        m_TargetAssemblyTypeName: EditarRestauranteController, Assembly-CSharp
+        m_MethodName: "CancelarCrearBot\xF3nMesa"
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1462876015
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7318,7 +7330,11 @@ MonoBehaviour:
   rtImgObjetoSello: {fileID: 194037518}
   imgSelloTintaEN: {fileID: 1006258031}
   imgSelloTintaES: {fileID: 96551129}
-  buttonParent: {fileID: 99731598}
+  contenedorAsignarComensalesAMesa: {fileID: 956298536}
+  inputFieldCantComensales: {fileID: 902169130}
+  textErrorComensales: {fileID: 1860158448}
+  tmpInputFieldPrefab: {fileID: 476926517351533604, guid: f3eb7c47497e91f4dbcf1404765fbba6, type: 3}
+  padreDeLosBotonesMesa: {fileID: 99731598}
 --- !u!1 &1525870345
 GameObject:
   m_ObjectHideFlags: 0
@@ -8948,7 +8964,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1860158449
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8965,8 +8981,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 194.8, y: -28}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 156.23, y: -28}
+  m_SizeDelta: {x: 122.87, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1860158450
 MonoBehaviour:
@@ -9847,8 +9863,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -110, y: -214.00006}
-  m_SizeDelta: {x: 211.1426, y: 62.3005}
+  m_AnchoredPosition: {x: -130, y: -214.00006}
+  m_SizeDelta: {x: 240, y: 62.3005}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1974783668
 MonoBehaviour:
@@ -10115,8 +10131,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 32
-  m_fontSizeBase: 32
+  m_fontSize: 36
+  m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -11266,7 +11282,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2143187685}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1499560293}
+        m_TargetAssemblyTypeName: EditarRestauranteController, Assembly-CSharp
+        m_MethodName: ConfirmarCantidadComensalesQueTieneLaMesa
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2143187685
 MonoBehaviour:
   m_ObjectHideFlags: 0

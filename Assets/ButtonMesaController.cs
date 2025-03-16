@@ -50,7 +50,7 @@ public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHan
         Vector2 spawnPos = Vector2.zero;
 
         // Definir el tamaño predeterminado del botón (en este ejemplo 100x50)
-        Vector2 defaultSize = new Vector2(100, 50);
+        Vector2 defaultSize = new Vector2(180, 100);
 
         // Creo un Rect que representaría el área del nuevo botón
         Rect newButtonRect = new Rect(spawnPos - defaultSize / 2f, defaultSize);
@@ -67,10 +67,8 @@ public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHan
             Vector2 otherPos = btn.rectTransform.anchoredPosition;
             Vector2 otherSize = btn.rectTransform.rect.size * btn.rectTransform.localScale;
 
-            float marginX = 190f; // Margen en el eje X
-            float marginY = 120f; // Margen en el eje Y
-
-            if (Mathf.Abs(otherPos.x - spawnPos.x) < marginX && Mathf.Abs(otherPos.y - spawnPos.y) < marginY)
+            //if (Mathf.Abs(otherPos.x - spawnPos.x) < marginX && Mathf.Abs(otherPos.y - spawnPos.y) < marginY)
+            if (Mathf.Abs(otherPos.x - spawnPos.x) < (otherSize.x / 2f + defaultSize.x / 2f) && Mathf.Abs(otherPos.y - spawnPos.y) < (otherSize.y / 2f + defaultSize.y / 2f))
             {
                 Debug.Log("Ya existe un botón en el centro. No se creará uno nuevo.");
 
@@ -80,8 +78,11 @@ public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHan
             }
         }
 
+        instanceEditarRestauranteController.GetButtonAñadirMesa().interactable = false;
+        Debug.Log("Es null?: " + instanceEditarRestauranteController.GetContenedorAsignarComensales());
+        instanceEditarRestauranteController.GetContenedorAsignarComensales().SetActive(true);
         // Gestionar cantidad de comensales a la mesa
-        instanceEditarRestauranteController.GestionarCrearNuevoBotón();
+        //instanceEditarRestauranteController.GestionarCrearNuevoBotón();
         /*
         // Crear un nuevo GameObject para el botón
         GameObject newButtonObj = new GameObject("Button");
@@ -119,8 +120,6 @@ public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHan
     // Detecta cuando se presiona el botón (inicia el arrastre)
     public void OnPointerDown(PointerEventData eventData)
     {
-        //isDragging = true;
-
         // Verificar si este objeto es hijo del contenedorPadre
         if (transform.parent != containerRect.transform)
         {
@@ -163,7 +162,6 @@ public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHan
         if (isDragging && rectTransform != null)
         {
             Vector2 newPos = rectTransform.anchoredPosition + eventData.delta;
-            //rectTransform.anchoredPosition = ClampToContainer(newPos);
             newPos = ClampToContainer(newPos);
             if (!WillOverlap(newPos))
             {
@@ -313,4 +311,6 @@ public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHan
         // Una vez usada la papelera, la desactivo
         instanceEditarRestauranteController.DesactivarPapelera();
     }
+
+    
 }
