@@ -15,29 +15,12 @@ using Image = UnityEngine.UI.Image;
 
 public class GestionarMesasController : MonoBehaviour
 {
-    [SerializeField] private TMP_Text inputFieldNombreRestaurante;
-    [SerializeField] private GameObject imgHayCambiosSinGuardar;
-    [SerializeField] private UnityEngine.UI.Button buttonGuardar;
-    [SerializeField] private UnityEngine.UI.Button buttonVolver;
-    [SerializeField] private UnityEngine.UI.Button buttonAñadirMesa;
-    [SerializeField] private RectTransform imgCartel;
-    [SerializeField] private TMP_Text textError;
-    [SerializeField] private UnityEngine.UI.Button botónPapelera;
-    [SerializeField] private RectTransform rtManosAdvertencia;
-    [SerializeField] private RectTransform rtImgObjetoSello;
-    [SerializeField] private RawImage imgSelloTintaEN;
-    [SerializeField] private RawImage imgSelloTintaES;
-    [SerializeField] private GameObject contenedorAsignarComensalesAMesa;
-    [SerializeField] private TMP_InputField inputFieldCantComensales;
-    [SerializeField] private GameObject textErrorComensales;
+    [SerializeField] private TMP_Text textNombreRestaurante;
+    [SerializeField] private TMP_Text textHoraActual;
     [SerializeField] private GameObject tmpInputFieldPrefab; // Prefab de InputField TMP
 
-    private string NombreRestaurante;
-    private string HoraApertura;
-    private string HoraCierre;
     private List<Mesa> Mesas;
 
-    private int idMesaAEliminar;
     private int lastIDMesa = 0;
 
     // Contenedor padre donde se agregarán los botones
@@ -63,6 +46,8 @@ public class GestionarMesasController : MonoBehaviour
 
         TrabajadorController.ComprobandoDatosTrabajador = false;
 
+        InvokeRepeating(nameof(ActualizarHora), 0f, 1f); // Llama a ActualizarHora() cada 1 segundo
+
         ObtenerDatosRestauranteAsync();
 
     }
@@ -72,7 +57,11 @@ public class GestionarMesasController : MonoBehaviour
     {
 
     }
-    
+
+    private void ActualizarHora()
+    {
+        textHoraActual.text = DateTime.Now.ToString("HH:mm");
+    }
 
     private async void ObtenerDatosRestauranteAsync()
     {
@@ -83,12 +72,11 @@ public class GestionarMesasController : MonoBehaviour
         // Deserializo la respuesta
         Restaurante restaurante = JsonConvert.DeserializeObject<Restaurante>(cad);
 
-        NombreRestaurante = restaurante.Nombre;
-        HoraApertura = restaurante.HoraApertura;
-        HoraCierre = restaurante.HoraCierre;
+        //HoraApertura = restaurante.HoraApertura;
+        //HoraCierre = restaurante.HoraCierre;
         Mesas = restaurante.Mesas;
 
-        inputFieldNombreRestaurante.text = NombreRestaurante;
+        textNombreRestaurante.text = restaurante.Nombre;
 
         Debug.Log("Hora Apertura: " + restaurante.HoraApertura + "; Hora Cierre: " + restaurante.HoraCierre);
 
@@ -160,9 +148,9 @@ public class GestionarMesasController : MonoBehaviour
         StartCoroutine(CrearUnHijoInputFieldDelBotónMesa(botonGO, mesa.CantPers));
 
         // Agrego este script al nuevo botón para dotarlo de funcionalidad de arrastre y escala
-        ButtonMesaController bm = botonGO.AddComponent<ButtonMesaController>();
-        bm.containerRect = this.padreDeLosBotonesMesa;  // Asigno el mismo contenedor
-        bm.rectTransform = rt; // Asigno el RectTransform del nuevo botón
+        //ButtonMesaController bm = botonGO.AddComponent<ButtonMesaController>();
+        //bm.containerRect = this.padreDeLosBotonesMesa;  // Asigno el mismo contenedor
+        //bm.rectTransform = rt; // Asigno el RectTransform del nuevo botón
     }
 
     public void Salir()
@@ -322,10 +310,4 @@ public class GestionarMesasController : MonoBehaviour
         textComponent.raycastTarget = false;
     }
 
-    public void CancelarCrearBotónMesa()
-    {
-        contenedorAsignarComensalesAMesa.SetActive(false);
-        buttonAñadirMesa.interactable = true;
-        textErrorComensales.SetActive(false);
-    }
 }
