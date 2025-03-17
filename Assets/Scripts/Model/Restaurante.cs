@@ -46,7 +46,7 @@ namespace Assets.Scripts.Model
             string cad = "" + cad1 + ": ";
             foreach (Mesa mesa in mesas)
             {
-                cad += mesa.mostrar() + ", \n";
+                cad += mesa.Mostrar() + ", \n";
             }
             return cad;
 

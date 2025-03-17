@@ -129,7 +129,7 @@ public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHan
         {
             // Actualizamos la referencia del botón seleccionado
             buttonSeleccionadoParaBorrar = this;
-            Debug.Log("Botón marcado: " + gameObject.name);
+            //Debug.Log("Botón marcado: " + gameObject.name);
             
             instanceEditarRestauranteController.ActivarPapelera();
             // (Opcional) Aquí puedes cambiar el color o aplicar alguna animación para indicar selección.
@@ -147,7 +147,7 @@ public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHan
                 // se deselecciona el botón marcado.
                 buttonSeleccionadoParaBorrar = null;
                 instanceEditarRestauranteController.DesactivarPapelera();
-                Debug.Log("Selección desmarcada");
+                //Debug.Log("Selección desmarcada");
             }
             isDragging = true;
         }
@@ -294,6 +294,7 @@ public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHan
         if (nombreBotón.CompareTo("Button") == 0)
         {
             Destroy(buttonSeleccionadoParaBorrar.gameObject);
+            StartCoroutine(instanceEditarRestauranteController.ActualizarIDMesasEnMapa());
         }
         else // El botón seleccionado para ser eliminado/borrado está registrado en la BDD 
         {

@@ -42,6 +42,7 @@ public class EditarRestauranteController : MonoBehaviour
     private List<Mesa> Mesas;
 
     private int idMesaAEliminar;
+    private int lastIDMesa = 0;
 
     // Contenedor padre donde se agregarán los botones
     public RectTransform padreDeLosBotonesMesa;
@@ -136,6 +137,8 @@ public class EditarRestauranteController : MonoBehaviour
 
     private void CrearBotonesMesas()
     {
+        lastIDMesa = 0;
+
         // El restaurante tiene mesas
         if (Mesas.Count > 0)
         {
@@ -180,6 +183,11 @@ public class EditarRestauranteController : MonoBehaviour
 
         // Agrego un componente Button para que sea interactivo
         botonGO.AddComponent<UnityEngine.UI.Button>();
+
+        // Creo nuevos GameObject hijos, las imágenes del botón
+        CrearImgsDelButton(rt);
+
+        StartCoroutine(CrearUnHijoInputFieldDelBotónMesa(botonGO, mesa.CantPers));
 
         // Agrego este script al nuevo botón para dotarlo de funcionalidad de arrastre y escala
         ButtonMesaController bm = botonGO.AddComponent<ButtonMesaController>();
@@ -240,9 +248,9 @@ public class EditarRestauranteController : MonoBehaviour
 
     private async void GestionarGuardarDatosRestauranteAsync()
     {
-        Restaurante restaurante = RellenarRestauranteSiActualizara();
-        Restaurante rest = ObtenerRestauranteConNuevasMesasCreadasParaRegistrar();
-        
+        Restaurante restaurante = RellenarRestauranteSiActualizara(); // Mesas ya existentes en la BDD
+        Restaurante rest = ObtenerRestauranteConNuevasMesasCreadasParaRegistrar(); // Mesas creadas nuevas
+
 
         bool b = await NombreRestauranteVálidoDistintoYNoRepetidoEnLaBDD();
 
@@ -362,10 +370,12 @@ public class EditarRestauranteController : MonoBehaviour
             float height = rt.rect.height;
             float scaleX = rt.localScale.x;
             float scaleY = rt.localScale.y;
+            TMP_InputField textInputField = botonTransform.transform.Find("InputField").GetComponent<TMP_InputField>();
+            int cantPers = int.Parse(textInputField.text.Trim());
             bool disponible  = mesa.Disponible;
 
             // Creo una nueva mesa con los datos actualizados del editor, conservando el mismo ID de mesa que hay en la BDD
-            mesasNuevas.Add(new Mesa(mesa.Id, posX, posY, width, height, scaleX, scaleY, disponible, restauranteIdUsuario));
+            mesasNuevas.Add(new Mesa(mesa.Id, posX, posY, width, height, scaleX, scaleY, cantPers, disponible, restauranteIdUsuario));
         }
 
         return mesasNuevas;
@@ -394,13 +404,15 @@ public class EditarRestauranteController : MonoBehaviour
                     float height = rt.rect.height;
                     float scaleX = rt.localScale.x;
                     float scaleY = rt.localScale.y;
+                    TMP_InputField textInputField = rt.transform.Find("InputField").GetComponent<TMP_InputField>();
+                    int cantPers = int.Parse(textInputField.text.Trim());
                     bool disponible = true;
 
                     //float width = botónCerrarSesión.gameObject.GetComponent<RectTransform>().rect.width;
                     //float height = botónCerrarSesión.gameObject.GetComponent<RectTransform>().rect.height;
                     Debug.Log("Width: " + width + " Y Height: " + height);
 
-                    mesasNuevas.Add(new Mesa(posX, posY, width, height, scaleX, scaleY, disponible, restauranteIdUsuario));
+                    mesasNuevas.Add(new Mesa(posX, posY, width, height, scaleX, scaleY, cantPers, disponible, restauranteIdUsuario));
                 }
                 else
                 {
@@ -843,6 +855,22 @@ public class EditarRestauranteController : MonoBehaviour
         }
 
         EsconderManosAdvertencia(); // Por si las manos de advertencia se están mostrando
+        StartCoroutine(ActualizarIDMesasEnMapa());
+    }
+
+    public IEnumerator ActualizarIDMesasEnMapa()
+    {
+        yield return null; // Espero un frame para que se actualice la GUI y pille bien los datos
+
+        lastIDMesa = 0;
+        foreach (Transform child in padreDeLosBotonesMesa.transform)
+        {
+            GameObject childObject = child.gameObject;
+            TMP_Text text  = childObject.transform.Find("Imagen Rectangle/Text").GetComponent<TextMeshProUGUI>();
+            
+            lastIDMesa++;
+            text.text = "" + lastIDMesa;
+        }
     }
 
     public void GestionarCrearNuevoBotón(int cantComensales)
@@ -873,7 +901,7 @@ public class EditarRestauranteController : MonoBehaviour
         // Agrego un componente Button para que sea interactivo
         newButtonObj.AddComponent<UnityEngine.UI.Button>();
 
-        // Crear un nuevo GameObject, la imagen del botón
+        // Creo nuevos GameObject hijos, las imágenes del botón
         CrearImgsDelButton(rectButton);
 
         StartCoroutine(CrearUnHijoInputFieldDelBotónMesa(newButtonObj, cantComensales));
@@ -894,7 +922,7 @@ public class EditarRestauranteController : MonoBehaviour
     private void CrearImgCircle(RectTransform newRect)
     {
         // Creo el objeto
-        GameObject imgObject = new GameObject("Imagen");
+        GameObject imgObject = new GameObject("Imagen Circle");
         // El nuevo botón se creará como hijo del contenedor, NO del Canvas
         imgObject.transform.SetParent(newRect, false);
 
@@ -919,14 +947,14 @@ public class EditarRestauranteController : MonoBehaviour
     private void CrearImgRectangle(RectTransform newRect)
     {
         // Creo el objeto
-        GameObject imgObject = new GameObject("Imagen");
+        GameObject imgObject = new GameObject("Imagen Rectangle");
         // El nuevo botón se creará como hijo del contenedor, NO del Canvas
         imgObject.transform.SetParent(newRect, false);
 
         // Agrego y configuro el RectTransform: posición central y tamaño predeterminado
         RectTransform rectImg = imgObject.AddComponent<RectTransform>();
-        rectImg.anchoredPosition = new Vector2(-60, 33); // x e y
-        rectImg.sizeDelta = new Vector2(30, 20); // Tamaño (ancho/alto)
+        rectImg.anchoredPosition = new Vector2(-67.5f, 35); // x e y
+        rectImg.sizeDelta = new Vector2(45, 30); // Tamaño (ancho/alto)
 
         // Agrego un componente Image
         Image img = imgObject.AddComponent<Image>();
@@ -950,10 +978,11 @@ public class EditarRestauranteController : MonoBehaviour
         rectText.anchoredPosition = Vector2.zero;
         rectText.sizeDelta = new Vector2(40, 30); // Tamaño (ancho/alto)
 
-        // Agrego un componente Image
+        // Agrego un componente TMP_Text
         TMP_Text text = textObject.AddComponent<TextMeshProUGUI>();
         text.alignment = TextAlignmentOptions.Center; // Centro el texto
-        text.text = "22";
+        lastIDMesa++;
+        text.text = ""+lastIDMesa;
         text.fontSize = 32;
         text.fontStyle = FontStyles.Bold;
 
@@ -962,10 +991,11 @@ public class EditarRestauranteController : MonoBehaviour
     private IEnumerator CrearUnHijoInputFieldDelBotónMesa(GameObject newButtonObj, int cantComensales)
     {
         GameObject inputFieldInstance = Instantiate(tmpInputFieldPrefab, newButtonObj.transform, false);
+        inputFieldInstance.name = "InputField";
 
         TMP_Text textComponent = inputFieldInstance.transform.Find("Text Area/Text").GetComponent<TMP_Text>();
         TMP_Text textPlaceHolder = inputFieldInstance.transform.Find("Text Area/Placeholder").GetComponent<TMP_Text>();
-
+        
         //inputFieldInstance.GetComponent<TMP_InputField>().interactable = false; // Pongo el inputField en no interactuable
         textComponent.alignment = TextAlignmentOptions.Center; // Centro el texto
         textComponent.fontSize = 56;
