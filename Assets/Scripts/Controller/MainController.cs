@@ -29,6 +29,8 @@ public class MainController : MonoBehaviour
     [SerializeField] private Button botónCerrarSesión;
     [SerializeField] private Button botónComprarServicio;
     [SerializeField] private Button botónEditarRestaurante;
+    [SerializeField] private Button botónGestionarMesas;
+    [SerializeField] private Button botónGestionarTrabajadores;
 
 
     private bool telónMoviéndose = false;
@@ -66,9 +68,6 @@ public class MainController : MonoBehaviour
         // Método para prevenir
         QuitarYPonerBotonesSegúnElTrabajador();
 
-        float width = botónCerrarSesión.gameObject.GetComponent<RectTransform>().rect.width;
-        float height = botónCerrarSesión.gameObject.GetComponent<RectTransform>().rect.height;
-        Debug.Log("Width: " + width + " Y Height: " + height);
     }
 
     
@@ -83,7 +82,7 @@ public class MainController : MonoBehaviour
     {
         QuitarBotónComprarServicio();
 
-        PonerBotónEditarRestaurante();
+        PonerBotonesFuncionalidadesProgramaSegunElRol();
     }
 
 
@@ -100,17 +99,32 @@ public class MainController : MonoBehaviour
         }
     }
 
-    private void PonerBotónEditarRestaurante()
+    private void PonerBotonesFuncionalidadesProgramaSegunElRol()
     {
-        // Si el trabajador tiene el rol de "Gerente", sale el botón para editar el restaurante
-        if (PlayerPrefs.GetInt("Rol_ID Usuario").Equals(2))
+        // Si el trabajador está en un restaurante, se comprueba el rol
+        if (PlayerPrefs.GetInt("Restaurante_ID Usuario", 0) > 0)
         {
-            botónEditarRestaurante.gameObject.SetActive(true);
+            switch (PlayerPrefs.GetInt("Rol_ID Usuario"))
+            {
+                case 1:
+                    botónEditarRestaurante.gameObject.SetActive(false);
+                    botónGestionarMesas.gameObject.SetActive(true);
+                    botónGestionarTrabajadores.gameObject.SetActive(false);
+                    break;
+                case 2: // Si el trabajador tiene el rol de "Gerente", se muestran los botones específicos para editar el restaurante y para gestionar los trabajadores
+                    botónEditarRestaurante.gameObject.SetActive(true);
+                    botónGestionarMesas.gameObject.SetActive(true);
+                    botónGestionarTrabajadores.gameObject.SetActive(true);
+                    break;
+            }
         }
-        else
+        else // El trabajador no está en ningún restaurante
         {
             botónEditarRestaurante.gameObject.SetActive(false);
+            botónGestionarMesas.gameObject.SetActive(false);
+            botónGestionarTrabajadores.gameObject.SetActive(false);
         }
+                  
     }
 
     private async void GestiónInicioDelProgramaAsync()
@@ -229,6 +243,11 @@ public class MainController : MonoBehaviour
     public void IrALaEscenaEditarRestaurante()
     {
         SceneManager.LoadScene("Editar Restaurante");
+    }
+
+    public void IrALaEscenaGestionarMesas()
+    {
+        SceneManager.LoadScene("Gestionar Mesas");
     }
 
     public void CerrarSesión()

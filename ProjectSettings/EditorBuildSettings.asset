@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Editar Restaurante.unity
     guid: 972a62a6443f85842a6066218c7d3ccc
+  - enabled: 1
+    path: Assets/Scenes/Gestionar Mesas.unity
+    guid: 4ea399cf591349a4da158858a8ed83d0
   m_configObjects: {}

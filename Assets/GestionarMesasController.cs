@@ -4,20 +4,21 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using Image = UnityEngine.UI.Image;
+
+
 
 public class GestionarMesasController : MonoBehaviour
 {
     [SerializeField] private TMP_Text textNombreRestaurante;
     [SerializeField] private TMP_Text textHoraActual;
     [SerializeField] private GameObject tmpInputFieldPrefab; // Prefab de InputField TMP
+    [SerializeField] private TMP_Text textHoraApertura;
+    [SerializeField] private TMP_Text textHoraCierre;
+
 
     private List<Mesa> Mesas;
 
@@ -29,7 +30,6 @@ public class GestionarMesasController : MonoBehaviour
     // Sprite que cargo desde Resources.
     private Sprite mesaSprite;
 
-    ButtonMesaController instanceButtonMesaController;
     MétodosAPIController instanceMétodosApiController;
 
 
@@ -41,7 +41,6 @@ public class GestionarMesasController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        instanceButtonMesaController = ButtonMesaController.InstanceButtonMesaController;
         instanceMétodosApiController = MétodosAPIController.InstanceMétodosAPIController;
 
         TrabajadorController.ComprobandoDatosTrabajador = false;
@@ -72,8 +71,8 @@ public class GestionarMesasController : MonoBehaviour
         // Deserializo la respuesta
         Restaurante restaurante = JsonConvert.DeserializeObject<Restaurante>(cad);
 
-        //HoraApertura = restaurante.HoraApertura;
-        //HoraCierre = restaurante.HoraCierre;
+        textHoraApertura.text = restaurante.HoraApertura.Replace(" ", "");
+        textHoraCierre.text = restaurante.HoraCierre.Replace(" ", "");
         Mesas = restaurante.Mesas;
 
         textNombreRestaurante.text = restaurante.Nombre;
@@ -140,10 +139,10 @@ public class GestionarMesasController : MonoBehaviour
         rt.localScale = new Vector3(mesa.ScaleX, mesa.ScaleY, 1f);
 
         // Agrego un componente Button para que sea interactivo
-        botonGO.AddComponent<UnityEngine.UI.Button>();
+        botonGO.AddComponent<Button>();
 
         // Creo nuevos GameObject hijos, las imágenes del botón
-        CrearImgsDelButton(rt);
+        CrearImgsDelButton(rt, mesa.Disponible);
 
         StartCoroutine(CrearUnHijoInputFieldDelBotónMesa(botonGO, mesa.CantPers));
 
@@ -158,53 +157,13 @@ public class GestionarMesasController : MonoBehaviour
         SceneManager.LoadScene("Main");
     }
 
-    public void GestionarCrearNuevoBotón(int cantComensales)
+    private void CrearImgsDelButton(RectTransform newRect, bool disponible)
     {
-        // Crear un nuevo GameObject para el botón
-        GameObject newButtonObj = new GameObject("Button");
-        // El nuevo botón se creará como hijo del contenedor, NO del Canvas
-        newButtonObj.transform.SetParent(padreDeLosBotonesMesa, false);
-
-        // Agregar y configurar el RectTransform: posición central y tamaño predeterminado
-        RectTransform rectButton = newButtonObj.AddComponent<RectTransform>();
-        rectButton.anchoredPosition = Vector2.zero;
-        rectButton.sizeDelta = new Vector2(180, 100); // Tamaño (ancho/alto)
-
-        // Agregar un Image y cargar la imagen desde Resources (incluyendo la subcarpeta si es necesario)
-        UnityEngine.UI.Image img = newButtonObj.AddComponent<UnityEngine.UI.Image>();
-        Sprite newSprite = Resources.Load<Sprite>("Editar Restaurante/mantelMesa");
-        if (newSprite != null)
-        {
-            img.sprite = newSprite;
-        }
-        else
-        {
-            Debug.LogWarning("No se encontró la imagen en Resources: mantelMesa");
-        }
-
-
-        // Agrego un componente Button para que sea interactivo
-        newButtonObj.AddComponent<UnityEngine.UI.Button>();
-
-        // Creo nuevos GameObject hijos, las imágenes del botón
-        CrearImgsDelButton(rectButton);
-
-        StartCoroutine(CrearUnHijoInputFieldDelBotónMesa(newButtonObj, cantComensales));
-
-        // 3 líneas esenciales
-        // Agrego este script al nuevo botón para dotarlo de funcionalidad de arrastre y escala
-        ButtonMesaController bm = newButtonObj.AddComponent<ButtonMesaController>();
-        bm.containerRect = this.padreDeLosBotonesMesa;  // Asigna el mismo contenedor
-        bm.rectTransform = rectButton;              // Asigna el RectTransform del nuevo botón
-    }
-
-    private void CrearImgsDelButton(RectTransform newRect)
-    {
-        CrearImgCircle(newRect);
+        CrearImgCircle(newRect, disponible);
         CrearImgRectangle(newRect);
     }
 
-    private void CrearImgCircle(RectTransform newRect)
+    private void CrearImgCircle(RectTransform newRect, bool disponible)
     {
         // Creo el objeto
         GameObject imgObject = new GameObject("Imagen Circle");
@@ -226,6 +185,31 @@ public class GestionarMesasController : MonoBehaviour
         else
         {
             Debug.LogWarning("No se encontró la imagen en Resources: circle perfect 1.0");
+        }
+        
+        // Poner color correcto a mesa según si está disponible o no. Verde = Sí ; Rojo = No
+        if (disponible)
+        {
+            PonerColorCorrectoAMesa(img, "#00B704");
+            
+        }
+        else
+        {
+            PonerColorCorrectoAMesa(img, "#A12121");
+        }
+    }
+
+    private void PonerColorCorrectoAMesa(Image img, string hexadecimal)
+    {
+        Color newColor;
+        // Intenta convertir el string hexadecimal a Color
+        if (ColorUtility.TryParseHtmlString(hexadecimal, out newColor))
+        {
+            img.color = newColor;
+        }
+        else
+        {
+            Debug.LogError("El formato del color hexadecimal es inválido.");
         }
     }
 
@@ -310,4 +294,8 @@ public class GestionarMesasController : MonoBehaviour
         textComponent.raycastTarget = false;
     }
 
+    public void IrAlMenúPrincipal()
+    {
+        SceneManager.LoadScene("Main");
+    }
 }
