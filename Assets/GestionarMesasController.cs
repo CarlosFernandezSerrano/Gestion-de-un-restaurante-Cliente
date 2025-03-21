@@ -55,6 +55,7 @@ public class GestionarMesasController : MonoBehaviour
 
         ObtenerDatosRestauranteAsync();
 
+        Debug.Log("Estado: " + EstadoReserva.Confirmada);
     }
 
     // Update is called once per frame
@@ -118,24 +119,44 @@ public class GestionarMesasController : MonoBehaviour
 
     public void PonerNoDisponibleMesa()
     {
-        Image img = botónMesaSeleccionado.gameObject.transform.Find("Imagen Circle").GetComponent<Image>();
-        PonerColorCorrectoAMesa(img, colorHexadecimalRojo);
-        contenedorInfoReservasMesa.SetActive(false);
-        
-        // Indicar al servidor
-
-
+        PonerReservaAMesaParaAhora();
     }
 
-    public void PonerDisponibleMesa()
+    public void PulsarBotónMesaDisponible()
     {
+        
+
         Image img = botónMesaSeleccionado.gameObject.transform.Find("Imagen Circle").GetComponent<Image>();
         PonerColorCorrectoAMesa(img, colorHexadecimalVerde);
         contenedorInfoReservasMesa.SetActive(false);
+    }
+
+    private async void PonerReservaAMesaParaAhora()
+    {
+        Image img = botónMesaSeleccionado.gameObject.transform.Find("Imagen Circle").GetComponent<Image>();
+        PonerColorCorrectoAMesa(img, colorHexadecimalRojo);
+        contenedorInfoReservasMesa.SetActive(false);
+
+        DateTime hoy = DateTime.Today;
+        string fechaDeHoy = hoy.ToString("dd/MM/yyyy");
+
+        string[] nombreBotónMesaSeparado = botónMesaSeleccionado.name.Trim().Split("-");
+        int id_Mesa = int.Parse(nombreBotónMesaSeparado[1]);
 
         // Indicar al servidor
+        // Intento registrar la reserva de la mesa enviando datos al servidor
+        string cad = await instanceMétodosApiController.PostDataAsync("reserva/crearReserva", new Reserva(0, fechaDeHoy, textHoraActual.text, ""+EstadoReserva.Confirmada, 0, id_Mesa));
 
-
+        // Deserializo la respuesta
+        Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
+        if (resultado.Result.Equals(1))
+        {
+            Debug.Log("Reserva registrada correctamente en mesa: "+nombreBotónMesaSeparado[1]);
+        }
+        else
+        {
+            Debug.Log("Error al registrar reserva en mesa");
+        }
     }
 
     // Elimino todos los botones mesa antes de actualizar el fondo de edición, para que no sea un caos y se pongan unos encima de otros, además de su gestión luego.
