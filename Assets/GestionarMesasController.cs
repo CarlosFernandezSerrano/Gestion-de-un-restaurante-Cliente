@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -18,11 +19,16 @@ public class GestionarMesasController : MonoBehaviour
     [SerializeField] private GameObject tmpInputFieldPrefab; // Prefab de InputField TMP
     [SerializeField] private TMP_Text textHoraApertura;
     [SerializeField] private TMP_Text textHoraCierre;
+    [SerializeField] private GameObject contenedorInfoReservasMesa;
 
 
     private List<Mesa> Mesas;
 
     private int lastIDMesa = 0;
+    private string colorHexadecimalVerde = "#00B704";
+    private string colorHexadecimalRojo = "#A12121";
+    private Button botónMesaSeleccionado;
+
 
     // Contenedor padre donde se agregarán los botones
     public RectTransform padreDeLosBotonesMesa;
@@ -81,6 +87,55 @@ public class GestionarMesasController : MonoBehaviour
 
         mesaSprite = Resources.Load<Sprite>("Editar Restaurante/mantelMesa");
         CrearBotonesMesas();
+
+        AñadirListenerABotonesMesaDelMapa();
+        
+    }
+
+    private void AñadirListenerABotonesMesaDelMapa()
+    {
+        // Obtenemos todos los componentes Button que sean hijos del contenedor
+        Button[] buttons = padreDeLosBotonesMesa.gameObject.GetComponentsInChildren<Button>();
+        foreach (Button button in buttons)
+        {
+            // Es recomendable capturar la referencia del botón para evitar problemas con clausuras
+            Button capturedButton = button;
+            capturedButton.onClick.AddListener(() => MostrarContenedorInfoReservasMesa(capturedButton));
+        }
+    }
+
+    private void MostrarContenedorInfoReservasMesa(Button capturedButton)
+    {
+        contenedorInfoReservasMesa.SetActive(true);
+        botónMesaSeleccionado = capturedButton;
+
+    }
+
+    public void DesactivarContenedorInfoReservasMesa()
+    {
+        contenedorInfoReservasMesa.SetActive(false);
+    }
+
+    public void PonerNoDisponibleMesa()
+    {
+        Image img = botónMesaSeleccionado.gameObject.transform.Find("Imagen Circle").GetComponent<Image>();
+        PonerColorCorrectoAMesa(img, colorHexadecimalRojo);
+        contenedorInfoReservasMesa.SetActive(false);
+        
+        // Indicar al servidor
+
+
+    }
+
+    public void PonerDisponibleMesa()
+    {
+        Image img = botónMesaSeleccionado.gameObject.transform.Find("Imagen Circle").GetComponent<Image>();
+        PonerColorCorrectoAMesa(img, colorHexadecimalVerde);
+        contenedorInfoReservasMesa.SetActive(false);
+
+        // Indicar al servidor
+
+
     }
 
     // Elimino todos los botones mesa antes de actualizar el fondo de edición, para que no sea un caos y se pongan unos encima de otros, además de su gestión luego.
@@ -190,19 +245,19 @@ public class GestionarMesasController : MonoBehaviour
         // Poner color correcto a mesa según si está disponible o no. Verde = Sí ; Rojo = No
         if (disponible)
         {
-            PonerColorCorrectoAMesa(img, "#00B704");
+            PonerColorCorrectoAMesa(img, colorHexadecimalVerde);
             
         }
         else
         {
-            PonerColorCorrectoAMesa(img, "#A12121");
+            PonerColorCorrectoAMesa(img, colorHexadecimalRojo);
         }
     }
 
     private void PonerColorCorrectoAMesa(Image img, string hexadecimal)
     {
         Color newColor;
-        // Intenta convertir el string hexadecimal a Color
+        // Intento convertir el string hexadecimal a Color
         if (ColorUtility.TryParseHtmlString(hexadecimal, out newColor))
         {
             img.color = newColor;
