@@ -1749,6 +1749,8 @@ MonoBehaviour:
   textHoraApertura: {fileID: 223721325}
   textHoraCierre: {fileID: 786648910}
   contenedorInfoReservasMesa: {fileID: 996331469}
+  buttonNoDisponible: {fileID: 1958707246}
+  buttonDisponible: {fileID: 655117218}
   padreDeLosBotonesMesa: {fileID: 89467398}
 --- !u!1 &479049901
 GameObject:

@@ -20,6 +20,8 @@ public class GestionarMesasController : MonoBehaviour
     [SerializeField] private TMP_Text textHoraApertura;
     [SerializeField] private TMP_Text textHoraCierre;
     [SerializeField] private GameObject contenedorInfoReservasMesa;
+    [SerializeField] private Button buttonNoDisponible;
+    [SerializeField] private Button buttonDisponible;
 
 
     private List<Mesa> Mesas;
@@ -29,6 +31,7 @@ public class GestionarMesasController : MonoBehaviour
     private string colorHexadecimalRojo = "#A12121";
     private Button botónMesaSeleccionado;
 
+    private static int contMostrarBotonesMesa = 1;
 
     // Contenedor padre donde se agregarán los botones
     public RectTransform padreDeLosBotonesMesa;
@@ -53,7 +56,7 @@ public class GestionarMesasController : MonoBehaviour
 
         InvokeRepeating(nameof(ActualizarHora), 0f, 1f); // Llama a ActualizarHora() cada 1 segundo
 
-        ObtenerDatosRestauranteAsync();
+        InvokeRepeating(nameof(ObtenerDatosRestauranteAsync), 0f, 1f); // Llama a ObtenerDatosRestauranteAsync() cada 1 segundo
 
         Debug.Log("Estado: " + EstadoReserva.Confirmada);
     }
@@ -71,8 +74,6 @@ public class GestionarMesasController : MonoBehaviour
 
     private async void ObtenerDatosRestauranteAsync()
     {
-        EliminarObjetosHijoDeFondoDeEdición();
-
         string cad = await instanceMétodosApiController.GetDataAsync("restaurante/getRestaurantePorId/" + PlayerPrefs.GetInt("Restaurante_ID Usuario"));
 
         // Deserializo la respuesta
@@ -86,8 +87,12 @@ public class GestionarMesasController : MonoBehaviour
 
         Debug.Log("Hora Apertura: " + restaurante.HoraApertura + "; Hora Cierre: " + restaurante.HoraCierre);
 
-        mesaSprite = Resources.Load<Sprite>("Editar Restaurante/mantelMesa");
-        CrearBotonesMesas();
+        // Los botones mesa sólo se pintan una vez
+        if (contMostrarBotonesMesa.Equals(1)){
+            contMostrarBotonesMesa++;
+            mesaSprite = Resources.Load<Sprite>("Editar Restaurante/mantelMesa");
+            CrearBotonesMesas();
+        }
 
         AñadirListenerABotonesMesaDelMapa();
         
@@ -107,9 +112,37 @@ public class GestionarMesasController : MonoBehaviour
 
     private void MostrarContenedorInfoReservasMesa(Button capturedButton)
     {
-        contenedorInfoReservasMesa.SetActive(true);
-        botónMesaSeleccionado = capturedButton;
+        botónMesaSeleccionado = capturedButton; // Obtengo el botón mesa que he pulsado
 
+        // Configuro los botones del contenedor info Mesa según si está disponible o no la mesa
+        string[] nombreBotón = botónMesaSeleccionado.name.Trim().Split("-");
+        bool mesaDisponible = BuscarSiLaMesaEstáDisponible(int.Parse(nombreBotón[1]));
+        if (mesaDisponible)
+        {
+            buttonNoDisponible.interactable = true;
+            buttonDisponible.interactable = false;
+        }
+        else
+        {
+            buttonNoDisponible.interactable = false;
+            buttonDisponible.interactable = true;
+        }
+
+        // Activo el contendor Info Reservas Mesa
+        contenedorInfoReservasMesa.SetActive(true);
+    }
+
+    private bool BuscarSiLaMesaEstáDisponible(int idMesa)
+    {
+        foreach (Mesa mesa in Mesas)
+        {
+            // Si se encuentra la mesa que estoy buscando, se obtiene su valor del atributo "Disponible"
+            if (mesa.Id.Equals(idMesa))
+            {
+                return mesa.Disponible;
+            }
+        }
+        return false;
     }
 
     public void DesactivarContenedorInfoReservasMesa()
@@ -133,17 +166,19 @@ public class GestionarMesasController : MonoBehaviour
 
     private async void PonerReservaAMesaParaAhora()
     {
-        Image img = botónMesaSeleccionado.gameObject.transform.Find("Imagen Circle").GetComponent<Image>();
+        Button botónMesaSelected = botónMesaSeleccionado;
+
+        Image img = botónMesaSelected.gameObject.transform.Find("Imagen Circle").GetComponent<Image>();
         PonerColorCorrectoAMesa(img, colorHexadecimalRojo);
         contenedorInfoReservasMesa.SetActive(false);
 
+        // Indicar al servidor
         DateTime hoy = DateTime.Today;
         string fechaDeHoy = hoy.ToString("dd/MM/yyyy");
 
-        string[] nombreBotónMesaSeparado = botónMesaSeleccionado.name.Trim().Split("-");
+        string[] nombreBotónMesaSeparado = botónMesaSelected.name.Trim().Split("-");
         int id_Mesa = int.Parse(nombreBotónMesaSeparado[1]);
 
-        // Indicar al servidor
         // Intento registrar la reserva de la mesa enviando datos al servidor
         string cad = await instanceMétodosApiController.PostDataAsync("reserva/crearReserva", new Reserva(0, fechaDeHoy, textHoraActual.text, ""+EstadoReserva.Confirmada, 0, id_Mesa));
 
@@ -152,6 +187,8 @@ public class GestionarMesasController : MonoBehaviour
         if (resultado.Result.Equals(1))
         {
             Debug.Log("Reserva registrada correctamente en mesa: "+nombreBotónMesaSeparado[1]);
+            buttonNoDisponible.interactable = false;
+            buttonDisponible.interactable = true;
         }
         else
         {
