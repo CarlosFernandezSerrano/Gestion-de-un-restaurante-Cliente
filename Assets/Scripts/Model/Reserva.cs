@@ -20,25 +20,28 @@ namespace Assets.Scripts.Model
         public string Fecha { get; set; } // "YYYY-MM-DD"
         public string Hora { get; set; } // "HH:mm:ss"
         public string Estado { get; set; }
+        public int CantComensales { get; set; }
         public int Cliente_Id { get; set; }
         public int Mesa_Id { get; set; }
 
-        public Reserva(string fecha, string hora, string estado, int cliente, int mesa)
+        public Reserva(string fecha, string hora, string estado, int cantComensales, int cliente_id, int mesa)
         {
             this.Fecha = fecha;
             this.Hora = hora;
-            this.Cliente_Id = cliente;
             this.Estado = estado;
+            this.CantComensales = cantComensales;
+            this.Cliente_Id = cliente_id;
             this.Mesa_Id = mesa;
         }
 
         [JsonConstructor]
-        public Reserva(int id, string fecha, string hora, string estado, int cliente_id, int mesa_id)
+        public Reserva(int id, string fecha, string hora, string estado, int cantComensales, int cliente_id, int mesa_id)
         {
             this.Id = id;
             this.Fecha = fecha;
             this.Hora = hora;
             this.Estado = estado;
+            this.CantComensales = cantComensales;
             this.Cliente_Id = cliente_id;
             this.Mesa_Id = mesa_id;
         }
@@ -47,5 +50,6 @@ namespace Assets.Scripts.Model
         {
             return this.Id + " " + this.Fecha + " " + this.Hora + " " + this.Cliente_Id + " " + this.Estado + " " + this.Mesa_Id;
         }
+
     }
 }

@@ -19,8 +19,9 @@ namespace Assets.Scripts.Model
         public int CantPers { get; set; }
         public bool Disponible { get; set; }
         public int Restaurante_ID { get; set; }
+        public List<Reserva> Reservas { get; set; } = new List<Reserva>();
 
-        public Mesa(float posX, float posY, float width, float height, float scaleX, float scaleY, int cantPers, bool disponible, int restaurante_Id)
+        public Mesa(float posX, float posY, float width, float height, float scaleX, float scaleY, int cantPers, bool disponible, int restaurante_Id, List<Reserva> reservas)
         {
             this.PosX = posX;
             this.PosY = posY;
@@ -31,10 +32,11 @@ namespace Assets.Scripts.Model
             this.CantPers = cantPers;
             this.Disponible = disponible;
             this.Restaurante_ID = restaurante_Id;
+            this.Reservas = reservas;
         }
 
         [JsonConstructor]
-        public Mesa(int id, float posX, float posY, float width, float height, float scaleX, float scaleY, int cantPers, bool disponible, int restaurante_Id)
+        public Mesa(int id, float posX, float posY, float width, float height, float scaleX, float scaleY, int cantPers, bool disponible, int restaurante_Id, List<Reserva> reservas)
         {
             this.Id = id;
             this.PosX = posX;
@@ -46,11 +48,23 @@ namespace Assets.Scripts.Model
             this.CantPers = cantPers;
             this.Disponible = disponible;
             this.Restaurante_ID = restaurante_Id;
+            this.Reservas = reservas;
         }
 
         public string Mostrar()
         {
-            return this.Id + " " + this.PosX + " " + this.PosY + " " + this.ScaleX + " " + this.ScaleY + " " + this.CantPers + " " + this.Disponible + " " + this.Restaurante_ID;
+            return this.Id + " " + this.PosX + " " + this.PosY + " " + this.ScaleX + " " + this.ScaleY + " " + this.CantPers + " " + this.Disponible + " " + this.Restaurante_ID + " " + MostrarListaReservas("Reservas: ", this.Reservas);
+        }
+
+        private string MostrarListaReservas(string cad1, List<Reserva> reservas)
+        {
+            string cad = "" + cad1 + ": ";
+            foreach (Reserva reserva in reservas)
+            {
+                cad += reserva.Mostrar() + ", \n";
+            }
+            return cad;
+
         }
     }
 }

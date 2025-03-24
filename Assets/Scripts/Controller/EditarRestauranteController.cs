@@ -104,6 +104,7 @@ public class EditarRestauranteController : MonoBehaviour
 
     private async void ObtenerDatosRestauranteAsync()
     {
+        Debug.Log("Pasa por aquí");
         EliminarObjetosHijoDeFondoDeEdición();
 
         string cad = await instanceMétodosApiController.GetDataAsync("restaurante/getRestaurantePorId/" + PlayerPrefs.GetInt("Restaurante_ID Usuario"));
@@ -310,7 +311,17 @@ public class EditarRestauranteController : MonoBehaviour
 
     private async Task RegistrarMesasNuevasEnBDDAsync(Restaurante rest)
     {
-        string cad = await instanceMétodosApiController.PostDataAsync("restaurante/registrarMesas/", rest);
+        Debug.Log("Pasa por registrar mesas nuevas");
+        if (rest == null)
+        {
+            Debug.Log("El valor de rest es nulo");
+
+        }
+        else
+        {
+            Debug.Log("El valor de rest no es nulo");
+        }
+            string cad = await instanceMétodosApiController.PostDataAsync("restaurante/registrarMesas/", rest);
 
         // Deserializo la respuesta
         Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
@@ -375,7 +386,7 @@ public class EditarRestauranteController : MonoBehaviour
             bool disponible  = mesa.Disponible;
 
             // Creo una nueva mesa con los datos actualizados del editor, conservando el mismo ID de mesa que hay en la BDD
-            mesasNuevas.Add(new Mesa(mesa.Id, posX, posY, width, height, scaleX, scaleY, cantPers, disponible, restauranteIdUsuario));
+            mesasNuevas.Add(new Mesa(mesa.Id, posX, posY, width, height, scaleX, scaleY, cantPers, disponible, restauranteIdUsuario, new List<Reserva>()));
         }
 
         return mesasNuevas;
@@ -408,11 +419,7 @@ public class EditarRestauranteController : MonoBehaviour
                     int cantPers = int.Parse(textInputField.text.Trim());
                     bool disponible = true;
 
-                    //float width = botónCerrarSesión.gameObject.GetComponent<RectTransform>().rect.width;
-                    //float height = botónCerrarSesión.gameObject.GetComponent<RectTransform>().rect.height;
-                    Debug.Log("Width: " + width + " Y Height: " + height);
-
-                    mesasNuevas.Add(new Mesa(posX, posY, width, height, scaleX, scaleY, cantPers, disponible, restauranteIdUsuario));
+                    mesasNuevas.Add(new Mesa(posX, posY, width, height, scaleX, scaleY, cantPers, disponible, restauranteIdUsuario, new List<Reserva>()));
                 }
                 else
                 {
