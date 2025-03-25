@@ -16,7 +16,7 @@ namespace Assets.Scripts.Model
         public List<Mesa> Mesas { get; set; } = new List<Mesa>();
         public List<Trabajador> Trabajadores { get; set; } = new List<Trabajador>();
 
-        public static string TiempoPermitidoParaComer { get; set; } = "02:58";
+        public static string TiempoPermitidoParaComer { get; set; } = "00:01";
 
         public Restaurante(string nombre, string horaApertura, string horaCierre, List<Mesa> mesas, List<Trabajador> trabajadores)
         {
