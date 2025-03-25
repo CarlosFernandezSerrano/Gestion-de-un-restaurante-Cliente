@@ -9,9 +9,10 @@ namespace Assets.Scripts.Model
 {
     public enum EstadoReserva
     {
-        Pendiente,
-        Confirmada,
-        Cancelada
+        Terminada, // Cuando acaba una reserva
+        Pendiente, // Para cuando la reserva esté en uso
+        Confirmada, // Para cuando se crea una reserva, pero aún no es el día y la hora
+        Cancelada // Cuando se cancela una reserva
     }
 
     class Reserva
@@ -48,7 +49,7 @@ namespace Assets.Scripts.Model
 
         public string Mostrar()
         {
-            return this.Id + " " + this.Fecha + " " + this.Hora + " " + this.Cliente_Id + " " + this.Estado + " " + this.Mesa_Id;
+            return this.Id + " " + this.Fecha + " " + this.Hora + " " + this.Estado + " " + this.CantComensales + " " + this.Cliente_Id + " " + this.Mesa_Id;
         }
 
     }
