@@ -59,8 +59,6 @@ public class GestionarMesasController : MonoBehaviour
 
         InvokeRepeating(nameof(ObtenerDatosRestauranteAsync), 0f, 1f); // Llama a ObtenerDatosRestauranteAsync() cada 1 segundo
 
-        
-
     }
 
     // Update is called once per frame
@@ -91,16 +89,17 @@ public class GestionarMesasController : MonoBehaviour
 
         Debug.Log("Hora Apertura: " + restaurante.HoraApertura + "; Hora Cierre: " + restaurante.HoraCierre);
 
+        ActualizarEstadoReservaYMesaDelDíaDeHoyAsync();
+
         // Los botones mesa sólo se pintan una vez
         if (contMostrarBotonesMesa.Equals(1)){
             contMostrarBotonesMesa++;
             mesaSprite = Resources.Load<Sprite>("Editar Restaurante/mantelMesa");
             CrearBotonesMesas();
-            ActualizarTodasLasReservasQueYaAcabaronYEstánPendientesAsync(); 
+            ActualizarTodasLasReservasQueYaAcabaronYEstánPendientesAsync();
             //InvokeRepeating(nameof(ActualizarEstadoReservaYMesaDelDíaDeHoy), 0f, 1f); // Llama a ActualizarEstadoReservaYMesa() cada 1 segundo
+            AñadirListenerABotonesMesaDelMapa();
         }
-
-        AñadirListenerABotonesMesaDelMapa();
         
     }
 
@@ -135,7 +134,7 @@ public class GestionarMesasController : MonoBehaviour
     }
 
     // Si una reserva ha acabado, se actualiza la mesa y la reserva. Los colores se actualizan aquí aunque se podrían actualizar aparte
-    private async void ActualizarEstadoReservaYMesaDelDíaDeHoy() 
+    private async void ActualizarEstadoReservaYMesaDelDíaDeHoyAsync() 
     {                                                       // Hay que hacer bastantes cambios y mejoras aquí __ _ __ _-- _ - - - - -- -_ _ _ _ - -_ _ - _ _ -_
         // Compruebo si ya ha pasado su tiempo límite
         string horaActual = DateTime.Now.ToString("HH:mm");
@@ -370,13 +369,15 @@ public class GestionarMesasController : MonoBehaviour
     }
 
     // Si pulso el botón "Disponible" quiere decir que hay una reserva en curso y quiero cancelarla
-    public void PulsarBotónMesaDisponible()
+    public void PonerDisponibleMesa()
     {
         CancelarReservaActualEnMesaAsync();
     }
 
     private async void CancelarReservaActualEnMesaAsync()
     {
+        Debug.Log("--------------------------------");
+
         Button botónMesaSelected = botónMesaSeleccionado;
 
         int id_Mesa = ObtenerIDMesaDelNombreDelBotónMesa(botónMesaSelected);
@@ -388,7 +389,6 @@ public class GestionarMesasController : MonoBehaviour
         {
             Debug.Log("Reservas mesa pendientes entre hoy y en adelante: " + r.Mostrar());
         }
-        Debug.Log("--------------------------------");
 
         // Obtengo las reservas del día de hoy
         List<Reserva> reservasMesaParaHoy = ObtenerReservasMesaParaHoy(reservasMesaPendientes);
@@ -409,33 +409,28 @@ public class GestionarMesasController : MonoBehaviour
             if (resultado.Result.Equals(1))
             {
                 Debug.Log("Reserva cancelada correctamente");
+                // También actualizo la mesa en la BDD en "Disponible" = true 
+                string cad2 = await instanceMétodosApiController.PutDataAsync("mesa/actualizarCampoDisponible", new Mesa(id_Mesa, 0, 0, 0, 0, 0, 0, 0, true, 0, new List<Reserva>()));
+
+                // Deserializo la respuesta
+                Resultado resultado2 = JsonConvert.DeserializeObject<Resultado>(cad2);
+
+                if (resultado2.Result.Equals(1))
+                {
+                    Debug.Log("Mesa puesta en disponible correctamente");
+                    Image img = botónMesaSeleccionado.gameObject.transform.Find("Imagen Circle").GetComponent<Image>();
+                    PonerColorCorrectoAMesa(img, colorHexadecimalVerde);
+                    contenedorInfoReservasMesa.SetActive(false);
+                }
+                else
+                {
+                    Debug.Log("Error al intentar actualizar la mesa");
+                }
             }
             else
             {
                 Debug.Log("Error al intentar cancelar una reserva");
             }
-
-            // También actualizo la mesa en la BDD en "Disponible" = true 
-            string cad2 = await instanceMétodosApiController.PutDataAsync("mesa/actualizarCampoDisponible", new Mesa(id_Mesa, 0, 0, 0, 0, 0, 0, 0, true, 0, new List<Reserva>()));
-
-            // Deserializo la respuesta
-            Resultado resultado2 = JsonConvert.DeserializeObject<Resultado>(cad2);    
-
-            if (resultado2.Result.Equals(1))
-            {
-                Debug.Log("Mesa puesta en disponible correctamente");
-            }
-            else
-            {
-                Debug.Log("Error al intentar actualizar la mesa");
-            }
-
-            buttonDisponible.interactable = false;
-            buttonNoDisponible.interactable = true;
-
-            Image img = botónMesaSeleccionado.gameObject.transform.Find("Imagen Circle").GetComponent<Image>();
-            PonerColorCorrectoAMesa(img, colorHexadecimalVerde);
-            contenedorInfoReservasMesa.SetActive(false);
         }
         else
         {
@@ -521,7 +516,7 @@ public class GestionarMesasController : MonoBehaviour
         return int.Parse(nombreBotónMesaSeparado[1]);
     }
 
-    private async void PonerReservaAMesaParaAhoraAsync()
+    private async void PonerReservaAMesaParaAhoraAsync() // En un momento aquí no se actualiza la mesa a disponible = false
     {
         Debug.Log("############# RESERVAR AL INSTANTE ##################");
 
@@ -545,23 +540,34 @@ public class GestionarMesasController : MonoBehaviour
             if (resultado.Result.Equals(1))
             {
                 Debug.Log("Reserva registrada correctamente en mesa: " + id_Mesa);
-                buttonNoDisponible.interactable = false;
-                buttonDisponible.interactable = true;
+                // Pongo mesa en No Disponible
+                string cad2 = await instanceMétodosApiController.PutDataAsync("mesa/actualizarCampoDisponible", new Mesa(id_Mesa, 0, 0, 0, 0, 0, 0, 0, false, 0, new List<Reserva>()));
+
+                // Deserializo la respuesta
+                Resultado resultado2 = JsonConvert.DeserializeObject<Resultado>(cad2);
+
+                if (resultado2.Result.Equals(1))
+                {
+                    Debug.Log("Mesa puesta en disponible correctamente");
+
+                    Image img = botónMesaSelected.gameObject.transform.Find("Imagen Circle").GetComponent<Image>();
+                    PonerColorCorrectoAMesa(img, colorHexadecimalRojo);
+                    contenedorInfoReservasMesa.SetActive(false);
+                }
+                else
+                {
+                    Debug.Log("Error al intentar actualizar la mesa");
+                }
             }
             else
             {
                 Debug.Log("Error al registrar reserva en mesa");
             }
-
-            Image img = botónMesaSelected.gameObject.transform.Find("Imagen Circle").GetComponent<Image>();
-            PonerColorCorrectoAMesa(img, colorHexadecimalRojo);
-            contenedorInfoReservasMesa.SetActive(false);
         }
         else
         {
             Debug.Log("No se puede poner la reserva porque ya hay una reserva cercana para esa mesa");
         }
-        
     }
 
     private bool ReservaNuevaNoObstaculizaElResto(int id_Mesa)

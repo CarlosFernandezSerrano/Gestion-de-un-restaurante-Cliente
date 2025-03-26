@@ -1971,7 +1971,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 378127790}
         m_TargetAssemblyTypeName: GestionarMesasController, Assembly-CSharp
-        m_MethodName: "PulsarBot\xF3nMesaDisponible"
+        m_MethodName: PonerDisponibleMesa
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
