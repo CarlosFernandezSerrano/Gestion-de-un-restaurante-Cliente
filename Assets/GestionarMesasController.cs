@@ -148,9 +148,6 @@ public class GestionarMesasController : MonoBehaviour
             // Obtengo las reservas del día de hoy
             List<Reserva> reservasMesaParaHoy = ObtenerReservasMesaParaHoy(reservasMesaPendientes);
 
-            // Obtengo la reserva actual en uso
-            //Reserva reserv = ObtenerReservaEnUso(reservasMesaParaHoy);
-
             foreach (Reserva reserva in reservasMesaParaHoy)
             {
                 string horaReserva = reserva.Hora;
@@ -200,10 +197,12 @@ public class GestionarMesasController : MonoBehaviour
                     }
                 }
 
-                // Pongo la mesa en no disponible
+                PonerReservaConfirmadaEnUsoAsync(reservasMesaParaHoy);
+
+                // Pongo la mesa en no disponible si existe una reserva pendiente ahora
                 if (ExisteUnaReservaPendienteAhora(reservasMesaParaHoy, horaActualTimeSpan))
                 {
-                    // Actualizo la mesa en la BDD en "Disponible" = true 
+                    // Actualizo la mesa en la BDD en "Disponible" = false 
                     string cad = await instanceMétodosApiController.PutDataAsync("mesa/actualizarCampoDisponible", new Mesa(reserva.Mesa_Id, 0, 0, 0, 0, 0, 0, 0, false, 0, new List<Reserva>()));
 
                     // Deserializo la respuesta
@@ -246,10 +245,48 @@ public class GestionarMesasController : MonoBehaviour
         }
     }
 
-    private bool ExisteUnaReservaPendienteAhora(List<Reserva> reservasMesaParaHoy, TimeSpan horaActualTimeSpan)
+    // Cambio el estado de la reserva de "Confirmada" a "Pendiente" (en uso)
+    private async void PonerReservaConfirmadaEnUsoAsync(List<Reserva> reservasMesaParaHoy)
     {
-        //throw new NotImplementedException();
-        
+        string horaActual = DateTime.Now.ToString("HH:mm");
+        TimeSpan horaActualTimeSpan = TimeSpan.Parse(horaActual);
+
+        foreach (Reserva reserva in reservasMesaParaHoy)
+        {
+            string horaReserva = reserva.Hora;
+            TimeSpan horaReservaTimeSpan = TimeSpan.Parse(horaReserva);
+
+            string[] tiempoPermitido = Restaurante.TiempoPermitidoParaComer.Split(":");
+            int horas = int.Parse(tiempoPermitido[0].Trim());
+            int minutos = int.Parse(tiempoPermitido[1].Trim());
+            Debug.Log("Resultado tiempo permitido - Horas:" + horas + "; Minutos:" + minutos + "*");
+
+            // Sumo el tiempo que puso el gerente en la escena "Editar Restaurante" en tiempo permitido para comer
+            TimeSpan sumaTiempo = TimeSpan.FromHours(horas) + TimeSpan.FromMinutes(minutos);
+            TimeSpan horaFinReserva = horaReservaTimeSpan.Add(sumaTiempo);
+
+            // Si hay una reserva "Confirmada" que debería estar en uso, se pone en "Pendiente"
+            if (horaActualTimeSpan < horaFinReserva && horaActualTimeSpan >= horaReservaTimeSpan && reserva.Estado.CompareTo("" + EstadoReserva.Confirmada) == 0)
+            {
+                string cad = await instanceMétodosApiController.PutDataAsync("reserva/actualizarEstadoReserva", new Reserva(reserva.Id, "", "", "" + EstadoReserva.Pendiente, 0, 0, reserva.Mesa_Id));
+
+                // Deserializo la respuesta
+                Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
+
+                if (resultado.Result.Equals(1))
+                {
+                    Debug.Log("Reserva actualizada de confirmada a pendiente correctamente");
+                }
+                else
+                {
+                    Debug.Log("Error al intentar poner en uso (pendiente) una reserva");
+                }
+            }
+        }
+    }
+
+    private bool ExisteUnaReservaPendienteAhora(List<Reserva> reservasMesaParaHoy, TimeSpan horaActualTimeSpan)
+    {        
         foreach (Reserva reserva in reservasMesaParaHoy)
         {
             string horaReserva = reserva.Hora;
@@ -425,9 +462,9 @@ public class GestionarMesasController : MonoBehaviour
             TimeSpan sumaTiempo = TimeSpan.FromHours(horas) + TimeSpan.FromMinutes(minutos);
             TimeSpan horaFinReserva = horaReservaTimeSpan.Add(sumaTiempo);
 
-            if (horaActualTimeSpan < horaFinReserva && reserva.Estado.CompareTo(""+EstadoReserva.Pendiente) == 0)
+            if (horaActualTimeSpan < horaFinReserva && horaActualTimeSpan >= horaReservaTimeSpan && reserva.Estado.CompareTo("" + EstadoReserva.Pendiente) == 0)
             {
-                return reserva;                      
+                return reserva;
             }
         }
         return null;        
