@@ -97,7 +97,7 @@ public class GestionarMesasController : MonoBehaviour
             mesaSprite = Resources.Load<Sprite>("Editar Restaurante/mantelMesa");
             CrearBotonesMesas();
             ActualizarTodasLasReservasQueYaAcabaronYEstánPendientesAsync(); 
-            InvokeRepeating(nameof(ActualizarEstadoReservaYMesaDelDíaDeHoy), 0f, 1f); // Llama a ActualizarEstadoReservaYMesa() cada 1 segundo
+            //InvokeRepeating(nameof(ActualizarEstadoReservaYMesaDelDíaDeHoy), 0f, 1f); // Llama a ActualizarEstadoReservaYMesa() cada 1 segundo
         }
 
         AñadirListenerABotonesMesaDelMapa();
@@ -523,6 +523,8 @@ public class GestionarMesasController : MonoBehaviour
 
     private async void PonerReservaAMesaParaAhoraAsync()
     {
+        Debug.Log("############# RESERVAR AL INSTANTE ##################");
+
         Button botónMesaSelected = botónMesaSeleccionado;
 
         // Indicar al servidor
@@ -533,34 +535,78 @@ public class GestionarMesasController : MonoBehaviour
         TMP_InputField textoCantComensalesMesa = botónMesaSelected.gameObject.transform.Find("InputField").GetComponent<TMP_InputField>();
         int cantComensalesMesa = int.Parse(textoCantComensalesMesa.text.Trim());
 
-        // Intento registrar la reserva de la mesa enviando datos al servidor. Pongo pendiente porque la reserva es para ahora mismo (en uso)
-        string cad = await instanceMétodosApiController.PostDataAsync("reserva/crearReserva", new Reserva(0, fechaDeHoy, textHoraActual.text, ""+EstadoReserva.Pendiente, cantComensalesMesa, 0, id_Mesa));
-
-        // Deserializo la respuesta
-        Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
-        if (resultado.Result.Equals(1))
+        if (ReservaNuevaNoObstaculizaElResto(id_Mesa))
         {
-            Debug.Log("Reserva registrada correctamente en mesa: "+id_Mesa);
-            buttonNoDisponible.interactable = false;
-            buttonDisponible.interactable = true;
+            // Intento registrar la reserva de la mesa enviando datos al servidor. Pongo pendiente porque la reserva es para ahora mismo (en uso)
+            string cad = await instanceMétodosApiController.PostDataAsync("reserva/crearReserva", new Reserva(0, fechaDeHoy, textHoraActual.text, "" + EstadoReserva.Pendiente, cantComensalesMesa, 0, id_Mesa));
+
+            // Deserializo la respuesta
+            Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
+            if (resultado.Result.Equals(1))
+            {
+                Debug.Log("Reserva registrada correctamente en mesa: " + id_Mesa);
+                buttonNoDisponible.interactable = false;
+                buttonDisponible.interactable = true;
+            }
+            else
+            {
+                Debug.Log("Error al registrar reserva en mesa");
+            }
+
+            Image img = botónMesaSelected.gameObject.transform.Find("Imagen Circle").GetComponent<Image>();
+            PonerColorCorrectoAMesa(img, colorHexadecimalRojo);
+            contenedorInfoReservasMesa.SetActive(false);
         }
         else
         {
-            Debug.Log("Error al registrar reserva en mesa");
+            Debug.Log("No se puede poner la reserva porque ya hay una reserva cercana para esa mesa");
         }
-
-        Image img = botónMesaSelected.gameObject.transform.Find("Imagen Circle").GetComponent<Image>();
-        PonerColorCorrectoAMesa(img, colorHexadecimalRojo);
-        contenedorInfoReservasMesa.SetActive(false);
+        
     }
 
-    // Elimino todos los botones mesa antes de actualizar el fondo de edición, para que no sea un caos y se pongan unos encima de otros, además de su gestión luego.
-    private void EliminarObjetosHijoDeFondoDeEdición()
+    private bool ReservaNuevaNoObstaculizaElResto(int id_Mesa)
     {
-        foreach (Transform hijo in padreDeLosBotonesMesa)
+        // Obtengo las reservas pendientes que tiene la mesa, ya sean de hoy o en adelante
+        List<Reserva> reservasMesaPendientes = ObtenerReservasMesaPendientes(id_Mesa);
+        // Obtengo las reservas del día de hoy
+        List<Reserva> reservasMesaParaHoy = ObtenerReservasMesaParaHoy(reservasMesaPendientes);
+
+        string horaActual = DateTime.Now.ToString("HH:mm");
+        TimeSpan horaActualTimeSpan = TimeSpan.Parse(horaActual);
+
+        string[] tiempoPermitido = Restaurante.TiempoPermitidoParaComer.Split(":");
+        int horas = int.Parse(tiempoPermitido[0].Trim());
+        int minutos = int.Parse(tiempoPermitido[1].Trim());
+        Debug.Log("Resultado tiempo permitido - Horas:" + horas + "; Minutos:" + minutos + "*");
+
+        // Sumo el tiempo que puso el gerente en la escena "Editar Restaurante" en tiempo permitido para comer
+        TimeSpan sumaTiempo = TimeSpan.FromHours(horas) + TimeSpan.FromMinutes(minutos);
+        TimeSpan horaFinReservaFutura = horaActualTimeSpan.Add(sumaTiempo);
+
+
+        foreach (Reserva reserva in reservasMesaParaHoy)
         {
-            Destroy(hijo.gameObject);
+            string horaReserva = reserva.Hora;
+            TimeSpan horaReservaTimeSpan = TimeSpan.Parse(horaReserva);
+
+            string[] tiempoPermitidoo = Restaurante.TiempoPermitidoParaComer.Split(":");
+            int horass = int.Parse(tiempoPermitidoo[0].Trim());
+            int minutoss = int.Parse(tiempoPermitidoo[1].Trim());
+            Debug.Log("Resultado tiempo permitido - Horas:" + horass + "; Minutos:" + minutoss + "*");
+
+            // Sumo el tiempo que puso el gerente en la escena "Editar Restaurante" en tiempo permitido para comer
+            TimeSpan sumaTiempoo = TimeSpan.FromHours(horass) + TimeSpan.FromMinutes(minutoss);
+            TimeSpan horaFinReservaExistente = horaReservaTimeSpan.Add(sumaTiempoo);
+            Debug.Log("HoraFINReservaFutura: " + horaFinReservaFutura + "; HoraInicioReservaExistente: "+ horaReservaTimeSpan + " -  HoraFinReservaExistente: " + horaFinReservaExistente + "; Estado reserva existente = " + reserva.Estado);
+            if (horaFinReservaFutura < horaFinReservaExistente && horaFinReservaFutura >= horaReservaTimeSpan && reserva.Estado.CompareTo("" + EstadoReserva.Confirmada) == 0)
+            {
+                Debug.Log("--------------- RESERVA NUEVA OBSTACULIZA");
+                return false;
+            }
         }
+        Debug.Log("--------------- RESERVA NUEVA NO OBSTACULIZA");
+        return true;
+
     }
 
     private void CrearBotonesMesas()
