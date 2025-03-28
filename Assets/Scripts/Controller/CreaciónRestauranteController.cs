@@ -81,7 +81,7 @@ public class CreaciónRestauranteController : MonoBehaviour
         // Si el nombre del restaurante tiene más de 2 caracteres, se crea. Los inputField en Unity pueden contener un carácter de más invisible.
         if (nombreRestaurante.Length > 2)
         {
-            Restaurante restaurante = new Restaurante(nombreRestaurante, horaApertura, horaCierre, new List<Mesa>(), new List<Trabajador>());
+            Restaurante restaurante = new Restaurante(nombreRestaurante, horaApertura, horaCierre, "00:00", new List<Mesa>(), new List<Trabajador>());
             restaurante.mostrar();
             string cad = await instanceMétodosAPIController.PostDataAsync("restaurante/registrarRestaurante", restaurante);
             // Deserializo la respuesta

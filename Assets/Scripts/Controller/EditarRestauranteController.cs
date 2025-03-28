@@ -35,6 +35,8 @@ public class EditarRestauranteController : MonoBehaviour
     [SerializeField] private TMP_InputField inputFieldCantComensales;
     [SerializeField] private GameObject textErrorComensales;
     [SerializeField] private GameObject tmpInputFieldPrefab; // Prefab de InputField TMP
+    [SerializeField] private TMP_Dropdown horaLímiteParaComer;
+    [SerializeField] private TMP_Dropdown minutoLímiteParaComer;
 
     private string NombreRestaurante;
     private string HoraApertura;
@@ -100,6 +102,8 @@ public class EditarRestauranteController : MonoBehaviour
         AgregarOpcionesADropdown(minutoApertura, opcionesMinutos);
         AgregarOpcionesADropdown(horaCierre, opcionesHoras);
         AgregarOpcionesADropdown(minutoCierre, opcionesMinutos);
+        AgregarOpcionesADropdown(horaLímiteParaComer, opcionesHoras);
+        AgregarOpcionesADropdown(minutoLímiteParaComer, opcionesMinutos);
     }
 
     private async void ObtenerDatosRestauranteAsync()
@@ -115,6 +119,7 @@ public class EditarRestauranteController : MonoBehaviour
         NombreRestaurante =  restaurante.Nombre;
         HoraApertura = restaurante.HoraApertura;
         HoraCierre = restaurante.HoraCierre;
+        AsignarTiempoParaComerEnDropDowns(restaurante.TiempoParaComer);
         Mesas = restaurante.Mesas;
 
         inputFieldNombreRestaurante.text = NombreRestaurante;
@@ -125,6 +130,19 @@ public class EditarRestauranteController : MonoBehaviour
 
         mesaSprite = Resources.Load<Sprite>("Editar Restaurante/mantelMesa");
         CrearBotonesMesas();
+    }
+
+    private void AsignarTiempoParaComerEnDropDowns(string tiempoParaComer)
+    {
+        Restaurante.TiempoPermitidoParaComer = tiempoParaComer;
+
+        // Hora cierre
+        string[] tiempoParaComerArray = tiempoParaComer.Split(":");
+        string hora_Límite = tiempoParaComerArray[0].Trim();
+        string minuto_Límite = tiempoParaComerArray[1].Trim();
+
+        BuscoElIndiceYLoPongoSiLoEncuentro(horaLímiteParaComer, hora_Límite);
+        BuscoElIndiceYLoPongoSiLoEncuentro(minutoLímiteParaComer, minuto_Límite);
     }
 
     // Elimino todos los botones mesa antes de actualizar el fondo de edición, para que no sea un caos y se pongan unos encima de otros, además de su gestión luego.
@@ -271,7 +289,7 @@ public class EditarRestauranteController : MonoBehaviour
 
             ObtenerDatosRestauranteAsync();
         } 
-        else if (HorasDistintasEnRestaurante() && NombreEsIgualQueEnLaBDD() || NombreEsIgualQueEnLaBDD() && MesasDistintasEnRestaurante())
+        else if (HorasDistintasEnRestaurante() && NombreEsIgualQueEnLaBDD() || NombreEsIgualQueEnLaBDD() && MesasDistintasEnRestaurante() || NombreEsIgualQueEnLaBDD() && TiempoParaComerDistintoEnRestaurante())
         {
             Debug.Log("Hay cambios 2");
             await ActualizarRestauranteEnBDDAsync(restaurante);
@@ -290,6 +308,21 @@ public class EditarRestauranteController : MonoBehaviour
             Debug.Log("No hay cambios");
             inputFieldNombreRestaurante.text = NombreRestaurante;
         }
+    }
+
+    private bool TiempoParaComerDistintoEnRestaurante()
+    {
+        string[] tiempoPermitidoParaComerArray = Restaurante.TiempoPermitidoParaComer.Split(":");
+        string hora_TiempoPermitido = tiempoPermitidoParaComerArray[0].Trim();
+        string minuto_TiempoPermitido = tiempoPermitidoParaComerArray[1].Trim();
+
+        //Hora o minuto del tiempo permitido para comer ha cambiado del original
+        if (hora_TiempoPermitido.CompareTo(horaLímiteParaComer.options[horaLímiteParaComer.value].text) != 0 || minuto_TiempoPermitido.CompareTo(minutoLímiteParaComer.options[minutoLímiteParaComer.value].text) != 0)
+        {
+            return true;
+        }
+
+        return false;
     }
 
     private async Task ActualizarRestauranteEnBDDAsync(Restaurante restaurante)
@@ -342,12 +375,14 @@ public class EditarRestauranteController : MonoBehaviour
         string nombreRestaurante = inputFieldNombreRestaurante.text.Trim();
         nombreRestaurante = Regex.Replace(nombreRestaurante, @"\s+", " "); // Reemplaza múltiples espacios por uno
 
-        string hora_Apertura = horaApertura.options[horaApertura.value].text+" : "+ minutoApertura.options[minutoApertura.value].text;
-        string hora_Cierre = horaCierre.options[horaCierre.value].text + " : " + minutoCierre.options[minutoCierre.value].text;
+        string hora_Apertura = horaApertura.options[horaApertura.value].text + ":" + minutoApertura.options[minutoApertura.value].text;
+        string hora_Cierre = horaCierre.options[horaCierre.value].text + ":" + minutoCierre.options[minutoCierre.value].text;
 
+        string tiempo_Límite = horaLímiteParaComer.options[horaLímiteParaComer.value].text + ":" + minutoLímiteParaComer.options[minutoLímiteParaComer.value].text;
+        Debug.Log("Tiempo límite: " + tiempo_Límite);
         List<Mesa> mesas = ObtenerListaDeMesasDelEditorActualizadas();
 
-        return new Restaurante(id, nombreRestaurante, hora_Apertura, hora_Cierre, mesas, new List<Trabajador>());
+        return new Restaurante(id, nombreRestaurante, hora_Apertura, hora_Cierre, tiempo_Límite, mesas, new List<Trabajador>());
     }
 
     private List<Mesa> ObtenerListaDeMesasDelEditorActualizadas()
@@ -428,7 +463,7 @@ public class EditarRestauranteController : MonoBehaviour
             }
         }
 
-        return new Restaurante(restauranteIdUsuario, "", "", "", mesasNuevas, new List<Trabajador>());
+        return new Restaurante(restauranteIdUsuario, "", "", "", "", mesasNuevas, new List<Trabajador>());
 
     }
 
@@ -596,7 +631,7 @@ public class EditarRestauranteController : MonoBehaviour
             DesactivarBotonesDelCanvas();
             imgHayCambiosSinGuardar.SetActive(true);
         }
-        else if (HorasDistintasEnRestaurante() && NombreEsIgualQueEnLaBDD() || NombreEsIgualQueEnLaBDD() && MesasDistintasEnRestaurante())
+        else if (HorasDistintasEnRestaurante() && NombreEsIgualQueEnLaBDD() || NombreEsIgualQueEnLaBDD() && MesasDistintasEnRestaurante() || NombreEsIgualQueEnLaBDD() && TiempoParaComerDistintoEnRestaurante())
         {
             Debug.Log("Hay cambios. ¿Desea guardar antes de irse?");
             DesactivarBotonesDelCanvas();
@@ -687,6 +722,12 @@ public class EditarRestauranteController : MonoBehaviour
     public void DesactivarPapelera()
     {
         botónPapelera.interactable = false;
+    }
+
+    public void PonerDropDownsSinTiempoLímite()
+    {
+        BuscoElIndiceYLoPongoSiLoEncuentro(horaLímiteParaComer, "00");
+        BuscoElIndiceYLoPongoSiLoEncuentro(minutoLímiteParaComer, "00");
     }
 
     public IEnumerator MostrarManosAdvertencia(float tiempoDeEspera, string cad1, string cad2)

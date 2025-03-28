@@ -82,8 +82,9 @@ public class GestionarMesasController : MonoBehaviour
         // Deserializo la respuesta
         Restaurante restaurante = JsonConvert.DeserializeObject<Restaurante>(cad);
 
-        textHoraApertura.text = restaurante.HoraApertura.Replace(" ", "");
-        textHoraCierre.text = restaurante.HoraCierre.Replace(" ", "");
+        textHoraApertura.text = restaurante.HoraApertura;
+        textHoraCierre.text = restaurante.HoraCierre;
+        Restaurante.TiempoPermitidoParaComer = restaurante.TiempoParaComer;
         Mesas = restaurante.Mesas;
         
 
