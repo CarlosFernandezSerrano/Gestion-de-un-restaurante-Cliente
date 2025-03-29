@@ -11,6 +11,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.XR;
 using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 
@@ -25,6 +26,10 @@ public class GestionarMesasController : MonoBehaviour
     [SerializeField] private GameObject contenedorInfoReservasMesa;
     [SerializeField] private Button buttonNoDisponible;
     [SerializeField] private Button buttonDisponible;
+    [SerializeField] private GameObject canvasReservasHoyMesa;
+    [SerializeField] private Scrollbar scrollbarReservasMesaHoy;
+    [SerializeField] private RectTransform rectTransformContent;
+    [SerializeField] private TMP_Text textReservasHoyMesa;
 
 
     private List<Mesa> Mesas;
@@ -86,8 +91,6 @@ public class GestionarMesasController : MonoBehaviour
         textHoraCierre.text = restaurante.HoraCierre;
         Restaurante.TiempoPermitidoParaComer = restaurante.TiempoParaComer;
         Mesas = restaurante.Mesas;
-        
-
 
         textNombreRestaurante.text = restaurante.Nombre;
 
@@ -124,7 +127,7 @@ public class GestionarMesasController : MonoBehaviour
                     Debug.Log("Mesa puesta en disponible correctamente");
 
                     Image img = padreDeLosBotonesMesa.gameObject.transform.Find("Button-" + mesa.Id + "/Imagen Circle").GetComponent<Image>();
-                    PonerColorCorrectoAMesa(img, colorHexadecimalVerde);
+                    PonerColorCorrectoAImg(img, colorHexadecimalVerde);
                 }
                 else
                 {
@@ -255,7 +258,7 @@ public class GestionarMesasController : MonoBehaviour
                             Debug.Log("Mesa puesta en disponible correctamente");
 
                             Image img = padreDeLosBotonesMesa.gameObject.transform.Find("Button-" + reserva.Mesa_Id + "/Imagen Circle").GetComponent<Image>();
-                            PonerColorCorrectoAMesa(img, colorHexadecimalVerde);
+                            PonerColorCorrectoAImg(img, colorHexadecimalVerde);
                         }
                         else
                         {
@@ -289,7 +292,7 @@ public class GestionarMesasController : MonoBehaviour
                         }
 
                         Image img = padreDeLosBotonesMesa.gameObject.transform.Find("Button-" + reserva.Mesa_Id + "/Imagen Circle").GetComponent<Image>();
-                        PonerColorCorrectoAMesa(img, colorHexadecimalRojo);
+                        PonerColorCorrectoAImg(img, colorHexadecimalRojo);
 
                     }
                     else // No hay ninguna reserva ahora mismo en uso, pongo la mesa en disponible
@@ -310,7 +313,7 @@ public class GestionarMesasController : MonoBehaviour
                         }
 
                         Image img = padreDeLosBotonesMesa.gameObject.transform.Find("Button-" + reserva.Mesa_Id + "/Imagen Circle").GetComponent<Image>();
-                        PonerColorCorrectoAMesa(img, colorHexadecimalVerde);
+                        PonerColorCorrectoAImg(img, colorHexadecimalVerde);
                     }
                 }
             }
@@ -545,7 +548,7 @@ public class GestionarMesasController : MonoBehaviour
                 {
                     Debug.Log("Mesa puesta en disponible correctamente");
                     Image img = botónMesaSeleccionado.gameObject.transform.Find("Imagen Circle").GetComponent<Image>();
-                    PonerColorCorrectoAMesa(img, colorHexadecimalVerde);
+                    PonerColorCorrectoAImg(img, colorHexadecimalVerde);
                     contenedorInfoReservasMesa.SetActive(false);
                 }
                 else
@@ -604,7 +607,7 @@ public class GestionarMesasController : MonoBehaviour
             DateTime fechaReserva = DateTime.Parse(reserva.Fecha); 
 
             // Si la fecha de la reserva es hoy y la reserva está confirmada o pendiente, se obtiene
-            if (fechaReserva == fechaHoy && reserva.Estado.CompareTo(""+EstadoReserva.Confirmada) == 0 || reserva.Estado.CompareTo("" + EstadoReserva.Pendiente) == 0)
+            if (fechaReserva == fechaHoy && reserva.Estado.CompareTo(""+EstadoReserva.Confirmada) == 0 || fechaReserva == fechaHoy && reserva.Estado.CompareTo("" + EstadoReserva.Pendiente) == 0)
             {
                 reservas.Add(reserva);
             }
@@ -681,7 +684,7 @@ public class GestionarMesasController : MonoBehaviour
                     Debug.Log("Mesa puesta en disponible correctamente");
 
                     Image img = botónMesaSelected.gameObject.transform.Find("Imagen Circle").GetComponent<Image>();
-                    PonerColorCorrectoAMesa(img, colorHexadecimalRojo);
+                    PonerColorCorrectoAImg(img, colorHexadecimalRojo);
                     contenedorInfoReservasMesa.SetActive(false);
                 }
                 else
@@ -843,16 +846,16 @@ public class GestionarMesasController : MonoBehaviour
         // Poner color correcto a mesa según si está disponible o no. Verde = Sí ; Rojo = No
         if (disponible)
         {
-            PonerColorCorrectoAMesa(img, colorHexadecimalVerde);
+            PonerColorCorrectoAImg(img, colorHexadecimalVerde);
             
         }
         else
         {
-            PonerColorCorrectoAMesa(img, colorHexadecimalRojo);
+            PonerColorCorrectoAImg(img, colorHexadecimalRojo);
         }
     }
 
-    private void PonerColorCorrectoAMesa(Image img, string hexadecimal)
+    private void PonerColorCorrectoAImg(Image img, string hexadecimal)
     {
         Color newColor;
         // Intento convertir el string hexadecimal a Color
@@ -950,5 +953,182 @@ public class GestionarMesasController : MonoBehaviour
     public void IrAlMenúPrincipal()
     {
         SceneManager.LoadScene("Main");
+    }
+
+    public void GestionarVerReservasMesas()
+    {
+        // Una vez obtenidas las reservas según su estado, las coloco ordenadas como botones en un Scroll View
+        CrearBotonesDeReservasEnMesaHoy();
+
+        canvasReservasHoyMesa.SetActive(true);
+        scrollbarReservasMesaHoy.value = 1; // Cada vez que muestro el scroll view, pongo el scroll arriba del todo
+        
+    }
+
+    private void CrearBotonesDeReservasEnMesaHoy()
+    {
+        Button botónMesaSelected = botónMesaSeleccionado;
+        int id_Mesa = ObtenerIDMesaDelNombreDelBotónMesa(botónMesaSelected);
+
+        // Obtengo las reservas pendientes que tiene la mesa, ya sean de hoy o en adelante
+        List<Reserva> reservasMesaPendientes = ObtenerReservasMesaPendientes(id_Mesa);
+        // Obtengo las reservas del día de hoy terminadas
+        List<Reserva> reservasMesaParaHoyTerminadas = ObtenerReservasMesaParaHoyTerminadas(reservasMesaPendientes);
+        // Obtengo las reservas del día de hoy (pendiente y confirmadas)
+        List<Reserva> reservasMesaParaHoy = ObtenerReservasMesaParaHoy(reservasMesaPendientes);
+        // Obtengo las reservas del día de hoy confirmadas
+        List<Reserva> reservasMesaParaHoyConfirmadas = ObtenerReservasMesaHoyConfirmadas(reservasMesaParaHoy);
+        // Obtengo la reserva actual en uso
+        Reserva reserva = ObtenerReservaEnUso(reservasMesaParaHoy);
+
+        // Tengo que eliminar todos los hijos (botones en este caso) de Content antes de poner nuevos (reservas actualizadas)
+        EliminarObjetosHijoDeScrollView();
+
+        // Existe una reserva en uso  
+        if (reserva != null)
+        {
+            CrearBotónEnScrollView(reserva, 1); // Falta hacer un switch dentro de esta fución para poner los botones de x colores
+        }
+
+        // Existen reservas de la mesa para hoy confirmadas 
+        if (reservasMesaParaHoyConfirmadas.Count > 0)
+        {
+            foreach (Reserva r in reservasMesaParaHoyConfirmadas)
+            {
+                CrearBotónEnScrollView(r, 2);
+            }
+        }
+
+        // Existen reservas de la mesa para hoy terminadas 
+        if (reservasMesaParaHoyTerminadas.Count > 0)
+        {
+            foreach (Reserva reserv in reservasMesaParaHoyTerminadas)
+            {
+                CrearBotónEnScrollView(reserv, 3);
+            }
+        }
+
+
+    }
+
+    private void EliminarObjetosHijoDeScrollView()
+    {
+        foreach (Transform hijo in rectTransformContent)
+        {
+            Destroy(hijo.gameObject);
+        }
+    }
+
+    private List<Reserva> ObtenerReservasMesaParaHoyTerminadas(List<Reserva> reservasMesaPendientes)
+    {
+        List<Reserva> reservas = new List<Reserva>();
+        DateTime fechaHoy = DateTime.Today;
+        foreach (Reserva reserva in reservasMesaPendientes)
+        {
+            DateTime fechaReserva = DateTime.Parse(reserva.Fecha);
+
+            // Si la fecha de la reserva es hoy y la reserva está terminada, se obtiene
+            if (fechaReserva == fechaHoy && reserva.Estado.CompareTo("" + EstadoReserva.Terminada) == 0)
+            {
+                reservas.Add(reserva);
+            }
+        }
+        return reservas;
+    }
+
+    private List<Reserva> ObtenerReservasMesaHoyConfirmadas(List<Reserva> reservasMesaParaHoy)
+    {
+        List<Reserva> reservas = new List<Reserva>();
+        foreach (Reserva reserva in reservasMesaParaHoy)
+        {
+            // Si la fecha de la reserva es hoy y la reserva está terminada, se obtiene
+            if (reserva.Estado.CompareTo("" + EstadoReserva.Confirmada) == 0)
+            {
+                reservas.Add(reserva);
+            }
+        }
+        return reservas;
+    }
+
+    private void CrearBotónEnScrollView(Reserva reserva, int num)
+    {
+        // Creo un GameObject para el botón y le asigno un nombre único.
+        GameObject botónGO = new GameObject("Button-" + reserva.Id);
+
+        // Establezco el padre para que se muestre en el UI.
+        botónGO.transform.SetParent(rectTransformContent, false);
+
+        // Agrego el componente RectTransform (se agrega automáticamente al crear UI, pero lo añado explícitamente).
+        RectTransform rt = botónGO.AddComponent<RectTransform>();
+        // Defino un tamaño por defecto para el botón.
+        rt.sizeDelta = new Vector2(1530.9f, 138f);
+
+        // Agrego CanvasRenderer para poder renderizar el UI.
+        botónGO.AddComponent<CanvasRenderer>();
+
+        // Agrego el componente Image para mostrar el sprite.
+        Image imagen = botónGO.AddComponent<Image>();
+
+        switch (num)
+        {
+            case 1:
+                PonerColorCorrectoAImg(imagen, "#6DEC6F");
+                //imagen.color = Color.green;
+                break;
+            case 2:
+                PonerColorCorrectoAImg(imagen, "#FDF468");
+                break;
+            case 3:
+                PonerColorCorrectoAImg(imagen, "#EC6C6C");
+                break;
+        }
+
+        // Configuro la posición y escala del botón basándose en las propiedades de la mesa.
+        //rt.anchoredPosition = new Vector2(mesa.PosX, mesa.PosY);
+        //rt.localScale = new Vector3(mesa.ScaleX, mesa.ScaleY, 1f);
+
+        // Agrego un componente Button para que sea interactivo
+        botónGO.AddComponent<Button>();
+
+        // Creo un nuevo GameObject hijo, el texto del botón
+        CrearTextoDelButton(rt, reserva);
+    }
+
+    private void CrearTextoDelButton(RectTransform rt, Reserva reserva)
+    {
+        // Creo un GameObject para el botón y le asigno un nombre único.
+        GameObject textGO = new GameObject("TMP_Text");
+
+        // Establezco el padre para que se muestre en el UI.
+        textGO.transform.SetParent(rt, false);
+
+        // Agrego el componente RectTransform (se agrega automáticamente al crear UI, pero lo añado explícitamente).
+        RectTransform rtText = textGO.AddComponent<RectTransform>();
+        // Anclas estiradas (stretch) en ambas direcciones
+        rtText.anchorMin = new Vector2(0, 0);
+        rtText.anchorMax = new Vector2(1, 1);
+
+        // Márgenes todos a 0 (equivale a Left, Right, Top, Bottom en el inspector)
+        rtText.offsetMin = Vector2.zero;
+        rtText.offsetMax = Vector2.zero;
+
+        // Centrado por si acaso (aunque no influye mucho cuando está estirado)
+        rtText.anchoredPosition = Vector2.zero;
+
+        // Agrego CanvasRenderer para poder renderizar el UI.
+        textGO.AddComponent<CanvasRenderer>();
+
+        // Agrego el componente TMP_Text para mostrar el sprite.
+        TMP_Text textoBotón = textGO.AddComponent<TextMeshProUGUI>();
+        textoBotón.fontStyle = FontStyles.Bold;
+        textoBotón.fontSize = 56;
+        textoBotón.alignment = TextAlignmentOptions.Center;
+        textoBotón.text = reserva.Fecha+"   "+reserva.Hora+"   "+reserva.CantComensales+"   "+"Carlos";
+    }
+
+    public void DesactivarCanvasReservasMesaHoy()
+    {
+        contenedorInfoReservasMesa.SetActive(false);
+        canvasReservasHoyMesa.SetActive(false);
     }
 }
