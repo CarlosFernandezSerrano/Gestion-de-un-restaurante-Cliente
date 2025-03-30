@@ -148,7 +148,7 @@ public class GestionarMesasController : MonoBehaviour
 
                 if (fechaReserva < fechaHoy && reserva.Estado.CompareTo(""+EstadoReserva.Pendiente) == 0)
                 {
-                    string cad = await instanceMétodosApiController.PutDataAsync("reserva/actualizarEstadoReserva", new Reserva(reserva.Id, "", "", "" + EstadoReserva.Terminada, 0, 0, reserva.Mesa_Id));
+                    string cad = await instanceMétodosApiController.PutDataAsync("reserva/actualizarEstadoReserva", new Reserva(reserva.Id, "", "", "" + EstadoReserva.Terminada, 0, 0, reserva.Mesa_Id, reserva.Cliente));
 
                     // Deserializo la respuesta
                     Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
@@ -234,7 +234,7 @@ public class GestionarMesasController : MonoBehaviour
                     // Obtengo las reservas de la mesa que acabaron y con estado "Pendiente" 
                     if (horaFinReserva <= horaActualTimeSpan && reserva.Estado.CompareTo("" + EstadoReserva.Pendiente) == 0)
                     {
-                        string cad = await instanceMétodosApiController.PutDataAsync("reserva/actualizarEstadoReserva", new Reserva(reserva.Id, "", "", "" + EstadoReserva.Terminada, 0, 0, reserva.Mesa_Id));
+                        string cad = await instanceMétodosApiController.PutDataAsync("reserva/actualizarEstadoReserva", new Reserva(reserva.Id, "", "", "" + EstadoReserva.Terminada, 0, 0, reserva.Mesa_Id, reserva.Cliente));
 
                         // Deserializo la respuesta
                         Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
@@ -338,7 +338,7 @@ public class GestionarMesasController : MonoBehaviour
         for (int i = 0; i < reservasPendientesEnUnaMesaHoy.Count - 1; i++)
         {
             Debug.Log("Reserva en lista: "+reservasPendientesEnUnaMesaHoy[i].Mostrar());
-            string cad = await instanceMétodosApiController.PutDataAsync("reserva/actualizarEstadoReserva", new Reserva(reservasPendientesEnUnaMesaHoy[i].Id, "", "", "" + EstadoReserva.Terminada, 0, 0, reservasPendientesEnUnaMesaHoy[i].Mesa_Id));
+            string cad = await instanceMétodosApiController.PutDataAsync("reserva/actualizarEstadoReserva", new Reserva(reservasPendientesEnUnaMesaHoy[i].Id, "", "", "" + EstadoReserva.Terminada, 0, 0, reservasPendientesEnUnaMesaHoy[i].Mesa_Id, reservasPendientesEnUnaMesaHoy[i].Cliente));
 
             // Deserializo la respuesta
             Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
@@ -367,7 +367,7 @@ public class GestionarMesasController : MonoBehaviour
 
             if (Restaurante.TiempoPermitidoParaComer.CompareTo("00:00") == 0 && horaActualTimeSpan >= horaReservaTimeSpan && reserva.Estado.CompareTo("" + EstadoReserva.Confirmada) == 0)
             {
-                string cad = await instanceMétodosApiController.PutDataAsync("reserva/actualizarEstadoReserva", new Reserva(reserva.Id, "", "", "" + EstadoReserva.Pendiente, 0, 0, reserva.Mesa_Id));
+                string cad = await instanceMétodosApiController.PutDataAsync("reserva/actualizarEstadoReserva", new Reserva(reserva.Id, "", "", "" + EstadoReserva.Pendiente, 0, 0, reserva.Mesa_Id, reserva.Cliente));
 
                 // Deserializo la respuesta
                 Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
@@ -396,7 +396,7 @@ public class GestionarMesasController : MonoBehaviour
             // Si hay una reserva "Confirmada" que debería estar en uso, se pone en "Pendiente"
             if (horaActualTimeSpan < horaFinReserva && horaActualTimeSpan >= horaReservaTimeSpan && reserva.Estado.CompareTo("" + EstadoReserva.Confirmada) == 0)
             {
-                string cad = await instanceMétodosApiController.PutDataAsync("reserva/actualizarEstadoReserva", new Reserva(reserva.Id, "", "", "" + EstadoReserva.Pendiente, 0, 0, reserva.Mesa_Id));
+                string cad = await instanceMétodosApiController.PutDataAsync("reserva/actualizarEstadoReserva", new Reserva(reserva.Id, "", "", "" + EstadoReserva.Pendiente, 0, 0, reserva.Mesa_Id, reserva.Cliente));
 
                 // Deserializo la respuesta
                 Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
@@ -530,7 +530,7 @@ public class GestionarMesasController : MonoBehaviour
             Debug.Log("Reserva not null");
 
             // Una vez obtenida la reserva pendiente, la cancelo en la BDD
-            string cad = await instanceMétodosApiController.PutDataAsync("reserva/actualizarEstadoReserva", new Reserva(reserva.Id, "", "", ""+EstadoReserva.Cancelada, 0, 0, id_Mesa));
+            string cad = await instanceMétodosApiController.PutDataAsync("reserva/actualizarEstadoReserva", new Reserva(reserva.Id, "", "", ""+EstadoReserva.Cancelada, 0, 0, id_Mesa, reserva.Cliente));
 
             // Deserializo la respuesta
             Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
@@ -666,7 +666,7 @@ public class GestionarMesasController : MonoBehaviour
         if (ReservaNuevaNoObstaculizaElResto(id_Mesa))
         {
             // Intento registrar la reserva de la mesa enviando datos al servidor. Pongo pendiente porque la reserva es para ahora mismo (en uso)
-            string cad = await instanceMétodosApiController.PostDataAsync("reserva/crearReserva", new Reserva(0, fechaDeHoy, textHoraActual.text, "" + EstadoReserva.Pendiente, cantComensalesMesa, 0, id_Mesa));
+            string cad = await instanceMétodosApiController.PostDataAsync("reserva/crearReserva", new Reserva(0, fechaDeHoy, textHoraActual.text, "" + EstadoReserva.Pendiente, cantComensalesMesa, 0, id_Mesa, new Cliente("", "", "")));
 
             // Deserializo la respuesta
             Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
@@ -970,10 +970,12 @@ public class GestionarMesasController : MonoBehaviour
         Button botónMesaSelected = botónMesaSeleccionado;
         int id_Mesa = ObtenerIDMesaDelNombreDelBotónMesa(botónMesaSelected);
 
+        textReservasHoyMesa.text = "Reservas Hoy Mesa " + ObtenerIDMesaDelMapa(botónMesaSelected);
+
         // Obtengo las reservas pendientes que tiene la mesa, ya sean de hoy o en adelante
         List<Reserva> reservasMesaPendientes = ObtenerReservasMesaPendientes(id_Mesa);
         // Obtengo las reservas del día de hoy terminadas
-        List<Reserva> reservasMesaParaHoyTerminadas = ObtenerReservasMesaParaHoyTerminadas(reservasMesaPendientes);
+        List<Reserva> reservasMesaParaHoyTerminadasYCanceladas = ObtenerReservasMesaParaHoyTerminadasYCanceladas(reservasMesaPendientes);
         // Obtengo las reservas del día de hoy (pendiente y confirmadas)
         List<Reserva> reservasMesaParaHoy = ObtenerReservasMesaParaHoy(reservasMesaPendientes);
         // Obtengo las reservas del día de hoy confirmadas
@@ -1000,15 +1002,20 @@ public class GestionarMesasController : MonoBehaviour
         }
 
         // Existen reservas de la mesa para hoy terminadas 
-        if (reservasMesaParaHoyTerminadas.Count > 0)
+        if (reservasMesaParaHoyTerminadasYCanceladas.Count > 0)
         {
-            foreach (Reserva reserv in reservasMesaParaHoyTerminadas)
+            foreach (Reserva reserv in reservasMesaParaHoyTerminadasYCanceladas)
             {
                 CrearBotónEnScrollView(reserv, 3);
             }
         }
 
 
+    }
+
+    private string ObtenerIDMesaDelMapa(Button botónMesaSelected)
+    {
+        return "" + botónMesaSelected.gameObject.transform.Find("Imagen Rectangle/Text").GetComponent<TextMeshProUGUI>().text.Trim();
     }
 
     private void EliminarObjetosHijoDeScrollView()
@@ -1019,7 +1026,7 @@ public class GestionarMesasController : MonoBehaviour
         }
     }
 
-    private List<Reserva> ObtenerReservasMesaParaHoyTerminadas(List<Reserva> reservasMesaPendientes)
+    private List<Reserva> ObtenerReservasMesaParaHoyTerminadasYCanceladas(List<Reserva> reservasMesaPendientes)
     {
         List<Reserva> reservas = new List<Reserva>();
         DateTime fechaHoy = DateTime.Today;
@@ -1028,7 +1035,7 @@ public class GestionarMesasController : MonoBehaviour
             DateTime fechaReserva = DateTime.Parse(reserva.Fecha);
 
             // Si la fecha de la reserva es hoy y la reserva está terminada, se obtiene
-            if (fechaReserva == fechaHoy && reserva.Estado.CompareTo("" + EstadoReserva.Terminada) == 0)
+            if (fechaReserva == fechaHoy && reserva.Estado.CompareTo("" + EstadoReserva.Terminada) == 0 || fechaReserva == fechaHoy && reserva.Estado.CompareTo("" + EstadoReserva.Cancelada) == 0)
             {
                 reservas.Add(reserva);
             }
@@ -1123,7 +1130,7 @@ public class GestionarMesasController : MonoBehaviour
         textoBotón.fontStyle = FontStyles.Bold;
         textoBotón.fontSize = 56;
         textoBotón.alignment = TextAlignmentOptions.Center;
-        textoBotón.text = reserva.Fecha+"   "+reserva.Hora+"   "+reserva.CantComensales+"   "+"Carlos";
+        textoBotón.text = reserva.Fecha+"   "+reserva.Hora+"   "+reserva.CantComensales+"   "+ reserva.Cliente.Nombre;
     }
 
     public void DesactivarCanvasReservasMesaHoy()
