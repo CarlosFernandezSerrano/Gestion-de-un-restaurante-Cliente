@@ -30,6 +30,8 @@ public class GestionarMesasController : MonoBehaviour
     [SerializeField] private Scrollbar scrollbarReservasMesaHoy;
     [SerializeField] private RectTransform rectTransformContent;
     [SerializeField] private TMP_Text textReservasHoyMesa;
+    [SerializeField] private GameObject canvasCrearReserva;
+    [SerializeField] private GameObject canvasBuscarReserva;
 
 
     private List<Mesa> Mesas;
@@ -228,11 +230,11 @@ public class GestionarMesasController : MonoBehaviour
                     reservasPendientesEnUnaMesaHoy.Add(reserva);
                 }
 
-                // -- Poner aquí que si el tiempo límite es distinto de 00:00, pasa por este if - - - -- - -  - - - 
+                // Si el tiempo límite es distinto de 00:00
                 if (Restaurante.TiempoPermitidoParaComer.CompareTo("00:00") != 0)
                 {
-                    // Obtengo las reservas de la mesa que acabaron y con estado "Pendiente" 
-                    if (horaFinReserva <= horaActualTimeSpan && reserva.Estado.CompareTo("" + EstadoReserva.Pendiente) == 0)
+                    // Obtengo las reservas de la mesa que acabaron hoy y con estado "Pendiente" o "Confirmada" para finalizarlas
+                    if (horaFinReserva <= horaActualTimeSpan && reserva.Estado.CompareTo("" + EstadoReserva.Pendiente) == 0 || horaFinReserva <= horaActualTimeSpan && reserva.Estado.CompareTo("" + EstadoReserva.Confirmada) == 0)
                     {
                         string cad = await instanceMétodosApiController.PutDataAsync("reserva/actualizarEstadoReserva", new Reserva(reserva.Id, "", "", "" + EstadoReserva.Terminada, 0, 0, reserva.Mesa_Id, reserva.Cliente));
 
@@ -270,7 +272,7 @@ public class GestionarMesasController : MonoBehaviour
 
                 PonerReservaConfirmadaEnUsoAsync(reservasMesaParaHoy);
 
-                // -- Poner aquí que si el tiempo límite es distinto de 00:00, pasa por este if - - - -- - -  - - - 
+                // Si el tiempo límite es distinto de 00:00
                 if (Restaurante.TiempoPermitidoParaComer.CompareTo("00:00") != 0)
                 {
                     // Pongo la mesa en no disponible si existe una reserva pendiente ahora
@@ -995,7 +997,9 @@ public class GestionarMesasController : MonoBehaviour
         // Existen reservas de la mesa para hoy confirmadas 
         if (reservasMesaParaHoyConfirmadas.Count > 0)
         {
-            foreach (Reserva r in reservasMesaParaHoyConfirmadas)
+            var reservasOrdenadasPorHora = reservasMesaParaHoyConfirmadas.OrderBy(r => TimeSpan.Parse(r.Hora)).ToList();
+
+            foreach (Reserva r in reservasOrdenadasPorHora)
             {
                 CrearBotónEnScrollView(r, 2);
             }
@@ -1004,7 +1008,9 @@ public class GestionarMesasController : MonoBehaviour
         // Existen reservas de la mesa para hoy terminadas 
         if (reservasMesaParaHoyTerminadasYCanceladas.Count > 0)
         {
-            foreach (Reserva reserv in reservasMesaParaHoyTerminadasYCanceladas)
+            var reservasOrdenadasPorHora = reservasMesaParaHoyTerminadasYCanceladas.OrderBy(r => TimeSpan.Parse(r.Hora)).ToList();
+
+            foreach (Reserva reserv in reservasOrdenadasPorHora)
             {
                 CrearBotónEnScrollView(reserv, 3);
             }
@@ -1138,4 +1144,15 @@ public class GestionarMesasController : MonoBehaviour
         contenedorInfoReservasMesa.SetActive(false);
         canvasReservasHoyMesa.SetActive(false);
     }
+
+    public void ActivarCanvasCrearReserva()
+    {
+        canvasCrearReserva.SetActive(true);
+    }
+
+    public void ActivarCanvasBuscarReserva()
+    {
+        canvasBuscarReserva.SetActive(true);
+    }
+
 }
