@@ -1135,8 +1135,9 @@ public class GestionarMesasController : MonoBehaviour
         TMP_Text textoBotón = textGO.AddComponent<TextMeshProUGUI>();
         textoBotón.fontStyle = FontStyles.Bold;
         textoBotón.fontSize = 56;
-        textoBotón.alignment = TextAlignmentOptions.Center;
-        textoBotón.text = reserva.Fecha+"   "+reserva.Hora+"   "+reserva.CantComensales+"   "+ reserva.Cliente.Nombre;
+        textoBotón.alignment = TextAlignmentOptions.Left;
+
+        textoBotón.text = "  "+reserva.Fecha+ "   " + reserva.Hora+ "          " + reserva.CantComensales+ "               " + reserva.Cliente.Nombre;
     }
 
     public void DesactivarCanvasReservasMesaHoy()
