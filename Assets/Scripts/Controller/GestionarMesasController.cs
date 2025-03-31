@@ -1137,7 +1137,7 @@ public class GestionarMesasController : MonoBehaviour
         textoBotón.fontSize = 56;
         textoBotón.alignment = TextAlignmentOptions.Left;
 
-        textoBotón.text = "  "+reserva.Fecha+ "   " + reserva.Hora+ "          " + reserva.CantComensales+ "               " + reserva.Cliente.Nombre;
+        textoBotón.text = "  "+reserva.Fecha+ "   " + reserva.Hora+ "          " + reserva.CantComensales+ "             " + reserva.Cliente.Nombre;
     }
 
     public void DesactivarCanvasReservasMesaHoy()
