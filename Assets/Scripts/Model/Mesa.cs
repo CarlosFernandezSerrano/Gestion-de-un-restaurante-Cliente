@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Model
 {
-    class Mesa
+    public class Mesa
     {
         public int Id { get; set; }
         public float PosX { get; set; }

@@ -39,7 +39,7 @@ public class GestionarMesasController : MonoBehaviour
     private int lastIDMesa = 0;
     private string colorHexadecimalVerde = "#00B704";
     private string colorHexadecimalRojo = "#A12121";
-    private Button botónMesaSeleccionado;
+    private Button botónMesaSeleccionado; 
 
     private int contMostrarBotonesMesa = 1;
 
@@ -50,10 +50,17 @@ public class GestionarMesasController : MonoBehaviour
     private Sprite mesaSprite;
 
     MétodosAPIController instanceMétodosApiController;
+    CrearReservaController instanceCrearReservaController;
 
+    public static GestionarMesasController InstanceGestionarMesasController { get; private set; }
 
     void Awake()
     {
+        if (InstanceGestionarMesasController == null)
+        {
+            InstanceGestionarMesasController = this;
+        }
+
         SceneManager.LoadSceneAsync("General Controller", LoadSceneMode.Additive);
     }
 
@@ -61,6 +68,7 @@ public class GestionarMesasController : MonoBehaviour
     void Start()
     {
         instanceMétodosApiController = MétodosAPIController.InstanceMétodosAPIController;
+        instanceCrearReservaController = CrearReservaController.InstanceCrearReservaController;
 
         TrabajadorController.ComprobandoDatosTrabajador = false;
 
@@ -171,7 +179,7 @@ public class GestionarMesasController : MonoBehaviour
     private bool LaMesaNoTieneNingunaReservaPendienteHoy(int mesa_Id)
     {
         // Obtengo las reservas pendientes que tiene la mesa, ya sean de hoy o en adelante
-        List<Reserva> reservasMesaPendientes = ObtenerReservasMesaPendientes(mesa_Id);
+        List<Reserva> reservasMesaPendientes = ObtenerReservasMesaDeHoyEnAdelante(mesa_Id);
         // Obtengo las reservas del día de hoy
         List<Reserva> reservasMesaParaHoy = ObtenerReservasMesaParaHoy(reservasMesaPendientes);
         int cont = 0;
@@ -205,7 +213,7 @@ public class GestionarMesasController : MonoBehaviour
         foreach (Mesa mesa in Mesas)
         {
             // Obtengo las reservas pendientes que tiene la mesa, ya sean de hoy o en adelante
-            List<Reserva> reservasMesaPendientes = ObtenerReservasMesaPendientes(mesa.Id);
+            List<Reserva> reservasMesaPendientes = ObtenerReservasMesaDeHoyEnAdelante(mesa.Id);
             // Obtengo las reservas del día de hoy
             List<Reserva> reservasMesaParaHoy = ObtenerReservasMesaParaHoy(reservasMesaPendientes);
 
@@ -514,7 +522,7 @@ public class GestionarMesasController : MonoBehaviour
         int id_Mesa = ObtenerIDMesaDelNombreDelBotónMesa(botónMesaSelected);
 
         // Obtengo las reservas pendientes que tiene la mesa, ya sean de hoy o en adelante
-        List<Reserva> reservasMesaPendientes = ObtenerReservasMesaPendientes(id_Mesa);
+        List<Reserva> reservasMesaPendientes = ObtenerReservasMesaDeHoyEnAdelante(id_Mesa);
 
         foreach (Reserva r in reservasMesaPendientes)
         {
@@ -617,7 +625,8 @@ public class GestionarMesasController : MonoBehaviour
         return reservas;
     }
 
-    private List<Reserva> ObtenerReservasMesaPendientes(int id_Mesa)
+    // Obtengo las reservas pendientes que tiene la mesa, ya sean de hoy o en adelante sin importar el estado
+    public List<Reserva> ObtenerReservasMesaDeHoyEnAdelante(int id_Mesa)
     {
         List<Reserva> reservas = new List<Reserva>();
         DateTime fechaHoy = DateTime.Today;
@@ -708,7 +717,7 @@ public class GestionarMesasController : MonoBehaviour
     private bool ReservaNuevaNoObstaculizaElResto(int id_Mesa)
     {
         // Obtengo las reservas pendientes que tiene la mesa, ya sean de hoy o en adelante
-        List<Reserva> reservasMesaPendientes = ObtenerReservasMesaPendientes(id_Mesa);
+        List<Reserva> reservasMesaPendientes = ObtenerReservasMesaDeHoyEnAdelante(id_Mesa);
         // Obtengo las reservas del día de hoy
         List<Reserva> reservasMesaParaHoy = ObtenerReservasMesaParaHoy(reservasMesaPendientes);
 
@@ -975,7 +984,7 @@ public class GestionarMesasController : MonoBehaviour
         textReservasHoyMesa.text = "Reservas Hoy Mesa " + ObtenerIDMesaDelMapa(botónMesaSelected);
 
         // Obtengo las reservas pendientes que tiene la mesa, ya sean de hoy o en adelante
-        List<Reserva> reservasMesaPendientes = ObtenerReservasMesaPendientes(id_Mesa);
+        List<Reserva> reservasMesaPendientes = ObtenerReservasMesaDeHoyEnAdelante(id_Mesa);
         // Obtengo las reservas del día de hoy terminadas
         List<Reserva> reservasMesaParaHoyTerminadasYCanceladas = ObtenerReservasMesaParaHoyTerminadasYCanceladas(reservasMesaPendientes);
         // Obtengo las reservas del día de hoy (pendiente y confirmadas)
@@ -1019,7 +1028,7 @@ public class GestionarMesasController : MonoBehaviour
 
     }
 
-    private string ObtenerIDMesaDelMapa(Button botónMesaSelected)
+    public string ObtenerIDMesaDelMapa(Button botónMesaSelected)
     {
         return "" + botónMesaSelected.gameObject.transform.Find("Imagen Rectangle/Text").GetComponent<TextMeshProUGUI>().text.Trim();
     }
@@ -1148,6 +1157,8 @@ public class GestionarMesasController : MonoBehaviour
 
     public void ActivarCanvasCrearReserva()
     {
+        instanceCrearReservaController.AsignarValoresConcretosEnDropdowns();
+
         canvasCrearReserva.SetActive(true);
     }
 
@@ -1156,4 +1167,10 @@ public class GestionarMesasController : MonoBehaviour
         canvasBuscarReserva.SetActive(true);
     }
 
+    public List<Mesa> GetMesas()
+    {
+        return Mesas;
+    }
+
+    
 }

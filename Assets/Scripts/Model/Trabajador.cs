@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//[System.Serializable] // Atributo obligatorio
+
 public class Trabajador 
 {
     public static Trabajador instanceCiente { get; private set; }

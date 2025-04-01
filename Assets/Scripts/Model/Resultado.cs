@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Model
 {
-    class Resultado
+    public class Resultado
     {
         public int Result { get; set; }
     }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Model
 {
-    class Rol
+    public class Rol
     {
         public int Id { get; set; }
         public string Nombre { get; set; }

@@ -15,7 +15,7 @@ namespace Assets.Scripts.Model
         Cancelada // Cuando se cancela una reserva
     }
 
-    class Reserva
+    public class Reserva
     {
         public int Id { get; set; }
         public string Fecha { get; set; } // "YYYY-MM-DD"
