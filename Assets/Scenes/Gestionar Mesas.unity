@@ -7744,6 +7744,13 @@ MonoBehaviour:
   dropDownMinutos: {fileID: 1241871503}
   dropDownCantComensales: {fileID: 876286499}
   textResultadoMesasDisponibles: {fileID: 584303186}
+  inputFieldNombre: {fileID: 1232052437}
+  inputFieldDni: {fileID: 263069178}
+  "inputFieldNumTel\xE9fono": {fileID: 2129330483}
+  inputFieldNumMesa: {fileID: 1833087928}
+  "textValorD\xEDaEnCrear": {fileID: 1011638706}
+  textValorHoraEnCrear: {fileID: 1605737320}
+  textValorNumComensalesEnCrear: {fileID: 1959979472}
 --- !u!1 &720109023
 GameObject:
   m_ObjectHideFlags: 0
@@ -10759,7 +10766,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 01/04/2025
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -13799,7 +13806,7 @@ GameObject:
   - component: {fileID: 1376631492}
   - component: {fileID: 1376631491}
   m_Layer: 0
-  m_Name: 'Button '
+  m_Name: Button Crear
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13868,7 +13875,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1376631492}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 718141595}
+        m_TargetAssemblyTypeName: CrearReservaController, Assembly-CSharp
+        m_MethodName: CrearReserva
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1376631492
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15624,7 +15643,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 12:00
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -18946,7 +18965,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 4
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

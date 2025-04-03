@@ -19,7 +19,14 @@ public class CrearReservaController : MonoBehaviour
     [SerializeField] private TMP_Dropdown dropDownMinutos;
     [SerializeField] private TMP_Dropdown dropDownCantComensales;
     [SerializeField] private TMP_Text textResultadoMesasDisponibles;
-    
+    [SerializeField] private TMP_InputField inputFieldNombre;
+    [SerializeField] private TMP_InputField inputFieldDni;
+    [SerializeField] private TMP_InputField inputFieldNumTeléfono;
+    [SerializeField] private TMP_InputField inputFieldNumMesa;
+    [SerializeField] private TMP_Text textValorDíaEnCrear;
+    [SerializeField] private TMP_Text textValorHoraEnCrear;
+    [SerializeField] private TMP_Text textValorNumComensalesEnCrear;
+
 
     GestionarMesasController instanceGestionarMesasController;
 
@@ -168,7 +175,7 @@ public class CrearReservaController : MonoBehaviour
             if (fechaActual == fechaReserva && horaReserva < horaActual)
             {
                 Debug.Log("++Error, fecha correcta, pero hora pasada");
-                textResultadoMesasDisponibles.text = "Hora pasada.";
+                textResultadoMesasDisponibles.text = " Hora pasada.";
                 return;
             }
 
@@ -192,10 +199,12 @@ public class CrearReservaController : MonoBehaviour
                 {
                     var mesasOrdenadas = mesasDisponiblesAUnaFechaHoraYComensalesDeterminados.OrderBy(m => m.CantPers).ToList();
                     string cad = " ";
+                    int cont = 0;
                     for (int i = 0; i < mesasOrdenadas.Count; i++)
                     {
                         if (mesasOrdenadas[i].CantPers >= cantComensales && cantComensales <= mesasOrdenadas[i].CantPers + 5)
                         {
+                            cont++;
                             Button botónMesaSelected = instanceGestionarMesasController.padreDeLosBotonesMesa.gameObject.transform.Find("Button-" + mesasOrdenadas[i].Id).GetComponent<Button>();
                             int id_Mesa_En_Mapa = int.Parse(instanceGestionarMesasController.ObtenerIDMesaDelMapa(botónMesaSelected));
                             if (i < mesasOrdenadas.Count - 1)
@@ -206,13 +215,23 @@ public class CrearReservaController : MonoBehaviour
                             {
                                 cad += "" + id_Mesa_En_Mapa + "(" + mesasOrdenadas[i].CantPers + ")";
                             }
+                            PonerValoresEnLasOpcionesDeCrear(fecha_Reserva, hora_Reserva, cantComensales_Reserva);
                         }
                     }
-                    textResultadoMesasDisponibles.text = cad; // Pinto en TMP_Text en Scroll View las mesas disponibles con su capacidad de personas
+                    // Si hay alguna mesa disponible "con la cantidad de comensales que pide el usuario"
+                    if (cont > 0)
+                    {
+                        textResultadoMesasDisponibles.text = cad; // Pinto en TMP_Text en Scroll View las mesas disponibles con su capacidad de personas
+                    }
+                    else
+                    {
+                        textResultadoMesasDisponibles.text = " Ninguna";
+                    }
                 }
                 else // Ninguna mesa disponible en esa fecha a esa hora
                 {
-                    textResultadoMesasDisponibles.text = "Ninguna";
+                    textResultadoMesasDisponibles.text = " Ninguna";
+                    PonerValoresEnLasOpcionesDeCrear("", "", "");
                 }
                 
             }
@@ -222,6 +241,22 @@ public class CrearReservaController : MonoBehaviour
             }
 
         }
+    }
+
+    // Valores: día, fecha, cant comensales
+    public void PonerValoresEnLasOpcionesDeCrear(string fecha_Reserva, string hora_Reserva, string cantComensales_Reserva)
+    {
+        textValorDíaEnCrear.text = fecha_Reserva;
+        textValorHoraEnCrear.text = hora_Reserva;
+        try
+        {
+            textValorNumComensalesEnCrear.text = "" + int.Parse(cantComensales_Reserva);
+        }
+        catch
+        {
+            textValorNumComensalesEnCrear.text = cantComensales_Reserva;
+        }
+        
     }
 
     private bool ReservaNuevaNoObstaculizaElResto(int id_Mesa, DateTime fechaReservaFutura, TimeSpan horaReservaFutura)
@@ -265,6 +300,17 @@ public class CrearReservaController : MonoBehaviour
 
     }
 
+    public void CrearReserva()
+    {
+        string nombre = inputFieldNombre.text;
+        string dni = inputFieldDni.text;
+        string teléfono = inputFieldNumTeléfono.text;
+        string num_Mesa = inputFieldNumMesa.text;
+
+        Debug.Log("++Crear Reserva Presionado: " + nombre + ", " + dni + ", " + teléfono+", "+num_Mesa);
+
+
+    }
 
     public void DesactivarCanvasCrearReserva()
     {

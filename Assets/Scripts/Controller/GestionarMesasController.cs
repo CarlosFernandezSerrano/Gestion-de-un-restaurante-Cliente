@@ -1158,6 +1158,7 @@ public class GestionarMesasController : MonoBehaviour
     public void ActivarCanvasCrearReserva()
     {
         instanceCrearReservaController.AsignarValoresConcretosEnDropdowns();
+        instanceCrearReservaController.PonerValoresEnLasOpcionesDeCrear("","","");
 
         canvasCrearReserva.SetActive(true);
     }
