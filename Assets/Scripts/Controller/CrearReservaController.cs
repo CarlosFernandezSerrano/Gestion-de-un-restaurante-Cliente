@@ -427,11 +427,13 @@ public class CrearReservaController : MonoBehaviour
         Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
         if (resultado.Result.Equals(1))
         {
-            Debug.Log("Reserva registrada correctamente en mesa: " + reserva.Mesa_Id);
+            Debug.Log("+ +Reserva registrada correctamente en mesa: " + reserva.Mesa_Id);
+            Poner4ValoresEnCrearVacíos();
+            PonerValoresEnLasOpcionesDeCrear("", "", "");
         }
         else
         {
-            Debug.Log("Error al registrar reserva en mesa");
+            Debug.Log("+ +Error al registrar reserva en mesa");
         }
     }
 
