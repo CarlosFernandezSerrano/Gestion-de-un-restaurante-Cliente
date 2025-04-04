@@ -654,7 +654,7 @@ public class GestionarMesasController : MonoBehaviour
         return reservas;
     }
 
-    private int ObtenerIDMesaDelNombreDelBotónMesa(Button botónMesaSelected)
+    public int ObtenerIDMesaDelNombreDelBotónMesa(Button botónMesaSelected)
     {
         string[] nombreBotónMesaSeparado = botónMesaSelected.name.Trim().Split("-");
         return int.Parse(nombreBotónMesaSeparado[1]);
@@ -1159,6 +1159,7 @@ public class GestionarMesasController : MonoBehaviour
     {
         instanceCrearReservaController.AsignarValoresConcretosEnDropdowns();
         instanceCrearReservaController.PonerValoresEnLasOpcionesDeCrear("","","");
+        instanceCrearReservaController.Poner4ValoresEnCrearVacíos();
 
         canvasCrearReserva.SetActive(true);
     }

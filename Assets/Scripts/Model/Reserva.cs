@@ -26,14 +26,14 @@ namespace Assets.Scripts.Model
         public int Mesa_Id { get; set; }
         public Cliente Cliente { get; set; }
 
-        public Reserva(string fecha, string hora, string estado, int cantComensales, int cliente_id, int mesa, Cliente cliente)
+        public Reserva(string fecha, string hora, string estado, int cantComensales, int cliente_id, int mesa_Id, Cliente cliente)
         {
             this.Fecha = fecha;
             this.Hora = hora;
             this.Estado = estado;
             this.CantComensales = cantComensales;
             this.Cliente_Id = cliente_id;
-            this.Mesa_Id = mesa;
+            this.Mesa_Id = mesa_Id;
             this.Cliente = cliente;
         }
 

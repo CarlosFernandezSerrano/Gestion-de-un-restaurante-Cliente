@@ -7751,6 +7751,7 @@ MonoBehaviour:
   "textValorD\xEDaEnCrear": {fileID: 1011638706}
   textValorHoraEnCrear: {fileID: 1605737320}
   textValorNumComensalesEnCrear: {fileID: 1959979472}
+  buttonCrear: {fileID: 1376631491}
 --- !u!1 &720109023
 GameObject:
   m_ObjectHideFlags: 0
