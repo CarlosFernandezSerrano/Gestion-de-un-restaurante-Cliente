@@ -31,6 +31,7 @@ public class CrearReservaController : MonoBehaviour
 
 
     private List<int> mesasDisponiblesEnMapa = new List<int>();
+    private bool posibleCrearReserva = false;
 
     GestionarMesasController instanceGestionarMesasController;
     MétodosAPIController instanceMétodosApiController;
@@ -198,6 +199,7 @@ public class CrearReservaController : MonoBehaviour
 
     public void ObtenerMesasDisponibles()
     {
+        posibleCrearReserva = false;
         textResultadoMesasDisponibles.text = "";
         mesasDisponiblesEnMapa.Clear();
 
@@ -269,6 +271,7 @@ public class CrearReservaController : MonoBehaviour
                         // Si se encuentra una mesa con x número de capacidad de comensales de las disponibles
                         if (mesasOrdenadas[i].CantPers >= cantComensales && cantComensales <= mesasOrdenadas[i].CantPers + 5)
                         {
+                            posibleCrearReserva = true;
                             cont++;
                             Button botónMesaSelected = instanceGestionarMesasController.padreDeLosBotonesMesa.gameObject.transform.Find("Button-" + mesasOrdenadas[i].Id).GetComponent<Button>();
                             int id_Mesa_En_Mapa = int.Parse(instanceGestionarMesasController.ObtenerIDMesaDelMapa(botónMesaSelected));
@@ -384,9 +387,19 @@ public class CrearReservaController : MonoBehaviour
 
         Cliente cliente = new Cliente(nombre, dni, teléfono);
         Reserva reserva = new Reserva(fecha, hora, ""+EstadoReserva.Confirmada, int.Parse(cant_Comensales), 0, mesa_ID, cliente);
-        
 
-        GestionarCrearReserva(reserva);
+        ObtenerMesasDisponibles();
+
+        if (posibleCrearReserva && Hay7De7CamposRellenos())
+        {
+            Debug.Log("+ +Se crea la reserva con los datos del cliente");
+            GestionarCrearReserva(reserva); // Se crea la reserva con los datos del cliente
+        }
+        else
+        {
+            Debug.Log("+ +Se cancela la creación de la reserva porque no cumple ciertas características");
+        }
+        
         
     }
 
