@@ -6079,8 +6079,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 765.45, y: -347}
-  m_SizeDelta: {x: 1530.9, y: 138}
+  m_AnchoredPosition: {x: 899.6091, y: -347}
+  m_SizeDelta: {x: 1799.2181, y: 138}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &527181723
 MonoBehaviour:
@@ -6333,8 +6333,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 231}
-  m_SizeDelta: {x: 1547.9, y: 100}
+  m_AnchoredPosition: {x: -0.010422, y: 231}
+  m_SizeDelta: {x: 1816.2, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &552539104
 MonoBehaviour:
@@ -10879,7 +10879,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1547.9, y: 68.3398}
+  m_SizeDelta: {x: 1799, y: 68.3398}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1032742692
 MonoBehaviour:
@@ -10901,7 +10901,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "   Fecha    Hora   N\xBA Com.    Cliente  "
+  m_text: "  Fecha    Hora   N\xBA Com.   Tel\xE9fono   Cliente  "
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -11307,7 +11307,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -90.29474}
-  m_SizeDelta: {x: 1547.9, y: 549.8451}
+  m_SizeDelta: {x: 1816.2181, y: 549.8451}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1107857202
 MonoBehaviour:
@@ -14425,8 +14425,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 765.45, y: -69}
-  m_SizeDelta: {x: 1530.9, y: 138}
+  m_AnchoredPosition: {x: 899.6091, y: -69}
+  m_SizeDelta: {x: 1799.2181, y: 138}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1464138392
 MonoBehaviour:
@@ -15241,7 +15241,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 29/03/2025   18:49   4   Carlos
+  m_text: ' 29/03/2025   18:49           4           915428657    Carlos'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -15275,7 +15275,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -16581,8 +16581,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 765.45, y: -208}
-  m_SizeDelta: {x: 1530.9, y: 138}
+  m_AnchoredPosition: {x: 899.6091, y: -208}
+  m_SizeDelta: {x: 1799.2181, y: 138}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1722327526
 MonoBehaviour:
