@@ -1157,6 +1157,7 @@ public class GestionarMesasController : MonoBehaviour
 
     public void ActivarCanvasCrearReserva()
     {
+        instanceCrearReservaController.InicializarValoresDropdowns();
         instanceCrearReservaController.AsignarValoresConcretosEnDropdowns();
         instanceCrearReservaController.PonerValoresEnLasOpcionesDeCrear("","","");
         instanceCrearReservaController.Poner4ValoresEnCrearVacíos();
@@ -1174,5 +1175,15 @@ public class GestionarMesasController : MonoBehaviour
         return Mesas;
     }
 
-    
+    public string GetHoraAperturaRestaurante()
+    {
+        return textHoraApertura.text;
+    }
+
+    public string GetHoraCierreRestaurante()
+    {
+        return textHoraCierre.text;
+    }
+
+
 }

@@ -52,15 +52,18 @@ public class CrearReservaController : MonoBehaviour
         instanceGestionarMesasController = GestionarMesasController.InstanceGestionarMesasController;
         instanceMétodosApiController = MétodosAPIController.InstanceMétodosAPIController;
 
-        InicializarValoresDropdowns();
+        
     }
 
     // Update is called once per frame
     void Update()
     {
         ActualizarBotónCrear();
+
+        ActualizarHoraReserva();
         
     }
+    
 
     private void ActualizarBotónCrear()
     {
@@ -72,6 +75,49 @@ public class CrearReservaController : MonoBehaviour
         {
             buttonCrear.interactable = false;
         }
+    }
+
+    // Si la hora de reserva que se pone es menor a la hora de apertura o es mayor a la hora de cierre, se pone la hora actual
+    private void ActualizarHoraReserva()
+    {
+        if (canvasCrearReserva.activeSelf)
+        {
+            TimeSpan hora_Reserva = TimeSpan.Parse(dropDownHoras.options[dropDownHoras.value].text + ":" + dropDownMinutos.options[dropDownMinutos.value].text);
+            
+            string fecha_Actual = DateTime.Now.ToString("dd/MM/yyyy");   // Ejemplo: "01-04-2025"
+            DateTime fechaActual = DateTime.Parse(fecha_Actual);
+            DateTime fechaReserva = DateTime.Parse(dropDownDías.options[dropDownDías.value].text + "/" + dropDownMeses.options[dropDownMeses.value].text + "/" + dropDownAños.options[dropDownAños.value].text);
+            
+            string hora_Actual = DateTime.Now.ToString("HH:mm");      // Ejemplo: "14:35"
+            TimeSpan horaActual = TimeSpan.Parse(hora_Actual);
+            
+            // Si la fecha de la reserva es la misma que la fecha actual y la hora de la reserva es menor que la hora actual, se pone la hora actual
+            if ( fechaReserva == fechaActual && hora_Reserva < horaActual)
+            {
+                // Hora actual
+                string[] horaActualArray = hora_Actual.Split(":");
+                string hora = horaActualArray[0].Trim();
+                string minuto = horaActualArray[1].Trim();
+
+                BuscoElIndiceYLoPongoSiLoEncuentro(dropDownHoras, hora);
+                BuscoElIndiceYLoPongoSiLoEncuentro(dropDownMinutos, minuto);
+            }
+
+            // Si la fecha de la reserva es menor que la fecha actual, se pone la fecha actual en los dropdowns
+            if (fechaReserva < fechaActual)
+            {
+                // Fecha actual
+                string[] fechaActualArray = fecha_Actual.Split("/");
+                string día = fechaActualArray[0].Trim();
+                string mes = fechaActualArray[1].Trim();
+                string año = fechaActualArray[2].Trim();
+
+                BuscoElIndiceYLoPongoSiLoEncuentro(dropDownDías, día);
+                BuscoElIndiceYLoPongoSiLoEncuentro(dropDownMeses, mes);
+                BuscoElIndiceYLoPongoSiLoEncuentro(dropDownAños, año);
+            }
+        }
+        
     }
 
     private bool Hay7De7CamposRellenos()
@@ -117,16 +163,39 @@ public class CrearReservaController : MonoBehaviour
         }
     }
 
-    private void InicializarValoresDropdowns()
+    public void InicializarValoresDropdowns()
     {
-        
         List<string> opcionesDías = new List<string> { "01", "02", "03", "04", "05", "06", "07", "08", "09",
                                                           "10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
                                                           "20", "21", "22", "23", "24", "25", "26", "27", "28", "29",
                                                           "30", "31"};
         List<string> opcionesMeses = new List<string> { "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12" };
-        List<string> opcionesAños = new List<string> { "2025", "2026", "2027", "2028", "2029", "2030", "2031", "2032", "2033", "2034", "2035", "2036", "2037", "2038", "2039", "2040" };
-        List<string> opcionesHoras = new List<string> { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" };
+
+        
+        // Calculo el año actual y al dropdown le agrego 9 años más
+        string fechaActual = DateTime.Now.ToString("yyyy-MM-dd");
+        string[] fechaArray = fechaActual.Split("-");
+        int añoActual = int.Parse(fechaArray[0]);
+
+        List<string> opcionesAños = new List<string>();
+        for (int a = añoActual; a < añoActual + 10 + 1; a++)
+        {
+            opcionesAños.Add("" + a);
+        }
+
+        // Hora apertura restaurante
+        string[] horaAperturaArray = instanceGestionarMesasController.GetHoraAperturaRestaurante().Split(":");
+        int hora_a = int.Parse(horaAperturaArray[0].Trim());
+        // Hora cierre restaurante
+        string[] horaCierreArray = instanceGestionarMesasController.GetHoraCierreRestaurante().Split(":");
+        int hora_c = int.Parse(horaCierreArray[0].Trim());
+
+        List<string> opcionesHoras = new List<string>();
+        for (int i = hora_a; i < hora_c + 1; i++)
+        {
+            opcionesHoras.Add("" +i);
+        }
+
         List<string> opcionesMinutos = new List<string> { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09",
                                                           "10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
                                                           "20", "21", "22", "23", "24", "25", "26", "27", "28", "29",
@@ -241,7 +310,15 @@ public class CrearReservaController : MonoBehaviour
             {
                 Debug.Log("++Error, fecha correcta, pero hora pasada");
                 textResultadoMesasDisponibles.text = " Hora pasada.";
-                PonerValoresEnLasOpcionesDeCrear("", "", "");
+                return;
+            }
+
+            TimeSpan hora_Apertura = TimeSpan.Parse(instanceGestionarMesasController.GetHoraAperturaRestaurante());
+            TimeSpan hora_Cierre = TimeSpan.Parse(instanceGestionarMesasController.GetHoraCierreRestaurante());
+            // Si se pone una hora cuando el restaurante no está de servicio, sale error
+            if (horaReserva < hora_Apertura || horaReserva > hora_Cierre) 
+            {
+                textResultadoMesasDisponibles.text = " Hora incorrecta.";
                 return;
             }
 
@@ -430,6 +507,8 @@ public class CrearReservaController : MonoBehaviour
             Debug.Log("+ +Reserva registrada correctamente en mesa: " + reserva.Mesa_Id);
             Poner4ValoresEnCrearVacíos();
             PonerValoresEnLasOpcionesDeCrear("", "", "");
+            textResultadoMesasDisponibles.text = "";
+            AsignarValoresConcretosEnDropdowns();
         }
         else
         {
