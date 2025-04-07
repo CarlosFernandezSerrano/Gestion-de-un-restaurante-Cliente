@@ -608,6 +608,7 @@ public class GestionarMesasController : MonoBehaviour
         return null;        
     }
 
+    // Obtengo las reservas del día de hoy (pendiente y confirmadas)
     private List<Reserva> ObtenerReservasMesaParaHoy(List<Reserva> reservasMesaPendientes)
     {
         List<Reserva> reservas = new List<Reserva>();
@@ -866,7 +867,7 @@ public class GestionarMesasController : MonoBehaviour
         }
     }
 
-    private void PonerColorCorrectoAImg(Image img, string hexadecimal)
+    public void PonerColorCorrectoAImg(Image img, string hexadecimal)
     {
         Color newColor;
         // Intento convertir el string hexadecimal a Color
@@ -1000,7 +1001,7 @@ public class GestionarMesasController : MonoBehaviour
         // Existe una reserva en uso  
         if (reserva != null)
         {
-            CrearBotónEnScrollView(reserva, 1); // Falta hacer un switch dentro de esta fución para poner los botones de x colores
+            CrearBotónEnScrollView(reserva, 1); 
         }
 
         // Existen reservas de la mesa para hoy confirmadas 
@@ -1024,8 +1025,6 @@ public class GestionarMesasController : MonoBehaviour
                 CrearBotónEnScrollView(reserv, 3);
             }
         }
-
-
     }
 
     public string ObtenerIDMesaDelMapa(Button botónMesaSelected)
@@ -1105,10 +1104,6 @@ public class GestionarMesasController : MonoBehaviour
                 break;
         }
 
-        // Configuro la posición y escala del botón basándose en las propiedades de la mesa.
-        //rt.anchoredPosition = new Vector2(mesa.PosX, mesa.PosY);
-        //rt.localScale = new Vector3(mesa.ScaleX, mesa.ScaleY, 1f);
-
         // Agrego un componente Button para que sea interactivo
         botónGO.AddComponent<Button>();
 
@@ -1169,6 +1164,7 @@ public class GestionarMesasController : MonoBehaviour
     {
         canvasBuscarReserva.SetActive(true);
     }
+    
 
     public List<Mesa> GetMesas()
     {
