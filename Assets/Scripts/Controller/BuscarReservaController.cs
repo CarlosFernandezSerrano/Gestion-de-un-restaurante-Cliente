@@ -1,8 +1,10 @@
 using Assets.Scripts.Model;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -13,13 +15,24 @@ public class BuscarReservaController : MonoBehaviour
     [SerializeField] private GameObject canvasBuscarReserva;
     [SerializeField] private TMP_InputField inputFieldDniCliente;
     [SerializeField] private RectTransform rectTransformContent;
+    [SerializeField] private Button botónCancelarReserva;
+    [SerializeField] private GameObject bloqueConfirmarCancelarReserva;
+    [SerializeField] private Button botónConfirmarCancelarReserva;
+    [SerializeField] private Button botónBuscarReservas;
+
+    private List<Button> botonesParaCancelar = new List<Button>();
+    private Button botónMesaSeleccionado;
+    private int id_ReservaACancelar;
+    private string dniEnInputField;
 
     GestionarMesasController instanceGestionarMesasController;
+    MétodosAPIController instanceMétodosAPIController;
 
     // Start is called before the first frame update
     void Start()
     {
         instanceGestionarMesasController = GestionarMesasController.InstanceGestionarMesasController;
+        instanceMétodosAPIController = MétodosAPIController.InstanceMétodosAPIController;
     }
 
     // Update is called once per frame
@@ -32,17 +45,24 @@ public class BuscarReservaController : MonoBehaviour
     {
         if (inputFieldDniCliente.text.Trim().Length > 5)
         {
-            List<Reserva> reservasCliente = ObtenerReservasCliente(inputFieldDniCliente.text.Trim());
+            dniEnInputField = inputFieldDniCliente.text.Trim();
 
-            // Tengo que eliminar todos los hijos (botones en este caso) de Content antes de poner nuevos (reservas actualizadas)
-            EliminarObjetosHijoDeScrollView();
-
-            if (reservasCliente.Count > 0)
-            {
-                // Una vez obtenidas las reservas del cliente, las coloco ordenadas como botones en un Scroll View
-                CrearBotonesDeReservasDeCliente(reservasCliente);
-            }
+            BuscarReservasCliente(dniEnInputField);
         }        
+    }
+
+    private void BuscarReservasCliente(string dniEnInputField)
+    {
+        List<Reserva> reservasCliente = ObtenerReservasCliente(dniEnInputField);
+
+        // Tengo que eliminar todos los hijos (botones en este caso) de Content antes de poner nuevos (reservas actualizadas)
+        EliminarObjetosHijoDeScrollView();
+
+        if (reservasCliente.Count > 0)
+        {
+            // Una vez obtenidas las reservas del cliente, las coloco ordenadas como botones en un Scroll View
+            CrearBotonesDeReservasDeCliente(reservasCliente);
+        }
     }
 
     private void EliminarObjetosHijoDeScrollView()
@@ -58,6 +78,8 @@ public class BuscarReservaController : MonoBehaviour
         List<Reserva> reservasTerminadasOCanceladas = ObtenerReservasTerminadasOCanceladas(reservasCliente);
         List<Reserva> reservasConfirmadas = ObtenerReservasConfirmadas(reservasCliente);
         Reserva reserva = ObtenerReservaEnUso(reservasCliente);
+
+        botonesParaCancelar.Clear();
 
         // Existe una reserva en uso  
         if (reserva != null)
@@ -93,6 +115,27 @@ public class BuscarReservaController : MonoBehaviour
                 CrearBotónEnScrollView(reserv, 3);
             }
         }
+
+        // Poner listener a los botones que se pueden cancelar
+        PonerListenerABotonesDeReservasQueSePuedenCancelar();
+    }
+
+    private void PonerListenerABotonesDeReservasQueSePuedenCancelar()
+    {
+        // Obtenemos todos los componentes Button que sean hijos del contenedor
+        foreach (Button button in botonesParaCancelar)
+        {
+            // Es recomendable capturar la referencia del botón para evitar problemas con clausuras
+            Button capturedButton = button;
+            capturedButton.onClick.AddListener(() => ActivarBotónCancelarReserva(capturedButton));
+        }
+    }
+
+    private void ActivarBotónCancelarReserva(Button capturedButton)
+    {
+        botónMesaSeleccionado = capturedButton; // Obtengo el botón mesa que he pulsado
+
+        botónCancelarReserva.interactable = true;
     }
 
     private List<Reserva> ObtenerReservasTerminadasOCanceladas(List<Reserva> reservasCliente)
@@ -171,6 +214,11 @@ public class BuscarReservaController : MonoBehaviour
 
         // Creo un nuevo GameObject hijo, el texto del botón
         CrearTextoDelButton(rt, reserva);
+
+        if (num.Equals(1) || num.Equals(2))
+        {
+            botonesParaCancelar.Add(botónGO.GetComponent<Button>());
+        }
     }
 
     private void CrearTextoDelButton(RectTransform rt, Reserva reserva)
@@ -200,10 +248,14 @@ public class BuscarReservaController : MonoBehaviour
         // Agrego el componente TMP_Text para mostrar el sprite.
         TMP_Text textoBotón = textGO.AddComponent<TextMeshProUGUI>();
         textoBotón.fontStyle = FontStyles.Bold;
-        textoBotón.fontSize = 56;
+        textoBotón.fontSize = 46;
         textoBotón.alignment = TextAlignmentOptions.Left;
 
-        textoBotón.text = "  " + reserva.Fecha + "   " + reserva.Hora + "          " + reserva.CantComensales + "           " + reserva.Cliente.NumTelefono + "    " + reserva.Cliente.Nombre;
+        // Obtengo el Id de la mesa en el mapa
+        Button botónMesaSelected = instanceGestionarMesasController.padreDeLosBotonesMesa.gameObject.transform.Find("Button-" + reserva.Mesa_Id).GetComponent<Button>();
+        int id_Mesa_En_Mapa = int.Parse(instanceGestionarMesasController.ObtenerIDMesaDelMapa(botónMesaSelected));
+
+        textoBotón.text = " " + reserva.Cliente.Nombre + "    " + reserva.Cliente.Dni + "    " + reserva.Cliente.NumTelefono + "   " + reserva.Fecha + "   " + reserva.Hora + "        " + reserva.CantComensales + "             "+ id_Mesa_En_Mapa ;
     }
 
     private List<Reserva> ObtenerReservasCliente(string dni)
@@ -224,8 +276,74 @@ public class BuscarReservaController : MonoBehaviour
         return reservasCliente;
     }
 
+    public void CancelarReserva()
+    {
+        botónBuscarReservas.interactable = false;
+
+        PonerInteractuablesONoLosBotonesHijoDelScrollView(false);
+        botónCancelarReserva.interactable = false;
+
+        Debug.Log("- -Paso por cancelar reserva");
+
+        string[] nombreBotónSeleccionadoArray = botónMesaSeleccionado.gameObject.name.Split("-");
+        id_ReservaACancelar = int.Parse(nombreBotónSeleccionadoArray[1]);
+
+        Debug.Log("- -ID reserva: "+ id_ReservaACancelar);
+
+        bloqueConfirmarCancelarReserva.SetActive(true);
+    }
+
+    private void PonerInteractuablesONoLosBotonesHijoDelScrollView(bool b)
+    {
+        foreach (Transform botón in rectTransformContent)
+        {
+            botón.GetComponent<Button>().interactable = b;
+        }
+    }
+
+    public async void ConfirmarCancelarReserva()
+    {
+        botónConfirmarCancelarReserva.interactable = false;
+
+        string cad = await instanceMétodosAPIController.PutDataAsync("reserva/actualizarEstadoReserva", new Reserva(id_ReservaACancelar, "", "", "" + EstadoReserva.Cancelada, 0, 0, 0, new Cliente("", "", "")));
+
+        // Deserializo la respuesta
+        Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
+
+        if (resultado.Result.Equals(1))
+        {
+            Debug.Log("- -Reserva cancelada correctamente");
+
+            // Espero 1.5 segundos a que el código del cliente actualice sus mesas
+            await Task.Delay(1500);
+
+            BuscarReservasCliente(dniEnInputField);
+            bloqueConfirmarCancelarReserva.SetActive(false);
+            botónBuscarReservas.interactable = true;
+            PonerInteractuablesONoLosBotonesHijoDelScrollView(true);
+        }
+        else
+        {
+            Debug.Log("Error al intentar terminar una reserva");
+        }
+        
+        botónConfirmarCancelarReserva.interactable = true;
+    }
+
+    public void DesactivarBloqueConfirmarCancelarReserva()
+    {
+        botónCancelarReserva.interactable = false;
+        bloqueConfirmarCancelarReserva.SetActive(false);
+        botónBuscarReservas.interactable = true;
+        PonerInteractuablesONoLosBotonesHijoDelScrollView(true);
+    }
+
     public void DesactivarCanvasBuscarReserva()
     {
         canvasBuscarReserva.SetActive(false);
+
+        EliminarObjetosHijoDeScrollView();
+        inputFieldDniCliente.text = "";
+        botónCancelarReserva.interactable = false;
     }
 }

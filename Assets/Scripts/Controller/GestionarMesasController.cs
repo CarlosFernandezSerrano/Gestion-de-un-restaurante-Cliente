@@ -205,7 +205,7 @@ public class GestionarMesasController : MonoBehaviour
 
     // Si una reserva ha acabado, se actualiza la mesa y la reserva. Los colores se actualizan aquí aunque se podrían actualizar aparte
     private async void ActualizarEstadoReservaYMesaDelDíaDeHoyAsync() 
-    {                                                       // Hay que hacer bastantes cambios y mejoras aquí __ _ __ _-- _ - - - - -- -_ _ _ _ - -_ _ - _ _ -_
+    {                                                       
         // Compruebo si ya ha pasado su tiempo límite
         string horaActual = DateTime.Now.ToString("HH:mm");
         TimeSpan horaActualTimeSpan = TimeSpan.Parse(horaActual);
@@ -213,9 +213,9 @@ public class GestionarMesasController : MonoBehaviour
         foreach (Mesa mesa in Mesas)
         {
             // Obtengo las reservas pendientes que tiene la mesa, ya sean de hoy o en adelante
-            List<Reserva> reservasMesaPendientes = ObtenerReservasMesaDeHoyEnAdelante(mesa.Id);
+            List<Reserva> reservasMesaHoyEnAdelante = ObtenerReservasMesaDeHoyEnAdelante(mesa.Id);
             // Obtengo las reservas del día de hoy
-            List<Reserva> reservasMesaParaHoy = ObtenerReservasMesaParaHoy(reservasMesaPendientes);
+            List<Reserva> reservasMesaParaHoy = ObtenerReservasMesaParaHoy(reservasMesaHoyEnAdelante);
 
             List<Reserva> reservasPendientesEnUnaMesaHoy = new List<Reserva>();
             foreach (Reserva reserva in reservasMesaParaHoy)
@@ -286,6 +286,7 @@ public class GestionarMesasController : MonoBehaviour
                     // Pongo la mesa en no disponible si existe una reserva pendiente ahora
                     if (ExisteUnaReservaPendienteAhora(reservasMesaParaHoy, horaActualTimeSpan))
                     {
+                        Debug.Log("- -Pasa por if");
                         // Actualizo la mesa en la BDD en "Disponible" = false 
                         string cad = await instanceMétodosApiController.PutDataAsync("mesa/actualizarCampoDisponible", new Mesa(reserva.Mesa_Id, 0, 0, 0, 0, 0, 0, 0, false, 0, new List<Reserva>()));
 
@@ -307,6 +308,7 @@ public class GestionarMesasController : MonoBehaviour
                     }
                     else // No hay ninguna reserva ahora mismo en uso, pongo la mesa en disponible
                     {
+                        Debug.Log("- -Pasa por else");
                         // Actualizo la mesa en la BDD en "Disponible" = true 
                         string cad = await instanceMétodosApiController.PutDataAsync("mesa/actualizarCampoDisponible", new Mesa(reserva.Mesa_Id, 0, 0, 0, 0, 0, 0, 0, true, 0, new List<Reserva>()));
 
@@ -618,7 +620,7 @@ public class GestionarMesasController : MonoBehaviour
             DateTime fechaReserva = DateTime.Parse(reserva.Fecha); 
 
             // Si la fecha de la reserva es hoy y la reserva está confirmada o pendiente, se obtiene
-            if (fechaReserva == fechaHoy && reserva.Estado.CompareTo(""+EstadoReserva.Confirmada) == 0 || fechaReserva == fechaHoy && reserva.Estado.CompareTo("" + EstadoReserva.Pendiente) == 0)
+            if (fechaReserva == fechaHoy && reserva.Estado.CompareTo(""+EstadoReserva.Confirmada) == 0 || fechaReserva == fechaHoy && reserva.Estado.CompareTo("" + EstadoReserva.Pendiente) == 0 || fechaReserva == fechaHoy && reserva.Estado.CompareTo("" + EstadoReserva.Cancelada) == 0)
             {
                 reservas.Add(reserva);
             }
@@ -1141,7 +1143,7 @@ public class GestionarMesasController : MonoBehaviour
         textoBotón.fontSize = 56;
         textoBotón.alignment = TextAlignmentOptions.Left;
 
-        textoBotón.text = "  "+reserva.Fecha+ "   " + reserva.Hora+ "          " + reserva.CantComensales+ "           " + reserva.Cliente.NumTelefono + "    " + reserva.Cliente.Nombre;
+        textoBotón.text = " "+reserva.Fecha+ "    " + reserva.Hora+ "           " + reserva.CantComensales+ "          " + reserva.Cliente.NumTelefono + "    " + reserva.Cliente.Nombre;
     }
 
     public void DesactivarCanvasReservasMesaHoy()
