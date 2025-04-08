@@ -77,14 +77,23 @@ public class BuscarReservaController : MonoBehaviour
     {
         List<Reserva> reservasTerminadasOCanceladas = ObtenerReservasTerminadasOCanceladas(reservasCliente);
         List<Reserva> reservasConfirmadas = ObtenerReservasConfirmadas(reservasCliente);
-        Reserva reserva = ObtenerReservaEnUso(reservasCliente);
+        List<Reserva> reservasEnUso = ObtenerReservasEnUso(reservasCliente);
 
         botonesParaCancelar.Clear();
 
-        // Existe una reserva en uso  
-        if (reserva != null)
+        // Existe una o varias reservas en uso  
+        if (reservasEnUso.Count > 0)
         {
-            CrearBotónEnScrollView(reserva, 1);
+            var reservasOrdenadasPorHora = reservasEnUso
+            .OrderByDescending(r => DateTime.Parse(r.Fecha)) // primero por fecha descendente (más recientes arriba)
+            .ThenBy(r => TimeSpan.Parse(r.Hora))   // luego por hora descendente
+            .ToList();
+
+
+            foreach (Reserva r in reservasOrdenadasPorHora)
+            {
+                CrearBotónEnScrollView(r, 1);
+            }            
         }
 
         // Existen reservas de la mesa para hoy confirmadas 
@@ -164,16 +173,17 @@ public class BuscarReservaController : MonoBehaviour
         return reservas;
     }
 
-    private Reserva ObtenerReservaEnUso(List<Reserva> reservasCliente)
+    private List<Reserva> ObtenerReservasEnUso(List<Reserva> reservasCliente)
     {
+        List<Reserva> reservas = new List<Reserva>();
         foreach (Reserva reserva in reservasCliente)
         {
             if (reserva.Estado.CompareTo("" + EstadoReserva.Pendiente) == 0)
             {
-                return reserva;
+                reservas.Add(reserva);
             }
         }
-        return null;
+        return reservas;
     }
 
     private void CrearBotónEnScrollView(Reserva reserva, int num)
@@ -255,7 +265,55 @@ public class BuscarReservaController : MonoBehaviour
         Button botónMesaSelected = instanceGestionarMesasController.padreDeLosBotonesMesa.gameObject.transform.Find("Button-" + reserva.Mesa_Id).GetComponent<Button>();
         int id_Mesa_En_Mapa = int.Parse(instanceGestionarMesasController.ObtenerIDMesaDelMapa(botónMesaSelected));
 
-        textoBotón.text = " " + reserva.Cliente.Nombre + "    " + reserva.Cliente.Dni + "    " + reserva.Cliente.NumTelefono + "   " + reserva.Fecha + "   " + reserva.Hora + "        " + reserva.CantComensales + "             "+ id_Mesa_En_Mapa ;
+        PonerTextoBotónDeFormaCorrecta(textoBotón, reserva, id_Mesa_En_Mapa);
+        
+    }
+
+    private void PonerTextoBotónDeFormaCorrecta(TMP_Text textoBotón, Reserva reserva, int id_Mesa_En_Mapa)
+    {
+        // El cliente de la reserva tiene un número de teléfono registrado
+        if (reserva.Cliente.NumTelefono.Trim().Length > 0)
+        {
+            switch (reserva.Cliente.Nombre.Trim().Length)
+            {
+                case 3:
+                    textoBotón.text = " " + reserva.Cliente.Nombre + "        " + reserva.Cliente.Dni + "    " + reserva.Cliente.NumTelefono + "   " + reserva.Fecha + "    " + reserva.Hora + "         " + reserva.CantComensales + "             " + id_Mesa_En_Mapa;
+                    break;
+                case 4:
+                    textoBotón.text = " " + reserva.Cliente.Nombre + "       " + reserva.Cliente.Dni + "    " + reserva.Cliente.NumTelefono + "   " + reserva.Fecha + "    " + reserva.Hora + "         " + reserva.CantComensales + "             " + id_Mesa_En_Mapa;
+                    break;
+                case 5:
+                    textoBotón.text = " " + reserva.Cliente.Nombre + "     " + reserva.Cliente.Dni + "    " + reserva.Cliente.NumTelefono + "   " + reserva.Fecha + "    " + reserva.Hora + "         " + reserva.CantComensales + "             " + id_Mesa_En_Mapa;
+                    break;
+                case 6:
+                    textoBotón.text = " " + reserva.Cliente.Nombre + "   " + reserva.Cliente.Dni + "    " + reserva.Cliente.NumTelefono + "   " + reserva.Fecha + "    " + reserva.Hora + "         " + reserva.CantComensales + "             " + id_Mesa_En_Mapa;
+                    break;
+                case 7:
+                    textoBotón.text = " " + reserva.Cliente.Nombre + "  " + reserva.Cliente.Dni + "    " + reserva.Cliente.NumTelefono + "   " + reserva.Fecha + "    " + reserva.Hora + "         " + reserva.CantComensales + "             " + id_Mesa_En_Mapa;
+                    break;
+            }
+        }
+        else
+        {
+            switch (reserva.Cliente.Nombre.Trim().Length)
+            {
+                case 3:
+                    textoBotón.text = " " + reserva.Cliente.Nombre + "        " + reserva.Cliente.Dni + "                       " + reserva.Fecha + "    " + reserva.Hora + "         " + reserva.CantComensales + "             " + id_Mesa_En_Mapa;
+                    break;
+                case 4:
+                    textoBotón.text = " " + reserva.Cliente.Nombre + "       " + reserva.Cliente.Dni + "                       " + reserva.Fecha + "    " + reserva.Hora + "         " + reserva.CantComensales + "             " + id_Mesa_En_Mapa;
+                    break;
+                case 5:
+                    textoBotón.text = " " + reserva.Cliente.Nombre + "     " + reserva.Cliente.Dni + "                       " + reserva.Fecha + "    " + reserva.Hora + "         " + reserva.CantComensales + "             " + id_Mesa_En_Mapa;
+                    break;
+                case 6:
+                    textoBotón.text = " " + reserva.Cliente.Nombre + "   " + reserva.Cliente.Dni + "                       " + reserva.Fecha + "    " + reserva.Hora + "         " + reserva.CantComensales + "             " + id_Mesa_En_Mapa;
+                    break;
+                case 7:
+                    textoBotón.text = " " + reserva.Cliente.Nombre + "  " + reserva.Cliente.Dni + "                       " + reserva.Fecha + "    " + reserva.Hora + "         " + reserva.CantComensales + "             " + id_Mesa_En_Mapa;
+                    break;
+            }
+        }
     }
 
     private List<Reserva> ObtenerReservasCliente(string dni)
