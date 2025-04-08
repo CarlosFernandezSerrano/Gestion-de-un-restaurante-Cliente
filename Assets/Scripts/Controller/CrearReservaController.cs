@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -132,7 +133,7 @@ public class CrearReservaController : MonoBehaviour
         string[] campos = { nombre, dni, num_Mesa, fecha, hora, num_Comensales };
 
         // Si ninguno de los campos está vacío, devuelve true. Todos los campos están llenos.
-        if (!campos.Any(string.IsNullOrWhiteSpace) && NumMesaCorrecto(num_Mesa))
+        if (!campos.Any(string.IsNullOrWhiteSpace) && NumMesaCorrecto(num_Mesa) && LosInputFieldCumplenElTamaño(nombre, dni))
         {
             return true;
         }
@@ -140,6 +141,43 @@ public class CrearReservaController : MonoBehaviour
         {
             return false;
         }
+    }
+
+    private bool LosInputFieldCumplenElTamaño(string nombreInputField, string dniInputField)
+    {
+        string nombre = Regex.Replace(nombreInputField, @"\s+", "");
+        string dni = Regex.Replace(dniInputField, @"\s+", "");
+        string num_Teléfono = Regex.Replace(inputFieldNumTeléfono.text.Trim(), @"\s+", ""); 
+
+        // Si se pone un número de teléfono
+        if (num_Teléfono.Length > 0)
+        {
+            if (nombre.Length <= 7 && dni.Length.Equals(9) && num_Teléfono.Length.Equals(9))
+            {
+                Debug.Log("*1Num_Telefono: " + num_Teléfono.Length);
+                return true;
+            }
+            else
+            {
+                Debug.Log("*2Num_Telefono: " + num_Teléfono.Length);
+                return false;
+            }
+        }
+        else // Si no se pone un número de teléfono
+        {
+            if (nombre.Length <= 7 && dni.Length.Equals(9))
+            {
+                Debug.Log("*1Num_Telefono: " + num_Teléfono.Length);
+                return true;
+            }
+            else
+            {
+                Debug.Log("*2Num_Telefono: " + num_Teléfono.Length);
+                return false;
+            }
+        }
+
+        
     }
 
     private bool NumMesaCorrecto(string num_Mesa)
