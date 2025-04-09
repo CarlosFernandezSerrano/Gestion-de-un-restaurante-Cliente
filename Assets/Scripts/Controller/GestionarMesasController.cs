@@ -996,7 +996,7 @@ public class GestionarMesasController : MonoBehaviour
         Reserva reserva = ObtenerReservaEnUso(reservasMesaParaHoy);
 
         // Tengo que eliminar todos los hijos (botones en este caso) de Content antes de poner nuevos (reservas actualizadas)
-        EliminarObjetosHijoDeScrollView();
+        EliminarObjetosHijoDeScrollView(rectTransformContent);
 
         // Existe una reserva en uso  
         if (reserva != null)
@@ -1032,7 +1032,7 @@ public class GestionarMesasController : MonoBehaviour
         return "" + botónMesaSelected.gameObject.transform.Find("Imagen Rectangle/Text").GetComponent<TextMeshProUGUI>().text.Trim();
     }
 
-    private void EliminarObjetosHijoDeScrollView()
+    private void EliminarObjetosHijoDeScrollView(RectTransform rectTransformContent)
     {
         foreach (Transform hijo in rectTransformContent)
         {
@@ -1185,13 +1185,11 @@ public class GestionarMesasController : MonoBehaviour
 
     private void CrearBotonesEnHistorialReservas()
     {
-        DateTime fechaHoy = DateTime.Today;
         // Tengo que eliminar todos los hijos (botones en este caso) de Content antes de poner nuevos (reservas actualizadas)
-        //EliminarObjetosHijoDeScrollView();
+        EliminarObjetosHijoDeScrollView(rectTransformContentHistorialReservas);
 
         List<Reserva> reservasDeHace1Mes = ObtenerTodasLasReservasDeHace1Mes();
-        List<Reserva> reservasTerminadasOCanceladas = ObtenerReservasTerminadasOCanceladas(reservasDeHace1Mes);
-        List<Reserva> reservasConfirmadas = ObtenerReservasConfirmadas(reservasDeHace1Mes);
+        List<Reserva> reservasTerminadasCanceladasOConfirmadas = ObtenerReservasTerminadasCanceladasOConfirmadas(reservasDeHace1Mes);
         List<Reserva> reservasEnUso = ObtenerReservasEnUso(reservasDeHace1Mes);
 
 
@@ -1206,42 +1204,26 @@ public class GestionarMesasController : MonoBehaviour
 
             foreach (Reserva r in reservasOrdenadasPorHora)
             {
-                CrearBotónEnScrollViewHistorialReservas(r, 1);
+                CrearBotónEnScrollViewHistorialReservas(r);
             }
         }
 
-        // Existen reservas de la mesa para hoy confirmadas 
-        if (reservasConfirmadas.Count > 0)
+        // Existen reservas de la mesa para hoy terminadas/canceladas o confirmadas 
+        if (reservasTerminadasCanceladasOConfirmadas.Count > 0)
         {
-            var reservasOrdenadasPorHora = reservasConfirmadas
-            .OrderByDescending(r => DateTime.Parse(r.Fecha)) // primero por fecha descendente (más recientes arriba)
-            .ThenBy(r => TimeSpan.Parse(r.Hora))   // luego por hora descendente
-            .ToList();
-
-
-            foreach (Reserva r in reservasOrdenadasPorHora)
-            {
-                CrearBotónEnScrollViewHistorialReservas(r, 2);
-            }
-        }
-
-        // Existen reservas de la mesa para hoy terminadas 
-        if (reservasTerminadasOCanceladas.Count > 0)
-        {
-            var reservasOrdenadasPorHora = reservasTerminadasOCanceladas
+            var reservasOrdenadasPorHora = reservasTerminadasCanceladasOConfirmadas
             .OrderByDescending(r => DateTime.Parse(r.Fecha)) // primero por fecha descendente (más recientes arriba)
             .ThenBy(r => TimeSpan.Parse(r.Hora))   // luego por hora descendente
             .ToList();
 
             foreach (Reserva reserv in reservasOrdenadasPorHora)
             {
-                CrearBotónEnScrollViewHistorialReservas(reserv, 3);
+                CrearBotónEnScrollViewHistorialReservas(reserv);
             }
         }
-        
     }
 
-    private void CrearBotónEnScrollViewHistorialReservas(Reserva reserva, int num)
+    private void CrearBotónEnScrollViewHistorialReservas(Reserva reserva)
     {
         // Creo un GameObject para el botón y le asigno un nombre único.
         GameObject botónGO = new GameObject("Button-" + reserva.Id);
@@ -1260,16 +1242,19 @@ public class GestionarMesasController : MonoBehaviour
         // Agrego el componente Image para mostrar el sprite.
         Image imagen = botónGO.AddComponent<Image>();
 
-        switch (num)
+        switch (reserva.Estado)
         {
-            case 1:
+            case "Pendiente":
                 PonerColorCorrectoAImg(imagen, "#6DEC6F");
                 //imagen.color = Color.green;
                 break;
-            case 2:
+            case "Confirmada":
                 PonerColorCorrectoAImg(imagen, "#FDF468");
                 break;
-            case 3:
+            case "Cancelada":
+                PonerColorCorrectoAImg(imagen, "#EC6C6C");
+                break;
+            case "Terminada":
                 PonerColorCorrectoAImg(imagen, "#EC6C6C");
                 break;
         }
@@ -1322,29 +1307,16 @@ public class GestionarMesasController : MonoBehaviour
         }
         else // El cliente no tiene ningún número de teléfono registrado
         {
-            textoBotón.text = " " + reserva.Fecha + "  " + reserva.Hora + "        " + reserva.CantComensales + "            " + id_Mesa_En_Mapa + "         " + reserva.Cliente.Dni + "   " + reserva.Cliente.NumTelefono + "    " + reserva.Cliente.Nombre;
+            textoBotón.text = " " + reserva.Fecha + "  " + reserva.Hora + "        " + reserva.CantComensales + "            " + id_Mesa_En_Mapa + "         " + reserva.Cliente.Dni + "                       " + reserva.Cliente.Nombre;
         }
     }
 
-    private List<Reserva> ObtenerReservasTerminadasOCanceladas(List<Reserva> reservasDeHace1Mes)
+    private List<Reserva> ObtenerReservasTerminadasCanceladasOConfirmadas(List<Reserva> reservasDeHace1Mes)
     {
         List<Reserva> reservas = new List<Reserva>();
         foreach (Reserva reserva in reservasDeHace1Mes)
         {
-            if (reserva.Estado.CompareTo(""+EstadoReserva.Cancelada) == 0 || reserva.Estado.CompareTo(""+EstadoReserva.Terminada) == 0)
-            {
-                reservas.Add(reserva);
-            }
-        }
-        return reservas;
-    }
-
-    private List<Reserva> ObtenerReservasConfirmadas(List<Reserva> reservasDeHace1Mes)
-    {
-        List<Reserva> reservas = new List<Reserva>();
-        foreach (Reserva reserva in reservasDeHace1Mes)
-        {
-            if (reserva.Estado.CompareTo("" + EstadoReserva.Confirmada) == 0)
+            if (reserva.Estado.CompareTo(""+EstadoReserva.Cancelada) == 0 || reserva.Estado.CompareTo(""+EstadoReserva.Terminada) == 0 || reserva.Estado.CompareTo("" + EstadoReserva.Confirmada) == 0)
             {
                 reservas.Add(reserva);
             }
