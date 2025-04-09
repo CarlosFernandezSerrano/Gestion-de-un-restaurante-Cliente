@@ -4,15 +4,12 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using UnityEngine.XR;
-using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 
 
@@ -32,7 +29,9 @@ public class GestionarMesasController : MonoBehaviour
     [SerializeField] private TMP_Text textReservasHoyMesa;
     [SerializeField] private GameObject canvasCrearReserva;
     [SerializeField] private GameObject canvasBuscarReserva;
-
+    [SerializeField] private GameObject canvasHistorialReservas;
+    [SerializeField] private Scrollbar scrollbarHistorialReservas; 
+    [SerializeField] private RectTransform rectTransformContentHistorialReservas;
 
     private List<Mesa> Mesas;
 
@@ -873,7 +872,7 @@ public class GestionarMesasController : MonoBehaviour
     {
         Color newColor;
         // Intento convertir el string hexadecimal a Color
-        if (ColorUtility.TryParseHtmlString(hexadecimal, out newColor))
+        if (UnityEngine.ColorUtility.TryParseHtmlString(hexadecimal, out newColor))
         {
             img.color = newColor;
         }
@@ -976,7 +975,6 @@ public class GestionarMesasController : MonoBehaviour
 
         canvasReservasHoyMesa.SetActive(true);
         scrollbarReservasMesaHoy.value = 1; // Cada vez que muestro el scroll view, pongo el scroll arriba del todo
-        
     }
 
     private void CrearBotonesDeReservasEnMesaHoy()
@@ -1003,7 +1001,7 @@ public class GestionarMesasController : MonoBehaviour
         // Existe una reserva en uso  
         if (reserva != null)
         {
-            CrearBotónEnScrollView(reserva, 1); 
+            CrearBotónEnScrollViewReservasMesaHoy(reserva, 1); 
         }
 
         // Existen reservas de la mesa para hoy confirmadas 
@@ -1013,7 +1011,7 @@ public class GestionarMesasController : MonoBehaviour
 
             foreach (Reserva r in reservasOrdenadasPorHora)
             {
-                CrearBotónEnScrollView(r, 2);
+                CrearBotónEnScrollViewReservasMesaHoy(r, 2);
             }
         }
 
@@ -1024,7 +1022,7 @@ public class GestionarMesasController : MonoBehaviour
 
             foreach (Reserva reserv in reservasOrdenadasPorHora)
             {
-                CrearBotónEnScrollView(reserv, 3);
+                CrearBotónEnScrollViewReservasMesaHoy(reserv, 3);
             }
         }
     }
@@ -1073,7 +1071,7 @@ public class GestionarMesasController : MonoBehaviour
         return reservas;
     }
 
-    private void CrearBotónEnScrollView(Reserva reserva, int num)
+    private void CrearBotónEnScrollViewReservasMesaHoy(Reserva reserva, int num)
     {
         // Creo un GameObject para el botón y le asigno un nombre único.
         GameObject botónGO = new GameObject("Button-" + reserva.Id);
@@ -1152,7 +1150,6 @@ public class GestionarMesasController : MonoBehaviour
         {
             textoBotón.text = "  " + reserva.Fecha + "    " + reserva.Hora + "           " + reserva.CantComensales + "                              " + reserva.Cliente.Nombre;
         }
-        
     }
 
     public void DesactivarCanvasReservasMesaHoy()
@@ -1175,7 +1172,220 @@ public class GestionarMesasController : MonoBehaviour
     {
         canvasBuscarReserva.SetActive(true);
     }
-    
+
+    public void ActivarCanvasHistorialReservas()
+    {
+        // Una vez obtenidas las reservas según su estado, las coloco ordenadas como botones en un Scroll View
+        CrearBotonesEnHistorialReservas();
+
+        canvasHistorialReservas.SetActive(true);
+
+        scrollbarHistorialReservas.value = 1; // Cada vez que muestro el scroll view, pongo el scroll arriba del todo
+    }
+
+    private void CrearBotonesEnHistorialReservas()
+    {
+        DateTime fechaHoy = DateTime.Today;
+        // Tengo que eliminar todos los hijos (botones en este caso) de Content antes de poner nuevos (reservas actualizadas)
+        //EliminarObjetosHijoDeScrollView();
+
+        List<Reserva> reservasDeHace1Mes = ObtenerTodasLasReservasDeHace1Mes();
+        List<Reserva> reservasTerminadasOCanceladas = ObtenerReservasTerminadasOCanceladas(reservasDeHace1Mes);
+        List<Reserva> reservasConfirmadas = ObtenerReservasConfirmadas(reservasDeHace1Mes);
+        List<Reserva> reservasEnUso = ObtenerReservasEnUso(reservasDeHace1Mes);
+
+
+        // Existe una o varias reservas en uso  
+        if (reservasEnUso.Count > 0)
+        {
+            var reservasOrdenadasPorHora = reservasEnUso
+            .OrderByDescending(r => DateTime.Parse(r.Fecha)) // primero por fecha descendente (más recientes arriba)
+            .ThenBy(r => TimeSpan.Parse(r.Hora))   // luego por hora descendente
+            .ToList();
+
+
+            foreach (Reserva r in reservasOrdenadasPorHora)
+            {
+                CrearBotónEnScrollViewHistorialReservas(r, 1);
+            }
+        }
+
+        // Existen reservas de la mesa para hoy confirmadas 
+        if (reservasConfirmadas.Count > 0)
+        {
+            var reservasOrdenadasPorHora = reservasConfirmadas
+            .OrderByDescending(r => DateTime.Parse(r.Fecha)) // primero por fecha descendente (más recientes arriba)
+            .ThenBy(r => TimeSpan.Parse(r.Hora))   // luego por hora descendente
+            .ToList();
+
+
+            foreach (Reserva r in reservasOrdenadasPorHora)
+            {
+                CrearBotónEnScrollViewHistorialReservas(r, 2);
+            }
+        }
+
+        // Existen reservas de la mesa para hoy terminadas 
+        if (reservasTerminadasOCanceladas.Count > 0)
+        {
+            var reservasOrdenadasPorHora = reservasTerminadasOCanceladas
+            .OrderByDescending(r => DateTime.Parse(r.Fecha)) // primero por fecha descendente (más recientes arriba)
+            .ThenBy(r => TimeSpan.Parse(r.Hora))   // luego por hora descendente
+            .ToList();
+
+            foreach (Reserva reserv in reservasOrdenadasPorHora)
+            {
+                CrearBotónEnScrollViewHistorialReservas(reserv, 3);
+            }
+        }
+        
+    }
+
+    private void CrearBotónEnScrollViewHistorialReservas(Reserva reserva, int num)
+    {
+        // Creo un GameObject para el botón y le asigno un nombre único.
+        GameObject botónGO = new GameObject("Button-" + reserva.Id);
+
+        // Establezco el padre para que se muestre en el UI.
+        botónGO.transform.SetParent(rectTransformContentHistorialReservas, false);
+
+        // Agrego el componente RectTransform (se agrega automáticamente al crear UI, pero lo añado explícitamente).
+        RectTransform rt = botónGO.AddComponent<RectTransform>();
+        // Defino un tamaño por defecto para el botón.
+        rt.sizeDelta = new Vector2(1530.9f, 138f);
+
+        // Agrego CanvasRenderer para poder renderizar el UI.
+        botónGO.AddComponent<CanvasRenderer>();
+
+        // Agrego el componente Image para mostrar el sprite.
+        Image imagen = botónGO.AddComponent<Image>();
+
+        switch (num)
+        {
+            case 1:
+                PonerColorCorrectoAImg(imagen, "#6DEC6F");
+                //imagen.color = Color.green;
+                break;
+            case 2:
+                PonerColorCorrectoAImg(imagen, "#FDF468");
+                break;
+            case 3:
+                PonerColorCorrectoAImg(imagen, "#EC6C6C");
+                break;
+        }
+
+        // Agrego un componente Button para que sea interactivo
+        botónGO.AddComponent<Button>();
+
+        // Creo un nuevo GameObject hijo, el texto del botón
+        CrearTextoDelButtonEnHistorialReservas(rt, reserva);
+    }
+
+    private void CrearTextoDelButtonEnHistorialReservas(RectTransform rt, Reserva reserva)
+    {
+        // Creo un GameObject para el botón y le asigno un nombre único.
+        GameObject textGO = new GameObject("TMP_Text");
+
+        // Establezco el padre para que se muestre en el UI.
+        textGO.transform.SetParent(rt, false);
+
+        // Agrego el componente RectTransform (se agrega automáticamente al crear UI, pero lo añado explícitamente).
+        RectTransform rtText = textGO.AddComponent<RectTransform>();
+        // Anclas estiradas (stretch) en ambas direcciones
+        rtText.anchorMin = new Vector2(0, 0);
+        rtText.anchorMax = new Vector2(1, 1);
+
+        // Márgenes todos a 0 (equivale a Left, Right, Top, Bottom en el inspector)
+        rtText.offsetMin = Vector2.zero;
+        rtText.offsetMax = Vector2.zero;
+
+        // Centrado por si acaso (aunque no influye mucho cuando está estirado)
+        rtText.anchoredPosition = Vector2.zero;
+
+        // Agrego CanvasRenderer para poder renderizar el UI.
+        textGO.AddComponent<CanvasRenderer>();
+
+        // Agrego el componente TMP_Text para mostrar el sprite.
+        TMP_Text textoBotón = textGO.AddComponent<TextMeshProUGUI>();
+        textoBotón.fontStyle = FontStyles.Bold;
+        textoBotón.fontSize = 46;
+        textoBotón.alignment = TextAlignmentOptions.Left;
+
+        // Obtengo el Id de la mesa en el mapa
+        Button botónMesaSelected = padreDeLosBotonesMesa.gameObject.transform.Find("Button-" + reserva.Mesa_Id).GetComponent<Button>();
+        int id_Mesa_En_Mapa = int.Parse(ObtenerIDMesaDelMapa(botónMesaSelected));
+
+        // Si el cliente tiene un número de teléfono registrado en la BDD
+        if (reserva.Cliente.NumTelefono.Trim().Length > 0)
+        {
+            textoBotón.text = " " + reserva.Fecha + "  " + reserva.Hora + "        " + reserva.CantComensales + "            " + id_Mesa_En_Mapa + "         " + reserva.Cliente.Dni + "   " + reserva.Cliente.NumTelefono + "    " + reserva.Cliente.Nombre;
+        }
+        else // El cliente no tiene ningún número de teléfono registrado
+        {
+            textoBotón.text = " " + reserva.Fecha + "  " + reserva.Hora + "        " + reserva.CantComensales + "            " + id_Mesa_En_Mapa + "         " + reserva.Cliente.Dni + "   " + reserva.Cliente.NumTelefono + "    " + reserva.Cliente.Nombre;
+        }
+    }
+
+    private List<Reserva> ObtenerReservasTerminadasOCanceladas(List<Reserva> reservasDeHace1Mes)
+    {
+        List<Reserva> reservas = new List<Reserva>();
+        foreach (Reserva reserva in reservasDeHace1Mes)
+        {
+            if (reserva.Estado.CompareTo(""+EstadoReserva.Cancelada) == 0 || reserva.Estado.CompareTo(""+EstadoReserva.Terminada) == 0)
+            {
+                reservas.Add(reserva);
+            }
+        }
+        return reservas;
+    }
+
+    private List<Reserva> ObtenerReservasConfirmadas(List<Reserva> reservasDeHace1Mes)
+    {
+        List<Reserva> reservas = new List<Reserva>();
+        foreach (Reserva reserva in reservasDeHace1Mes)
+        {
+            if (reserva.Estado.CompareTo("" + EstadoReserva.Confirmada) == 0)
+            {
+                reservas.Add(reserva);
+            }
+        }
+        return reservas;
+    }
+
+    private List<Reserva> ObtenerReservasEnUso(List<Reserva> reservasDeHace1Mes)
+    {
+        List<Reserva> reservas = new List<Reserva>();
+        foreach (Reserva reserva in reservasDeHace1Mes)
+        {
+            if (reserva.Estado.CompareTo("" + EstadoReserva.Pendiente) == 0)
+            {
+                reservas.Add(reserva);
+            }
+        }
+        return reservas;
+    }
+
+    private List<Reserva> ObtenerTodasLasReservasDeHace1Mes()
+    {
+        DateTime fechaActual = DateTime.Today;
+        DateTime fechaHaceUnMes = fechaActual.AddMonths(-1); // Le resto un mes a la fecha actual
+        TimeSpan horaActual = TimeSpan.Parse(DateTime.Now.ToString("HH:mm"));
+        List<Reserva> reservas = new List<Reserva>();
+        foreach (Mesa mesa in Mesas)
+        {
+            foreach (Reserva reserva in mesa.Reservas)
+            {
+                DateTime fechaReserva = DateTime.Parse(reserva.Fecha);
+                TimeSpan horaReserva = TimeSpan.Parse(reserva.Hora);
+
+                if (fechaReserva <= fechaActual && fechaReserva >= fechaHaceUnMes || fechaReserva == fechaActual &&  horaReserva <= horaActual)
+                {
+                    reservas.Add(reserva);
+                }
+            }
+        }
+        return reservas;
+    }
 
     public List<Mesa> GetMesas()
     {
