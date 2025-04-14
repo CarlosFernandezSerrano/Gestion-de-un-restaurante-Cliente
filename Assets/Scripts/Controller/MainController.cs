@@ -59,6 +59,8 @@ public class MainController : MonoBehaviour
         instanceMétodosAPIController = MétodosAPIController.InstanceMétodosAPIController;
         instanceTrabajadorController = TrabajadorController.InstanceTrabajadorController;
 
+        FicheroController.GestionarFicheros();
+
         TrabajadorController.ComprobandoDatosTrabajador = false;
         instanceTrabajadorController.PonerDatosEnPerfilTrabajador(textUserNombre, textUserRol, textUserRestaurante);
 
