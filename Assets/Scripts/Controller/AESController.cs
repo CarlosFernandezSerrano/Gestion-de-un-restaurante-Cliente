@@ -36,15 +36,6 @@ namespace Assets.Scripts.Controller
             }
         }
 
-        public static string LeerKeyAndIV(string contenido)
-        {
-            string[] partes = contenido.Split(new char[] { ':', '*' });
-            AESController.KeyBase64 = partes[1];
-            AESController.IVBase64 = partes[3];
-
-            return "Key: " + AESController.KeyBase64 + "; IV: " + AESController.IVBase64;
-        }
-
         public static string Encrypt(string simpleText)
         {
              byte[] key = Convert.FromBase64String(KeyBase64);

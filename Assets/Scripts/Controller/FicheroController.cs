@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scripts.Model;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,18 +10,33 @@ using UnityEngine;
 
 namespace Assets.Scripts.Controller
 {
-    class FicheroController
+    class FicheroController : MonoBehaviour
     {
+        [SerializeField] private Cambio_Idioma_Escena_Main_Controller scriptCambioIdiomaEscenaMainController;
+
         private static string rutaArchivo;
 
+        public static FicheroController InstanceFicheroController { get; private set; }
 
-        public static void GestionarFicheros()
+        private void Awake()
+        {
+            if (InstanceFicheroController == null)
+            {
+                InstanceFicheroController = this;
+            }
+        }
+
+
+
+        public void GestionarFicheros()
         {
             CrearFichero("KeyAndIV");
 
             CrearFichero("UserInfo.txt");
 
             LeerFichUserInfo();
+
+            scriptCambioIdiomaEscenaMainController.PonerTextosEnIdiomaCorrecto();
         }
 
         private static void CrearFichero(string cad)
@@ -57,7 +73,7 @@ namespace Assets.Scripts.Controller
                 {
                     string contenido = File.ReadAllText(rutaArchivo);
 
-                    string cad2 = AESController.LeerKeyAndIV(contenido);
+                    string cad2 = LeerKeyAndIV(contenido);
                     Debug.Log(cad2);
                 }
 
@@ -65,7 +81,7 @@ namespace Assets.Scripts.Controller
             }
         }
 
-        private static void GestionarEncriptarFicheroUserInfo(int id, string language)
+        public static void GestionarEncriptarFicheroUserInfo(int id, string language)
         {
             string contenido = "ID:"+id+"*\nLanguage:"+language;
 
@@ -102,8 +118,23 @@ namespace Assets.Scripts.Controller
             // Ruta completa del archivo dentro de persistentDataPath
             string rutaFichero = Path.Combine(Application.persistentDataPath, "Fichs/UserInfo.txt");
             string contenido = File.ReadAllText(rutaFichero);
+            string contenidoDecrypted = AESController.Decrypt(contenido);
 
-            Debug.Log("Contenido Fich User info: " + AESController.Decrypt(contenido));
+            string[] partes = contenidoDecrypted.Split(new char[] { ':', '*' });
+            Usuario.ID = int.Parse(partes[1]);
+            Usuario.Idioma = partes[3];
+
+            Debug.Log("ID:" + Usuario.ID + "; Idioma:" + Usuario.Idioma);
+            Debug.Log("Contenido Fich User info: " + contenidoDecrypted);
+        }
+
+        private static string LeerKeyAndIV(string contenido)
+        {
+            string[] partes = contenido.Split(new char[] { ':', '*' });
+            AESController.KeyBase64 = partes[1];
+            AESController.IVBase64 = partes[3];
+
+            return "Key: " + AESController.KeyBase64 + "; IV: " + AESController.IVBase64;
         }
     }
 }

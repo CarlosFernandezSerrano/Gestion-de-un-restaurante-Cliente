@@ -91,7 +91,7 @@ public class GestionarMesasController : MonoBehaviour
 
     private async void ObtenerDatosRestauranteAsync()
     {
-        string cad = await instanceMétodosApiController.GetDataAsync("restaurante/getRestaurantePorId/" + PlayerPrefs.GetInt("Restaurante_ID Usuario"));
+        string cad = await instanceMétodosApiController.GetDataAsync("restaurante/getRestaurantePorId/" + Usuario.Restaurante_ID);
 
         // Deserializo la respuesta
         Restaurante restaurante = JsonConvert.DeserializeObject<Restaurante>(cad);

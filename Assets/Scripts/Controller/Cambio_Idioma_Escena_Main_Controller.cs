@@ -1,3 +1,5 @@
+using Assets.Scripts.Controller;
+using Assets.Scripts.Model;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -47,9 +49,9 @@ public class Cambio_Idioma_Escena_Main_Controller : MonoBehaviour
 
     }
 
-    private void PonerTextosEnIdiomaCorrecto()
+    public void PonerTextosEnIdiomaCorrecto()
     {
-        switch (PlayerPrefs.GetString("TipoIdioma", "Español"))
+        switch (Usuario.Idioma)
         {
             case "Español":
                 // Textos en canvas Log In
@@ -116,15 +118,15 @@ public class Cambio_Idioma_Escena_Main_Controller : MonoBehaviour
 
     public void CambiarAIdiomaSpanish()
     {
-        PlayerPrefs.SetString("TipoIdioma", "Español");
-        PlayerPrefs.Save(); // Para asegurarme de que el cambio se guarda de inmediato en el disco.
+        Usuario.Idioma = "Español";
+        FicheroController.GestionarEncriptarFicheroUserInfo(Usuario.ID, Usuario.Idioma); // Guardo el idioma cambiado en el fichero "UserInfo"
         PonerTextosEnIdiomaCorrecto();
     }
 
     public void CambiarAIdiomaEnglish()
     {
-        PlayerPrefs.SetString("TipoIdioma", "English");
-        PlayerPrefs.Save();
+        Usuario.Idioma = "English";
+        FicheroController.GestionarEncriptarFicheroUserInfo(Usuario.ID, Usuario.Idioma); // Guardo el idioma cambiado en el fichero "UserInfo"
         PonerTextosEnIdiomaCorrecto();
     }
 }

@@ -90,7 +90,7 @@ public class CreaciónRestauranteController : MonoBehaviour
             switch (resultado.Result)
             {
                 case 0:
-                    if (PlayerPrefs.GetString("TipoIdioma").CompareTo("Español") == 0 || PlayerPrefs.GetString("TipoIdioma") == null)
+                    if (Usuario.Idioma.CompareTo("Español") == 0 || Usuario.Idioma == null)
                     {
                         textoErrorRegistro.text = "Error inesperado.";
                         StartCoroutine(MostrarManoError(2f));
@@ -109,7 +109,7 @@ public class CreaciónRestauranteController : MonoBehaviour
                     
                     break;
                 case 2:
-                    if (PlayerPrefs.GetString("TipoIdioma").CompareTo("Español") == 0 || PlayerPrefs.GetString("TipoIdioma") == null)
+                    if (Usuario.Idioma.CompareTo("Español") == 0 || Usuario.Idioma == null)
                     {
                         textoErrorRegistro.text = "El restaurante ya existe.";
                         StartCoroutine(MostrarManoError(2f));
@@ -220,12 +220,11 @@ public class CreaciónRestauranteController : MonoBehaviour
         Restaurante restaurant = JsonConvert.DeserializeObject<Restaurante>(cad2);
         Debug.Log("Restaurante: " + restaurant.mostrar());
 
-        PlayerPrefs.SetInt("Restaurante_ID Usuario", restaurant.Id);
-        PlayerPrefs.SetInt("Rol_ID Usuario", 2); // Al comprar el servicio, el rol del usuario cambia
-        PlayerPrefs.Save();
+        Usuario.Restaurante_ID = restaurant.Id;
+        Usuario.Rol_ID = 2; // Al comprar el servicio, el rol del usuario cambia
 
         // Actualizo el trabajador con nuevo Rol por comprar el servicio y su nuevo restaurante_ID.
-        await instanceTrabajadorController.ActualizarDatosTrabajadorPorIdAsync(new Trabajador(PlayerPrefs.GetInt("ID Usuario"), PlayerPrefs.GetString("Nombre Usuario"), "", 2, PlayerPrefs.GetInt("Restaurante_ID Usuario")));
+        await instanceTrabajadorController.ActualizarDatosTrabajadorPorIdAsync(new Trabajador(Usuario.ID, Usuario.Nombre, "", 2, Usuario.Restaurante_ID));
 
         StartCoroutine(FinRegistroRestaurante());
     }

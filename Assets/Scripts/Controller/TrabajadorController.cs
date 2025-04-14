@@ -42,7 +42,7 @@ namespace Assets.Scripts.Controller
 
         private void ComprobarDatosTrabajador()
         {
-            int id = PlayerPrefs.GetInt("ID Usuario", 0);
+            int id = Usuario.ID;
             // Si el usuario ya tiene asignado un ID, puede realizar esta función
             if (id > 0)
             {
@@ -59,7 +59,7 @@ namespace Assets.Scripts.Controller
 
         private IEnumerator EsperoUnTiempoAntesDeVolverAComprobarLosDatosDelTrabajador()
         {
-            yield return new WaitForSeconds(5f); // Cada 5 segundos actualizo
+            yield return new WaitForSeconds(2f); // Cada 2 segundos actualizo
             ComprobandoDatosTrabajador = false;
         }
 
@@ -71,11 +71,12 @@ namespace Assets.Scripts.Controller
             
             // Deserializo la respuesta
             Trabajador trabajador = JsonConvert.DeserializeObject<Trabajador>(cad);
-            PlayerPrefs.SetInt("ID Usuario", trabajador.Id);
-            PlayerPrefs.SetInt("Rol_ID Usuario", trabajador.Rol_ID);
+            
+            Usuario.ID = trabajador.Id;
+            FicheroController.GestionarEncriptarFicheroUserInfo(Usuario.ID, Usuario.Idioma);
+            Usuario.Rol_ID = trabajador.Rol_ID;
             // Si el valor es 0, es que no está en ningún restaurante.
-            PlayerPrefs.SetInt("Restaurante_ID Usuario", trabajador.Restaurante_ID);
-            PlayerPrefs.Save();
+            Usuario.Restaurante_ID = trabajador.Restaurante_ID;
 
             instanceMainController.QuitarYPonerBotonesSegúnElTrabajador();
 
@@ -92,11 +93,11 @@ namespace Assets.Scripts.Controller
 
             // Deserializo la respuesta
             Trabajador trabajador = JsonConvert.DeserializeObject<Trabajador>(cad);
-            
-            PlayerPrefs.SetInt("Rol_ID Usuario", trabajador.Rol_ID);
+
+            Usuario.Nombre = trabajador.Nombre;
+            Usuario.Rol_ID = trabajador.Rol_ID;
             // Si el valor es 0, es que no está en ningún restaurante.
-            PlayerPrefs.SetInt("Restaurante_ID Usuario", trabajador.Restaurante_ID);
-            PlayerPrefs.Save();
+            Usuario.Restaurante_ID =  trabajador.Restaurante_ID;
 
             if (instanceMainController != null)
             {
@@ -105,13 +106,13 @@ namespace Assets.Scripts.Controller
                 PonerDatosEnPerfilTrabajador(instanceMainController.getTextPerfilUserNombre(), instanceMainController.getTextPerfilUserRol(), instanceMainController.getTextPerfilUserRestaurante());
             }
              
-            Debug.Log("ID Usuario: " + PlayerPrefs.GetInt("ID Usuario") + ", Nombre Usuario: " + PlayerPrefs.GetString("Nombre Usuario") + ", Rol_ID Usuario: " + PlayerPrefs.GetInt("Rol_ID Usuario") + ", Restaurante_ID Usuario: " + PlayerPrefs.GetInt("Restaurante_ID Usuario"));
+            Debug.Log("ID Usuario: " + Usuario.ID + ", Nombre Usuario: " + Usuario.Nombre + ", Rol_ID Usuario: " + Usuario.Rol_ID + ", Restaurante_ID Usuario: " + Usuario.Restaurante_ID);
         }
 
         public void PonerDatosEnPerfilTrabajador(TMPro.TMP_Text textUserNombre, TMPro.TMP_Text textUserRol, TMPro.TMP_Text textUserRestaurante)
         {
-            textUserNombre.text = PlayerPrefs.GetString("Nombre Usuario");
-            switch (PlayerPrefs.GetInt("Rol_ID Usuario"))
+            textUserNombre.text = Usuario.Nombre;
+            switch (Usuario.Rol_ID)
             {
                 case 1:
                     textUserRol.text = "Empleado";
@@ -120,7 +121,7 @@ namespace Assets.Scripts.Controller
                     textUserRol.text = "Gerente";
                     break;
             }
-            if (PlayerPrefs.GetInt("Restaurante_ID Usuario", 0).Equals(0))
+            if (Usuario.Restaurante_ID.Equals(0))
             {
                 textUserRestaurante.text = "";
             }
@@ -134,7 +135,7 @@ namespace Assets.Scripts.Controller
         {
             if (instanceMétodosAPIController != null)
             {
-                string cad = await instanceMétodosAPIController.GetDataAsync("restaurante/getRestaurantePorId/" + PlayerPrefs.GetInt("Restaurante_ID Usuario"));
+                string cad = await instanceMétodosAPIController.GetDataAsync("restaurante/getRestaurantePorId/" + Usuario.Restaurante_ID);
 
                 // Deserializo la respuesta
                 Restaurante restaurante = JsonConvert.DeserializeObject<Restaurante>(cad);

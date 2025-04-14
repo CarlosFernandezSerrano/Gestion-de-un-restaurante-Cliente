@@ -111,7 +111,7 @@ public class EditarRestauranteController : MonoBehaviour
         Debug.Log("Pasa por aquí");
         EliminarObjetosHijoDeFondoDeEdición();
 
-        string cad = await instanceMétodosApiController.GetDataAsync("restaurante/getRestaurantePorId/" + PlayerPrefs.GetInt("Restaurante_ID Usuario"));
+        string cad = await instanceMétodosApiController.GetDataAsync("restaurante/getRestaurantePorId/" + Usuario.Restaurante_ID);
 
         // Deserializo la respuesta
         Restaurante restaurante = JsonConvert.DeserializeObject<Restaurante>(cad);
@@ -371,7 +371,7 @@ public class EditarRestauranteController : MonoBehaviour
 
     private Restaurante RellenarRestauranteSiActualizara()
     {
-        int id = PlayerPrefs.GetInt("Restaurante_ID Usuario");
+        int id = Usuario.Restaurante_ID;
         string nombreRestaurante = inputFieldNombreRestaurante.text.Trim();
         nombreRestaurante = Regex.Replace(nombreRestaurante, @"\s+", " "); // Reemplaza múltiples espacios por uno
 
@@ -389,7 +389,7 @@ public class EditarRestauranteController : MonoBehaviour
     {
         List<Mesa> mesasNuevas = new List<Mesa>();
 
-        int restauranteIdUsuario = PlayerPrefs.GetInt("Restaurante_ID Usuario");
+        int restauranteIdUsuario = Usuario.Restaurante_ID;
 
         // Recorro cada mesa en la lista del restaurante.
         foreach (Mesa mesa in Mesas)
@@ -431,7 +431,7 @@ public class EditarRestauranteController : MonoBehaviour
     {
         List<Mesa> mesasNuevas = new List<Mesa>();
 
-        int restauranteIdUsuario = PlayerPrefs.GetInt("Restaurante_ID Usuario");
+        int restauranteIdUsuario = Usuario.Restaurante_ID;
 
         // Recorremos cada hijo del contenedor.
         foreach (Transform child in padreDeLosBotonesMesa)
@@ -568,7 +568,7 @@ public class EditarRestauranteController : MonoBehaviour
                     case 0: // El nuevo nombre de restaurante no existe en la BDD, se puede actualizar.
                         return true;
                     case 1:
-                        if (PlayerPrefs.GetString("TipoIdioma").CompareTo("Español") == 0 || PlayerPrefs.GetString("TipoIdioma") == null)
+                        if (Usuario.Idioma.CompareTo("Español") == 0 || Usuario.Idioma == null)
                         {
                             Debug.Log("El restaurante ya existe.");
                             string cad2 = "No se puede cambiar el nombre, ya existe";
@@ -799,7 +799,7 @@ public class EditarRestauranteController : MonoBehaviour
             yield return new WaitForSeconds(0.003f);
         }
 
-        if (PlayerPrefs.GetString("TipoIdioma", "Español").CompareTo("Español") == 0)
+        if (Usuario.Idioma.CompareTo("Español") == 0)
         {
             imgSelloTintaES.gameObject.SetActive(true);
             StartCoroutine(HacerDesaparecerLentamenteElTextoAAdivinar(1, imgSelloTintaES));

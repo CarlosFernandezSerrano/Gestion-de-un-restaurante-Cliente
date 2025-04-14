@@ -158,7 +158,7 @@ public class RegisterAppController : MonoBehaviour
         switch (resultado.Result)
         {
             case 0:
-                if (PlayerPrefs.GetString("TipoIdioma").CompareTo("Español") == 0 || PlayerPrefs.GetString("TipoIdioma") == null)
+                if (Usuario.Idioma.CompareTo("Español") == 0 || Usuario.Idioma == null)
                 {
                     textoErrorRegistro.text = "Error inesperado";
                 }
@@ -169,7 +169,7 @@ public class RegisterAppController : MonoBehaviour
                 break;
             case 1:
                 textoErrorRegistro.text = "";
-                if (PlayerPrefs.GetString("TipoIdioma").CompareTo("Español") == 0 || PlayerPrefs.GetString("TipoIdioma") == null)
+                if (Usuario.Idioma.CompareTo("Español") == 0 || Usuario.Idioma == null)
                 {
                     textoÉxitoRegistro.text = "Trabajador registrado correctamente";
                 }
@@ -181,7 +181,7 @@ public class RegisterAppController : MonoBehaviour
                 instanceTrabajadorController.ObtenerDatosTrabajadorPorNombreAsync(new Trabajador(username, "", 0, 0));
                 break;
             case 2:
-                if (PlayerPrefs.GetString("TipoIdioma").CompareTo("Español") == 0 || PlayerPrefs.GetString("TipoIdioma") == null)
+                if (Usuario.Idioma.CompareTo("Español") == 0 || Usuario.Idioma == null)
                 {
                     textoErrorRegistro.text = "El usuario " + username + " ya existe";
                 }
@@ -203,9 +203,7 @@ public class RegisterAppController : MonoBehaviour
 
         string nombreUsuario = inputTextoNombre.text.Trim();
 
-        //Guardo este valor en este PlayerPrefs para usar futuramente.
-        PlayerPrefs.SetString("Nombre Usuario", nombreUsuario);
-        PlayerPrefs.Save();
+        Usuario.Nombre = nombreUsuario;
     }
 
     private IEnumerator FinRegistroUsuario()

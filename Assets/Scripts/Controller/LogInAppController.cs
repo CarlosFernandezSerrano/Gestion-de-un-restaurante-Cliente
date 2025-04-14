@@ -98,7 +98,7 @@ public class LogInAppController : MonoBehaviour
         switch (data.Result)
         {
             case 1:
-                if (PlayerPrefs.GetString("TipoIdioma").CompareTo("Español") == 0 || PlayerPrefs.GetString("TipoIdioma") == null)
+                if (Usuario.Idioma.CompareTo("Español") == 0 || Usuario.Idioma == null)
                 {
                     textoExitoLogin.text = "Inicio de sesión correcto";
                 }
@@ -110,7 +110,7 @@ public class LogInAppController : MonoBehaviour
                 instanceTrabajadorController.ObtenerDatosTrabajadorPorNombreAsync(new Trabajador(nombre, "", 0, 0));
                 break;
             case 0:
-                if (PlayerPrefs.GetString("TipoIdioma").CompareTo("Español") == 0 || PlayerPrefs.GetString("TipoIdioma") == null)
+                if (Usuario.Idioma.CompareTo("Español") == 0 || Usuario.Idioma == null)
                 {
                     textoErrorLogin.text = "Contraseña incorrecta";
                 }
@@ -120,7 +120,7 @@ public class LogInAppController : MonoBehaviour
                 }
                 break;
             case -1:
-                if (PlayerPrefs.GetString("TipoIdioma").CompareTo("Español") == 0 || PlayerPrefs.GetString("TipoIdioma") == null)
+                if (Usuario.Idioma.CompareTo("Español") == 0 || Usuario.Idioma == null)
                 {
                     textoErrorLogin.text = "El trabajador " + nombre + " no existe";
                 }
@@ -139,9 +139,7 @@ public class LogInAppController : MonoBehaviour
 
         string nombreUsuario = inputFieldNombreLogin.text.Trim();
 
-        //Guardo estos valores en estos PlayerPrefs para usar futuramente.
-        PlayerPrefs.SetString("Nombre Usuario", nombreUsuario);
-        PlayerPrefs.Save();
+        Usuario.Nombre = nombreUsuario;
     }
 
     // Coroutine para finalizar el proceso de inicio de sesión

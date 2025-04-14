@@ -38,7 +38,7 @@ public class MainController : MonoBehaviour
 
     MétodosAPIController instanceMétodosAPIController;
     TrabajadorController instanceTrabajadorController;
-
+    FicheroController instanceFicheroController;
 
     public static MainController InstanceMainController { get; private set; }
 
@@ -58,8 +58,9 @@ public class MainController : MonoBehaviour
     {
         instanceMétodosAPIController = MétodosAPIController.InstanceMétodosAPIController;
         instanceTrabajadorController = TrabajadorController.InstanceTrabajadorController;
+        instanceFicheroController = FicheroController.InstanceFicheroController;
 
-        FicheroController.GestionarFicheros();
+        instanceFicheroController.GestionarFicheros();
 
         TrabajadorController.ComprobandoDatosTrabajador = false;
         instanceTrabajadorController.PonerDatosEnPerfilTrabajador(textUserNombre, textUserRol, textUserRestaurante);
@@ -91,7 +92,7 @@ public class MainController : MonoBehaviour
     // Si el usuario tiene un restaurante_ID superior a 0 (el trabajador ya está asignado a un restaurante), se desactiva el botón de comprar el servicio
     private void QuitarBotónComprarServicio()
     {
-        if (PlayerPrefs.GetInt("Restaurante_ID Usuario", 0) > 0)
+        if (Usuario.Restaurante_ID > 0)
         {
             botónComprarServicio.gameObject.SetActive(false);
         }
@@ -104,9 +105,9 @@ public class MainController : MonoBehaviour
     private void PonerBotonesFuncionalidadesProgramaSegunElRol()
     {
         // Si el trabajador está en un restaurante, se comprueba el rol
-        if (PlayerPrefs.GetInt("Restaurante_ID Usuario", 0) > 0)
+        if (Usuario.Restaurante_ID > 0)
         {
-            switch (PlayerPrefs.GetInt("Rol_ID Usuario"))
+            switch (Usuario.Rol_ID)
             {
                 case 1:
                     botónEditarRestaurante.gameObject.SetActive(false);
@@ -145,13 +146,12 @@ public class MainController : MonoBehaviour
            await ComprueboSiUserExisteAsync();
         }
 
-        
-        Debug.Log("ID Usuario: " + PlayerPrefs.GetInt("ID Usuario") + ", Nombre Usuario: " + PlayerPrefs.GetString("Nombre Usuario") + ", Rol_ID Usuario: " + PlayerPrefs.GetInt("Rol_ID Usuario") + ", Restaurante_ID Usuario: " + PlayerPrefs.GetInt("Restaurante_ID Usuario"));
+        Debug.Log("ID Usuario: " + Usuario.ID + ", Nombre Usuario: " + Usuario.Nombre + ", Rol_ID Usuario: " + Usuario.Rol_ID + ", Restaurante_ID Usuario: " + Usuario.Restaurante_ID);
     }
 
     private async Task ComprueboSiUserExisteAsync()
     {
-        string cad = await instanceMétodosAPIController.GetDataAsync("trabajador/existe/" + PlayerPrefs.GetInt("ID Usuario"));
+        string cad = await instanceMétodosAPIController.GetDataAsync("trabajador/existe/" + Usuario.ID);
         try
         {
             Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
@@ -166,7 +166,7 @@ public class MainController : MonoBehaviour
             }
             else // El trabajdor existe y obtengo sus datos por si ha tenido cambios. Ejemplo: le han puesto un rol distinto o le han agregado a un restaurante.
             {
-                instanceTrabajadorController.ObtenerDatosTrabajadorPorIdAsync(PlayerPrefs.GetInt("ID Usuario"));
+                instanceTrabajadorController.ObtenerDatosTrabajadorPorIdAsync(Usuario.ID);
             }
         }
         catch (Exception ex)
