@@ -119,14 +119,14 @@ public class Cambio_Idioma_Escena_Main_Controller : MonoBehaviour
     public void CambiarAIdiomaSpanish()
     {
         Usuario.Idioma = "Español";
-        FicheroController.GestionarEncriptarFicheroUserInfo(Usuario.ID, Usuario.Idioma); // Guardo el idioma cambiado en el fichero "UserInfo"
+        FicheroController.GestionarEncriptarFicheroUserInfo(Usuario.ID, Usuario.Idioma, Usuario.Token); // Guardo el idioma cambiado en el fichero "UserInfo"
         PonerTextosEnIdiomaCorrecto();
     }
 
     public void CambiarAIdiomaEnglish()
     {
         Usuario.Idioma = "English";
-        FicheroController.GestionarEncriptarFicheroUserInfo(Usuario.ID, Usuario.Idioma); // Guardo el idioma cambiado en el fichero "UserInfo"
+        FicheroController.GestionarEncriptarFicheroUserInfo(Usuario.ID, Usuario.Idioma, Usuario.Token); // Guardo el idioma cambiado en el fichero "UserInfo"
         PonerTextosEnIdiomaCorrecto();
     }
 }

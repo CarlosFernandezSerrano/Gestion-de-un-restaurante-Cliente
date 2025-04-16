@@ -9,9 +9,11 @@ using UnityEngine.Networking;
 using System.Text;
 using UnityEditor.PackageManager.UI;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using UnityEditor.PackageManager;
 using Assets.Scripts.Model;
 using Assets.Scripts.Controller;
+
 
 
 public class LogInAppController : MonoBehaviour
@@ -94,10 +96,19 @@ public class LogInAppController : MonoBehaviour
         string cad = await instanceMétodosAPIController.PostDataAsync("trabajador/logIn/", t);
 
         // Deserializo la respuesta
-        Resultado data = JsonConvert.DeserializeObject<Resultado>(cad);
-        switch (data.Result)
+        JObject jsonObject = JObject.Parse(cad);
+        int resultValue = jsonObject["result"].Value<int>();
+        
+
+        //Resultado data = JsonConvert.DeserializeObject<Resultado>(cad);
+        switch (resultValue)
         {
             case 1:
+                string tokenValue = jsonObject["token"].Value<string>();
+                Usuario.Token = tokenValue;
+                Debug.Log("Token: " + Usuario.Token);
+                FicheroController.GestionarEncriptarFicheroUserInfo(Usuario.ID, Usuario.Idioma, tokenValue); // Guardo el token en el fichero
+
                 if (Usuario.Idioma.CompareTo("Español") == 0 || Usuario.Idioma == null)
                 {
                     textoExitoLogin.text = "Inicio de sesión correcto";
@@ -130,7 +141,6 @@ public class LogInAppController : MonoBehaviour
                 }
                 break;
         }
-        data.Result = -2;
     }
 
     private void GestionarLogInExitoso()

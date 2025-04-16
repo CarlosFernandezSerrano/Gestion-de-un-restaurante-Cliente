@@ -1,9 +1,12 @@
+using Assets.Scripts.Model;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -43,6 +46,9 @@ public class MétodosAPIController : MonoBehaviour
         // Creo la solicitud GET
         using (UnityWebRequest request = UnityWebRequest.Get(url))
         {
+            // Añado el token en la cabecera Authorization
+            request.SetRequestHeader("Authorization", "Bearer " + Usuario.Token);
+
             // Envio la solicitud
             var operation = request.SendWebRequest();
 
@@ -116,6 +122,9 @@ public class MétodosAPIController : MonoBehaviour
             request.downloadHandler = new DownloadHandlerBuffer();
             request.SetRequestHeader("Content-Type", "application/json");
 
+            // Añado el token en la cabecera Authorization
+            request.SetRequestHeader("Authorization", "Bearer " + Usuario.Token);
+
             // Enviamos la solicitud
             var operation = request.SendWebRequest();
 
@@ -156,6 +165,9 @@ public class MétodosAPIController : MonoBehaviour
             request.downloadHandler = new DownloadHandlerBuffer();
             request.SetRequestHeader("Content-Type", "application/json");
 
+            // Añado el token en la cabecera Authorization
+            request.SetRequestHeader("Authorization", "Bearer " + Usuario.Token);
+
             // Enviamos la solicitud
             var operation = request.SendWebRequest();
 
@@ -190,8 +202,8 @@ public class MétodosAPIController : MonoBehaviour
             // Asignamos un DownloadHandler para poder recibir respuesta
             request.downloadHandler = new DownloadHandlerBuffer();
 
-            // Si el servidor requiere el header Content-Type, se puede agregar.
-            request.SetRequestHeader("Content-Type", "application/json");
+            // Añado el token en la cabecera Authorization
+            request.SetRequestHeader("Authorization", "Bearer " + Usuario.Token);
 
             // Enviamos la solicitud de forma asíncrona
             var operation = request.SendWebRequest();

@@ -14,6 +14,7 @@ namespace Assets.Scripts.Model
         public static int Rol_ID { get; set; } = 0;
         public static int Restaurante_ID { get; set; } = 0;
         public static string Idioma { get; set; } = "Spanish";
+        public static string Token { get; set; } = "token";
 
 
     }

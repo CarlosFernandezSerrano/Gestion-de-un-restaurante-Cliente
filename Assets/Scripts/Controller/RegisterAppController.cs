@@ -9,6 +9,7 @@ using Assets.Scripts.Model;
 using UnityEditor.Experimental.GraphView;
 using System;
 using Assets.Scripts.Controller;
+using Newtonsoft.Json.Linq;
 
 
 public class RegisterAppController : MonoBehaviour
@@ -152,10 +153,10 @@ public class RegisterAppController : MonoBehaviour
         string cad = await instanceMétodosAPIController.PostDataAsync("trabajador/registrarUser", t);
 
         // Deserializo la respuesta
-        Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
-        //Debug.Log("El valor de result es: " + data.Result);
-        
-        switch (resultado.Result)
+        JObject jsonObject = JObject.Parse(cad);
+        int resultValue = jsonObject["result"].Value<int>();
+
+        switch (resultValue)
         {
             case 0:
                 if (Usuario.Idioma.CompareTo("Español") == 0 || Usuario.Idioma == null)
@@ -169,6 +170,12 @@ public class RegisterAppController : MonoBehaviour
                 break;
             case 1:
                 textoErrorRegistro.text = "";
+
+                string tokenValue = jsonObject["token"].Value<string>();
+                Usuario.Token = tokenValue;
+                Debug.Log("Token: " + Usuario.Token);
+                FicheroController.GestionarEncriptarFicheroUserInfo(Usuario.ID, Usuario.Idioma, tokenValue); // Guardo el token en el fichero
+
                 if (Usuario.Idioma.CompareTo("Español") == 0 || Usuario.Idioma == null)
                 {
                     textoÉxitoRegistro.text = "Trabajador registrado correctamente";
@@ -191,7 +198,6 @@ public class RegisterAppController : MonoBehaviour
                 }
                 break;            
         }
-        resultado.Result = -2;        
     }
 
     

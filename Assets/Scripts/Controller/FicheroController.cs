@@ -62,7 +62,7 @@ namespace Assets.Scripts.Controller
 
                 if (cad.Contains("UserInfo"))
                 {
-                    GestionarEncriptarFicheroUserInfo(0, "Spanish");
+                    GestionarEncriptarFicheroUserInfo(0, "Spanish", Usuario.Token);
                 }
 
                 Debug.Log("Archivo creado en: " + rutaArchivo);
@@ -81,9 +81,9 @@ namespace Assets.Scripts.Controller
             }
         }
 
-        public static void GestionarEncriptarFicheroUserInfo(int id, string language)
+        public static void GestionarEncriptarFicheroUserInfo(int id, string language, string token)
         {
-            string contenido = "ID:"+id+"*\nLanguage:"+language;
+            string contenido = "ID:"+id+"*\nLanguage:"+language+"*\nToken:"+token;
 
             // Creo el archivo y escribo el contenido encriptado
             File.WriteAllText(rutaArchivo, AESController.Encrypt(contenido));
@@ -123,8 +123,10 @@ namespace Assets.Scripts.Controller
             string[] partes = contenidoDecrypted.Split(new char[] { ':', '*' });
             Usuario.ID = int.Parse(partes[1]);
             Usuario.Idioma = partes[3];
+            Usuario.Token = partes[5];
 
-            Debug.Log("ID:" + Usuario.ID + "; Idioma:" + Usuario.Idioma);
+
+            Debug.Log("ID:" + Usuario.ID + "; Idioma:" + Usuario.Idioma+ "; Token: "+Usuario.Token);
             Debug.Log("Contenido Fich User info: " + contenidoDecrypted);
         }
 

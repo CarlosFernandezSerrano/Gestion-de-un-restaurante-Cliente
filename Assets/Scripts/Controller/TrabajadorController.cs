@@ -73,7 +73,7 @@ namespace Assets.Scripts.Controller
             Trabajador trabajador = JsonConvert.DeserializeObject<Trabajador>(cad);
             
             Usuario.ID = trabajador.Id;
-            FicheroController.GestionarEncriptarFicheroUserInfo(Usuario.ID, Usuario.Idioma);
+            FicheroController.GestionarEncriptarFicheroUserInfo(Usuario.ID, Usuario.Idioma, Usuario.Token);
             Usuario.Rol_ID = trabajador.Rol_ID;
             // Si el valor es 0, es que no está en ningún restaurante.
             Usuario.Restaurante_ID = trabajador.Restaurante_ID;
