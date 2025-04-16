@@ -274,45 +274,11 @@ public class BuscarReservaController : MonoBehaviour
         // El cliente de la reserva tiene un número de teléfono registrado
         if (reserva.Cliente.NumTelefono.Trim().Length > 0)
         {
-            switch (reserva.Cliente.Nombre.Trim().Length)
-            {
-                case 3:
-                    textoBotón.text = " " + reserva.Cliente.Nombre + "        " + reserva.Cliente.Dni + "    " + reserva.Cliente.NumTelefono + "   " + reserva.Fecha + "    " + reserva.Hora + "         " + reserva.CantComensales + "             " + id_Mesa_En_Mapa;
-                    break;
-                case 4:
-                    textoBotón.text = " " + reserva.Cliente.Nombre + "       " + reserva.Cliente.Dni + "    " + reserva.Cliente.NumTelefono + "   " + reserva.Fecha + "    " + reserva.Hora + "         " + reserva.CantComensales + "             " + id_Mesa_En_Mapa;
-                    break;
-                case 5:
-                    textoBotón.text = " " + reserva.Cliente.Nombre + "     " + reserva.Cliente.Dni + "    " + reserva.Cliente.NumTelefono + "   " + reserva.Fecha + "    " + reserva.Hora + "         " + reserva.CantComensales + "             " + id_Mesa_En_Mapa;
-                    break;
-                case 6:
-                    textoBotón.text = " " + reserva.Cliente.Nombre + "   " + reserva.Cliente.Dni + "    " + reserva.Cliente.NumTelefono + "   " + reserva.Fecha + "    " + reserva.Hora + "         " + reserva.CantComensales + "             " + id_Mesa_En_Mapa;
-                    break;
-                case 7:
-                    textoBotón.text = " " + reserva.Cliente.Nombre + "  " + reserva.Cliente.Dni + "    " + reserva.Cliente.NumTelefono + "   " + reserva.Fecha + "    " + reserva.Hora + "         " + reserva.CantComensales + "             " + id_Mesa_En_Mapa;
-                    break;
-            }
+            textoBotón.text = " " + reserva.Fecha + "  " + reserva.Hora + "        " + reserva.CantComensales + "            " + id_Mesa_En_Mapa + "        " + reserva.Cliente.Dni + "   " + reserva.Cliente.NumTelefono + "    " + reserva.Cliente.Nombre;
         }
         else
         {
-            switch (reserva.Cliente.Nombre.Trim().Length)
-            {
-                case 3:
-                    textoBotón.text = " " + reserva.Cliente.Nombre + "        " + reserva.Cliente.Dni + "                       " + reserva.Fecha + "    " + reserva.Hora + "         " + reserva.CantComensales + "             " + id_Mesa_En_Mapa;
-                    break;
-                case 4:
-                    textoBotón.text = " " + reserva.Cliente.Nombre + "       " + reserva.Cliente.Dni + "                       " + reserva.Fecha + "    " + reserva.Hora + "         " + reserva.CantComensales + "             " + id_Mesa_En_Mapa;
-                    break;
-                case 5:
-                    textoBotón.text = " " + reserva.Cliente.Nombre + "     " + reserva.Cliente.Dni + "                       " + reserva.Fecha + "    " + reserva.Hora + "         " + reserva.CantComensales + "             " + id_Mesa_En_Mapa;
-                    break;
-                case 6:
-                    textoBotón.text = " " + reserva.Cliente.Nombre + "   " + reserva.Cliente.Dni + "                       " + reserva.Fecha + "    " + reserva.Hora + "         " + reserva.CantComensales + "             " + id_Mesa_En_Mapa;
-                    break;
-                case 7:
-                    textoBotón.text = " " + reserva.Cliente.Nombre + "  " + reserva.Cliente.Dni + "                       " + reserva.Fecha + "    " + reserva.Hora + "         " + reserva.CantComensales + "             " + id_Mesa_En_Mapa;
-                    break;
-            }
+            textoBotón.text = " " + reserva.Fecha + "  " + reserva.Hora + "        " + reserva.CantComensales + "            " + id_Mesa_En_Mapa + "        " + reserva.Cliente.Dni + "                       " + reserva.Cliente.Nombre;
         }
     }
 
