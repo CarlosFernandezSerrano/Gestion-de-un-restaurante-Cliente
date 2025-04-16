@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Gestionar Mesas.unity
     guid: 4ea399cf591349a4da158858a8ed83d0
+  - enabled: 1
+    path: Assets/Scenes/Gestionar Trabajadores.unity
+    guid: 9441545d246a5ca4aa1d8311866ff2ab
   m_configObjects: {}

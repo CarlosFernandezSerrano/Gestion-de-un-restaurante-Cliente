@@ -252,6 +252,11 @@ public class MainController : MonoBehaviour
         SceneManager.LoadScene("Gestionar Mesas");
     }
 
+    public void IrALaEscenaGestionarTrabajadores()
+    {
+        SceneManager.LoadScene("Gestionar Trabajadores");
+    }
+
     public void CerrarSesión()
     {
         PlayerPrefs.SetInt("UsuarioRegistrado", 0);

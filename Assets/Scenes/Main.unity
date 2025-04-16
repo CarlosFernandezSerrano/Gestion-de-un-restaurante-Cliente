@@ -1416,7 +1416,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1188165481}
         m_TargetAssemblyTypeName: MainController, Assembly-CSharp
-        m_MethodName: IrALaEscenaEditarRestaurante
+        m_MethodName: IrALaEscenaGestionarTrabajadores
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4655,6 +4655,30 @@ PrefabInstance:
       propertyPath: m_fontColor32.rgba
       value: 4294967295
       objectReference: {fileID: 0}
+    - target: {fileID: 3126185416137951792, guid: 39d3133ea78e56b4abcaa9114e92cac1, type: 3}
+      propertyPath: m_CaretColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3126185416137951792, guid: 39d3133ea78e56b4abcaa9114e92cac1, type: 3}
+      propertyPath: m_CaretColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3126185416137951792, guid: 39d3133ea78e56b4abcaa9114e92cac1, type: 3}
+      propertyPath: m_CaretColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3305424614939526681, guid: 39d3133ea78e56b4abcaa9114e92cac1, type: 3}
+      propertyPath: m_CaretColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3305424614939526681, guid: 39d3133ea78e56b4abcaa9114e92cac1, type: 3}
+      propertyPath: m_CaretColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3305424614939526681, guid: 39d3133ea78e56b4abcaa9114e92cac1, type: 3}
+      propertyPath: m_CaretColor.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3847911565756455018, guid: 39d3133ea78e56b4abcaa9114e92cac1, type: 3}
       propertyPath: m_fontColor.b
       value: 1
@@ -5335,6 +5359,26 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3609973965130226026, guid: bfecb644de7b0c741b9cab9addc7e934, type: 3}
+      propertyPath: m_CaretWidth
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3609973965130226026, guid: bfecb644de7b0c741b9cab9addc7e934, type: 3}
+      propertyPath: m_CaretColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3609973965130226026, guid: bfecb644de7b0c741b9cab9addc7e934, type: 3}
+      propertyPath: m_CaretColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3609973965130226026, guid: bfecb644de7b0c741b9cab9addc7e934, type: 3}
+      propertyPath: m_CaretColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3609973965130226026, guid: bfecb644de7b0c741b9cab9addc7e934, type: 3}
+      propertyPath: m_CustomCaretColor
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3669575082240615619, guid: bfecb644de7b0c741b9cab9addc7e934, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -5471,6 +5515,26 @@ PrefabInstance:
       propertyPath: m_fontColor32.rgba
       value: 4294967295
       objectReference: {fileID: 0}
+    - target: {fileID: 6168675858862156102, guid: bfecb644de7b0c741b9cab9addc7e934, type: 3}
+      propertyPath: m_CaretWidth
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6168675858862156102, guid: bfecb644de7b0c741b9cab9addc7e934, type: 3}
+      propertyPath: m_CaretColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6168675858862156102, guid: bfecb644de7b0c741b9cab9addc7e934, type: 3}
+      propertyPath: m_CaretColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6168675858862156102, guid: bfecb644de7b0c741b9cab9addc7e934, type: 3}
+      propertyPath: m_CaretColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6168675858862156102, guid: bfecb644de7b0c741b9cab9addc7e934, type: 3}
+      propertyPath: m_CustomCaretColor
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6547595655994156781, guid: bfecb644de7b0c741b9cab9addc7e934, type: 3}
       propertyPath: m_fontColor.b
       value: 1
@@ -5490,6 +5554,26 @@ PrefabInstance:
     - target: {fileID: 6799965182540798174, guid: bfecb644de7b0c741b9cab9addc7e934, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -192
+      objectReference: {fileID: 0}
+    - target: {fileID: 7647855917787333880, guid: bfecb644de7b0c741b9cab9addc7e934, type: 3}
+      propertyPath: m_CaretWidth
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7647855917787333880, guid: bfecb644de7b0c741b9cab9addc7e934, type: 3}
+      propertyPath: m_CaretColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7647855917787333880, guid: bfecb644de7b0c741b9cab9addc7e934, type: 3}
+      propertyPath: m_CaretColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7647855917787333880, guid: bfecb644de7b0c741b9cab9addc7e934, type: 3}
+      propertyPath: m_CaretColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7647855917787333880, guid: bfecb644de7b0c741b9cab9addc7e934, type: 3}
+      propertyPath: m_CustomCaretColor
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8852618007309332436, guid: bfecb644de7b0c741b9cab9addc7e934, type: 3}
       propertyPath: m_fontColor.b
