@@ -196,6 +196,7 @@ public class BuscarReservaController : MonoBehaviour
 
         // Agrego el componente RectTransform (se agrega automáticamente al crear UI, pero lo añado explícitamente).
         RectTransform rt = botónGO.AddComponent<RectTransform>();
+
         // Defino un tamaño por defecto para el botón.
         rt.sizeDelta = new Vector2(1530.9f, 138f);
 

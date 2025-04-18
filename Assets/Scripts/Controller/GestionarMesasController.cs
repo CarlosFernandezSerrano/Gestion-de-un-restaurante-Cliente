@@ -814,11 +814,6 @@ public class GestionarMesasController : MonoBehaviour
         CrearImgsDelButton(rt, mesa.Disponible);
 
         StartCoroutine(CrearUnHijoInputFieldDelBotónMesa(botonGO, mesa.CantPers));
-
-        // Agrego este script al nuevo botón para dotarlo de funcionalidad de arrastre y escala
-        //ButtonMesaController bm = botonGO.AddComponent<ButtonMesaController>();
-        //bm.containerRect = this.padreDeLosBotonesMesa;  // Asigno el mismo contenedor
-        //bm.rectTransform = rt; // Asigno el RectTransform del nuevo botón
     }
 
     public void Salir()
