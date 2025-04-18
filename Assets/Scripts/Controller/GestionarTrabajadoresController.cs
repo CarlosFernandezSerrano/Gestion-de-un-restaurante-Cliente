@@ -310,6 +310,47 @@ public class GestionarTrabajadoresController : MonoBehaviour
         textoBotón.text = " "+nombreTrabajador;
     }
 
+    public async void AñadirTrabajadorARestaurante()
+    {
+        buttonAñadir.interactable = false;
+
+        string nombreTrabajador = inputFieldBuscarTrabajador.text.Trim();
+
+        int id_Trabajador = ObtenerIdTrabajadorPorNombre(nombreTrabajador);
+
+        Trabajador trabajador = new Trabajador(id_Trabajador, "", "", 0, Usuario.Restaurante_ID);
+
+        string cad = await instanceMétodosApiController.PutDataAsync("trabajador/actualizarRestauranteIDTrabajador", trabajador);
+
+        // Deserializo la respuesta
+        Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
+
+        if (resultado.Result.Equals(1))
+        {
+            inputFieldBuscarTrabajador.text = "";
+            EliminarObjetosHijoDeScrollView(rtScrollViewContent);
+            ObtenerTrabajadoresDeUnRestauranteAsync();
+        }
+        else
+        {
+            inputFieldBuscarTrabajador.text = "Error";
+        }
+
+        
+    }
+
+    private int ObtenerIdTrabajadorPorNombre(string nombreTrabajador)
+    {
+        foreach (Trabajador trabajador in TrabajadoresSinRestaurante)
+        {
+            if (trabajador.Nombre.CompareTo(nombreTrabajador) == 0)
+            {
+                return trabajador.Id;
+            }
+        }
+        return 0;
+    }
+
     public void IrALaEscenaMain()
     {
         SceneManager.LoadScene("Main");
