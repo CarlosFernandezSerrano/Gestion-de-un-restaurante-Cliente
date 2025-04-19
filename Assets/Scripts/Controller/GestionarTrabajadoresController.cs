@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -18,14 +19,18 @@ public class GestionarTrabajadoresController : MonoBehaviour
     [SerializeField] private GameObject scrollViewNombresTrabajadores;
     [SerializeField] private RectTransform rtScrollViewContentNombresTrabajadores;
     [SerializeField] private Button buttonAñadir;
+    [SerializeField] private GameObject prefabBotónConInputFieldYDropdown;
+    [SerializeField] private Button buttonGuardar;
+    [SerializeField] private Button buttonEliminar;
+    [SerializeField] private TMP_Text textoError;
 
-    private List<Trabajador> TrabajadoresEnRestaurante;
+    private List<Trabajador> TrabajadoresEnRestaurante = new List<Trabajador>();
     private List<Trabajador> TrabajadoresSinRestaurante = new List<Trabajador>();
 
     private bool BuscandoTrabajadoresSinRest = false;
     private string TextoInputFieldAntes = "";
-    //private bool buscando = false;
-
+    private Button botónPulsadoParaEliminar;
+    
 
     MétodosAPIController instanceMétodosApiController;
 
@@ -50,6 +55,90 @@ public class GestionarTrabajadoresController : MonoBehaviour
     void Update()
     {
         GestionarBuscarTrabajador();
+
+        GestionarCambiosEnTrabajadores();
+
+        GestionarHayUnInputFieldVacíoEnNombresTrabajadores();
+    }
+
+    private void GestionarHayUnInputFieldVacíoEnNombresTrabajadores()
+    {
+        foreach (Transform hijo in rtScrollViewContent)
+        {
+            string nombre = hijo.GetComponentInChildren<TMP_InputField>().text.Trim();
+            if (nombre.Length.Equals(0))
+            {
+                buttonGuardar.interactable = false;
+                textoError.text = "Nombre vacío";
+                return;
+            }
+        }
+        textoError.text = "";
+    }
+
+    private void GestionarCambiosEnTrabajadores()
+    {
+        List<Trabajador> trabajadoresEnScrollViewAhora = ObtenerDatosTrabajadoresEnScrollView();
+
+        if (AlgúnNombreORolCambiado(trabajadoresEnScrollViewAhora))
+        {
+            buttonGuardar.interactable = true;
+        }
+        else
+        {
+            buttonGuardar.interactable = false;
+        }
+    }
+
+    private bool AlgúnNombreORolCambiado(List<Trabajador> trabajadoresEnScrollViewAhora)
+    {        
+        foreach (Trabajador trabajador in TrabajadoresEnRestaurante)
+        {
+            int cont = 0;
+            foreach (Trabajador trabajadorScrollViewAhora in trabajadoresEnScrollViewAhora)
+            {
+                // Recorro todos los nombres que hay ahora en el scrollview y compruebo si cada nombre de los TrabajadoresEnRestaurante están idénticos, sino, hay cambios.
+                if (trabajador.Nombre.CompareTo(trabajadorScrollViewAhora.Nombre) != 0)
+                {
+                    cont++;
+                }
+            }
+            // Un nombre ha sido cambiado
+            if (cont.Equals(trabajadoresEnScrollViewAhora.Count))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private List<Trabajador> ObtenerDatosTrabajadoresEnScrollView()
+    {
+        List<Trabajador> trabajadores = new List<Trabajador>();
+        foreach (Transform hijo in rtScrollViewContent)
+        {
+            int id = ObtenerIdTrabajadorDeBotón(hijo);
+            string nombre = hijo.GetComponentInChildren<TMP_InputField>().text.Trim();
+            TMP_Dropdown dropdown = hijo.GetComponentInChildren<TMP_Dropdown>();
+            string rol = dropdown.options[dropdown.value].text;
+
+            switch (rol)
+            {
+                case "Empleado":
+                    trabajadores.Add(new Trabajador(id, nombre, "", 1, 0));
+                    break;
+                case "Gerente":
+                    trabajadores.Add(new Trabajador(id, nombre, "", 2, 0));
+                    break;
+            }
+        }
+        return trabajadores;
+    }
+
+    private int ObtenerIdTrabajadorDeBotón(Transform hijo)
+    {
+        string[] array = hijo.name.Split("-");
+        return int.Parse(array[1]);
     }
 
     private async void ObtenerTrabajadoresSinRestauranteAsync()
@@ -88,6 +177,8 @@ public class GestionarTrabajadoresController : MonoBehaviour
                 // Se encuentran trabajadores sin restaurante con un nombre parecido al que se pone en el inputField
                 if (nombres_Trabajadores_Sin_Restaurante.Count > 0)
                 {
+                    scrollViewNombresTrabajadores.SetActive(true);
+
                     // Tengo que eliminar todos los hijos (botones en este caso) de Content antes de poner nuevos (reservas actualizadas)
                     EliminarObjetosHijoDeScrollView(rtScrollViewContentNombresTrabajadores);
 
@@ -102,6 +193,8 @@ public class GestionarTrabajadoresController : MonoBehaviour
                 {
                     // Tengo que eliminar todos los hijos (botones en este caso) de Content antes de poner nuevos (reservas actualizadas)
                     EliminarObjetosHijoDeScrollView(rtScrollViewContentNombresTrabajadores);
+
+                    scrollViewNombresTrabajadores.SetActive(false);
                 }
             }
             
@@ -111,6 +204,7 @@ public class GestionarTrabajadoresController : MonoBehaviour
             // Tengo que eliminar todos los hijos (botones en este caso) de Content antes de poner nuevos (reservas actualizadas)
             EliminarObjetosHijoDeScrollView(rtScrollViewContentNombresTrabajadores);
             TextoInputFieldAntes = "";
+            scrollViewNombresTrabajadores.SetActive(false);
         }
 
 
@@ -120,15 +214,12 @@ public class GestionarTrabajadoresController : MonoBehaviour
 
             // Tengo que eliminar todos los hijos (botones en este caso) de Content antes de poner nuevos (reservas actualizadas)
             EliminarObjetosHijoDeScrollView(rtScrollViewContentNombresTrabajadores);
+            scrollViewNombresTrabajadores.SetActive(false);
         }
         else
         {
             buttonAñadir.interactable = false;
         }
-
-
-
-
     }
 
     private bool ElNombreExiste()
@@ -159,13 +250,7 @@ public class GestionarTrabajadoresController : MonoBehaviour
         // Deserializo la respuesta
         TrabajadoresEnRestaurante = JsonConvert.DeserializeObject<List<Trabajador>>(cad);
 
-        foreach (var t in TrabajadoresEnRestaurante)
-        {
-            Debug.Log(t.mostrar());
-        }
-
         CrearBotonesTrabajadores();
-        
     }
 
     private void CrearBotonesTrabajadores()
@@ -181,6 +266,47 @@ public class GestionarTrabajadoresController : MonoBehaviour
 
     private void CrearBotónTrabajador(Trabajador trabajador)
     {
+        Debug.Log("*OK");
+        GameObject botonGO = Instantiate(prefabBotónConInputFieldYDropdown, rtScrollViewContent, false);
+
+        // Crear un GameObject para el botón y asignarle un nombre único.
+        botonGO.name = "Button-" + trabajador.Id;
+
+        // Referencias de componentes
+        Button button = botonGO.GetComponent<Button>();
+        TMP_InputField inputField = botonGO.GetComponentInChildren<TMP_InputField>();
+        TMP_Dropdown dropdown = botonGO.GetComponentInChildren<TMP_Dropdown>();
+
+        inputField.text = trabajador.Nombre;
+
+        List<string> opciones = new List<string> { "Empleado", "Gerente"};
+        AgregarOpcionesADropdown(dropdown, opciones);
+
+        switch (trabajador.Rol_ID)
+        {
+            case 1:
+                BuscoElIndiceYLoPongoSiLoEncuentro(dropdown, "Empleado");
+                break;
+            case 2:
+                BuscoElIndiceYLoPongoSiLoEncuentro(dropdown, "Gerente");
+                break;
+        }
+
+        //Pongo listener al botón
+        button.onClick.AddListener(() => GestionarActivarBotónEliminarTrabajador(button));
+        
+        inputField.onSelect.AddListener((_) =>
+        {
+            buttonEliminar.interactable = false;
+        });
+
+        dropdown.onValueChanged.AddListener((_) =>
+        {
+            buttonEliminar.interactable = false;
+        });
+
+        //PonerListenerADropdown(dropdown);
+        /*
         // Crear un GameObject para el botón y asignarle un nombre único.
         GameObject botonGO = new GameObject("Button-" + trabajador.Id);
 
@@ -201,6 +327,39 @@ public class GestionarTrabajadoresController : MonoBehaviour
 
         // Creo un nuevo GameObject hijo, el texto del botón
         CrearTextoDelButton(rt, trabajador);
+        */
+
+
+    }
+
+    private void GestionarActivarBotónEliminarTrabajador(Button button)
+    {
+        botónPulsadoParaEliminar = button;
+
+        buttonEliminar.interactable = true;
+    }
+
+    private void AgregarOpcionesADropdown(TMP_Dropdown dropdown, List<string> opciones)
+    {
+        dropdown.ClearOptions();  // Limpia opciones anteriores
+        dropdown.AddOptions(opciones);
+    }
+
+    private void BuscoElIndiceYLoPongoSiLoEncuentro(TMP_Dropdown dropdown, string valor)
+    {
+        // Busco el índice de ese valor en el Dropdown
+        int index = dropdown.options.FindIndex(option => option.text == valor);
+
+        // Si lo encuentra, establecerlo como el seleccionado
+        if (index != -1)
+        {
+            dropdown.value = index;
+            dropdown.RefreshShownValue(); // Refresca la UI para mostrar el valor seleccionado.
+        }
+        else
+        {
+            Debug.Log("Valor no encontrado");
+        }
     }
 
     private void CrearTextoDelButton(RectTransform rt, Trabajador trabajador)
