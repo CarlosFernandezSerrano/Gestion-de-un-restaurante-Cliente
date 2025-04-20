@@ -281,30 +281,5 @@ public class MétodosAPIController : MonoBehaviour
             }
         }
     }*/
-
-    public IEnumerator DeleteData()
-    {
-        string url = "https://localhost:7233/cliente/borrarxid/3"; // Ajusta la URL según tu configuración
-        using (UnityWebRequest request = UnityWebRequest.Delete(url))
-        {
-            // Asigna un downloadHandler para poder capturar la respuesta del servidor
-            request.downloadHandler = new DownloadHandlerBuffer();
-
-            yield return request.SendWebRequest();
-
-            if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
-            {
-                Debug.Log("Error: " + request.error);
-            }
-            else
-            {
-                // Procesa la respuesta, que generalmente es JSON
-                string jsonResponse = request.downloadHandler.text;
-                Debug.Log("Respuesta: " + jsonResponse);
-                // Puedes deserializar con JsonUtility o alguna otra librería JSON
-            }
-        }
-    }
-
     
 }
