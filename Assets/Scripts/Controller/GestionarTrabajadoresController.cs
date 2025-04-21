@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -27,6 +28,8 @@ public class GestionarTrabajadoresController : MonoBehaviour
     [SerializeField] private TMP_Text textoContenedorAdvertenciaCambiarDeGerente;
     [SerializeField] private GameObject contenedorAdvertenciaEliminarTrabajador;
     [SerializeField] private TMP_Text textoAdvertenciaEliminarTrabajador;
+    [SerializeField] private GameObject contenedorErrorAlGuardarTrabajadores;
+    [SerializeField] private TMP_Text textoErrorAlGuardarTrabajadores;
 
     private List<Trabajador> TrabajadoresEnRestaurante = new List<Trabajador>();
     private List<Trabajador> TrabajadoresSinRestaurante = new List<Trabajador>();
@@ -79,14 +82,12 @@ public class GestionarTrabajadoresController : MonoBehaviour
                 // Si el contenedor no está activo, se activa/muestra
                 if (!contenedorAdvertenciaCambiarGerente.activeSelf)
                 {
+                    TrabajadorPosibleASerNuevoGerente = ObtenerTrabajadorQueHaSidoPuestoGerenteExistiendoUno(trabajadoresEnScrollViewAhora);
+
                     // Mostrar contenedor advertencia 
-                    contenedorAdvertenciaCambiarGerente.SetActive(true);
-
-                    TrabajadorPosibleASerNuevoGerente = ObtenerTrabajadorQueHaSidoPuestoGerenteExistiendoUno(trabajadoresEnScrollViewAhora);                    
-
                     textoContenedorAdvertenciaCambiarDeGerente.text = "¿Está dispuest@ a ceder su rol de gerente al usuario " + TrabajadorPosibleASerNuevoGerente.Nombre + "?";
+                    contenedorAdvertenciaCambiarGerente.SetActive(true);
                 }
-                
             }
             else
             {
@@ -98,7 +99,6 @@ public class GestionarTrabajadoresController : MonoBehaviour
                 {
                     buttonGuardar.interactable = false;
                 }
-                
             }
         }
         else
@@ -282,7 +282,7 @@ public class GestionarTrabajadoresController : MonoBehaviour
                 {
                     scrollViewNombresTrabajadores.SetActive(true);
 
-                    // Tengo que eliminar todos los hijos (botones en este caso) de Content antes de poner nuevos (reservas actualizadas)
+                    // Tengo que eliminar todos los hijos (botones en este caso) de Content antes de poner nuevos (trabajadores actualizados)
                     EliminarObjetosHijoDeScrollView(rtScrollViewContentNombresTrabajadores);
 
                     // Muestro los trabajadores sin restaurante que coinciden con el contenido del inputField en un scrollview
@@ -294,7 +294,7 @@ public class GestionarTrabajadoresController : MonoBehaviour
                 }
                 else
                 {
-                    // Tengo que eliminar todos los hijos (botones en este caso) de Content antes de poner nuevos (reservas actualizadas)
+                    // Tengo que eliminar todos los hijos (botones en este caso) de Content antes de poner nuevos (trabajadores actualizados)
                     EliminarObjetosHijoDeScrollView(rtScrollViewContentNombresTrabajadores);
 
                     scrollViewNombresTrabajadores.SetActive(false);
@@ -304,7 +304,7 @@ public class GestionarTrabajadoresController : MonoBehaviour
         }
         else
         {
-            // Tengo que eliminar todos los hijos (botones en este caso) de Content antes de poner nuevos (reservas actualizadas)
+            // Tengo que eliminar todos los hijos (botones en este caso) de Content antes de poner nuevos (trabajadores actualizados)
             EliminarObjetosHijoDeScrollView(rtScrollViewContentNombresTrabajadores);
             TextoInputFieldAntes = "";
             scrollViewNombresTrabajadores.SetActive(false);
@@ -315,7 +315,7 @@ public class GestionarTrabajadoresController : MonoBehaviour
         {
             buttonAñadir.interactable = true;
 
-            // Tengo que eliminar todos los hijos (botones en este caso) de Content antes de poner nuevos (reservas actualizadas)
+            // Tengo que eliminar todos los hijos (botones en este caso) de Content antes de poner nuevos (trabajadores actualizados)
             EliminarObjetosHijoDeScrollView(rtScrollViewContentNombresTrabajadores);
             scrollViewNombresTrabajadores.SetActive(false);
         }
@@ -337,6 +337,7 @@ public class GestionarTrabajadoresController : MonoBehaviour
         return false;
     }
 
+    // Elimino todos los hijos de Content
     private void EliminarObjetosHijoDeScrollView(RectTransform rectTransformContent)
     {
         foreach (Transform hijo in rectTransformContent)
@@ -646,9 +647,34 @@ public class GestionarTrabajadoresController : MonoBehaviour
         return 0;
     }
 
-    public void ConfirmarAsignarNuevoGerente()
+    public async void ConfirmarAsignarNuevoGerente()
     {
-        TMP_Dropdown dropdownPosibleFuturoGerente = rtScrollViewContent.transform.Find("Button-" + TrabajadorPosibleASerNuevoGerente.Id).GetComponentInChildren<TMP_Dropdown>();
+        // Obtengo y actualizo el trabajador que va a ser a partir de ahora el nuevo gerente del restaurante
+        Trabajador trabajador = ObtenerTrabajadorPorID(TrabajadorPosibleASerNuevoGerente);
+        trabajador.Rol_ID = 2;
+        trabajador.Restaurante_ID = Usuario.Restaurante_ID;
+        string cad = await instanceMétodosApiController.PutDataAsync("trabajador/actualizarTrabajadorPorGerente/", trabajador);
+
+        // Deserializo la respuesta
+        Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
+
+        // Actualización exitosa del nuevo gerente
+        if (resultado.Result.Equals(1))
+        {
+            // Ahora actualizo al que antes era gerente poniéndolo empleado
+            Trabajador t = new Trabajador(Usuario.ID, Usuario.Nombre, "", 1, Usuario.Restaurante_ID);
+            string cad2 = await instanceMétodosApiController.PutDataAsync("trabajador/actualizarTrabajadorPorGerente/", t);
+
+            // Deserializo la respuesta
+            Resultado resultado2 = JsonConvert.DeserializeObject<Resultado>(cad2);
+            
+            if (resultado2.Result.Equals(1))
+            {
+                SceneManager.LoadScene("Main");
+            }
+        }
+
+        /*TMP_Dropdown dropdownPosibleFuturoGerente = rtScrollViewContent.transform.Find("Button-" + TrabajadorPosibleASerNuevoGerente.Id).GetComponentInChildren<TMP_Dropdown>();
 
         // Pongo el rol gerente al nuevo gerente
         BuscoElIndiceYLoPongoSiLoEncuentro(dropdownPosibleFuturoGerente, "Gerente");
@@ -664,7 +690,19 @@ public class GestionarTrabajadoresController : MonoBehaviour
 
         Debug.Log("+Nuevo gerente hecho");
 
-        contenedorAdvertenciaCambiarGerente.SetActive(false);
+        contenedorAdvertenciaCambiarGerente.SetActive(false);*/
+    }
+
+    private Trabajador ObtenerTrabajadorPorID(Trabajador trabajadorPosibleASerNuevoGerente)
+    {
+        foreach (Trabajador trabajador in TrabajadoresEnRestaurante)
+        {
+            if (trabajador.Id.Equals(trabajadorPosibleASerNuevoGerente.Id))
+            {
+                return trabajador;
+            }
+        }
+        return null;
     }
 
     private int ObtenerIDTrabajadorGerenteAntesDelCambio()
@@ -766,7 +804,11 @@ public class GestionarTrabajadoresController : MonoBehaviour
             if (resultado.Result.Equals(0))
             {
                 // Muestro mensaje: "El nombre X ya existe"
+                
                 Debug.Log("++Error: El nombre "+ trabajador.Nombre + " ya existe");
+                textoErrorAlGuardarTrabajadores.text = "El trabajador " + trabajador.Nombre + " ya existe";
+
+                contenedorErrorAlGuardarTrabajadores.SetActive(true);
                 break;
             }
             else
@@ -775,9 +817,14 @@ public class GestionarTrabajadoresController : MonoBehaviour
             }
         }
 
-        // El trabajador eliminado no era gerente, no se han eliminado todos los trabajadores del restaurante en la BDD, y se actualiza el Scroll View
+        // Tengo que eliminar todos los hijos (botones en este caso) de Content antes de poner nuevos (trabajadores actualizados)
         EliminarObjetosHijoDeScrollView(rtScrollViewContent);
         ObtenerTrabajadoresDeUnRestauranteAsync();
+    }
+
+    public void PulsarOkayDelContenedorErrorAlGuardarTrabajadores()
+    {
+        contenedorErrorAlGuardarTrabajadores.SetActive(false);
     }
 
 
