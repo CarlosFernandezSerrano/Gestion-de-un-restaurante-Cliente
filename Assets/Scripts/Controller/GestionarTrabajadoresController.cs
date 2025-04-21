@@ -28,8 +28,10 @@ public class GestionarTrabajadoresController : MonoBehaviour
     [SerializeField] private TMP_Text textoContenedorAdvertenciaCambiarDeGerente;
     [SerializeField] private GameObject contenedorAdvertenciaEliminarTrabajador;
     [SerializeField] private TMP_Text textoAdvertenciaEliminarTrabajador;
+    [SerializeField] private TMP_Text textoEntreParéntesisAlQuererEliminarTrabajador;
     [SerializeField] private GameObject contenedorErrorAlGuardarTrabajadores;
     [SerializeField] private TMP_Text textoErrorAlGuardarTrabajadores;
+    
 
     private List<Trabajador> TrabajadoresEnRestaurante = new List<Trabajador>();
     private List<Trabajador> TrabajadoresSinRestaurante = new List<Trabajador>();
@@ -650,7 +652,7 @@ public class GestionarTrabajadoresController : MonoBehaviour
     public async void ConfirmarAsignarNuevoGerente()
     {
         // Obtengo y actualizo el trabajador que va a ser a partir de ahora el nuevo gerente del restaurante
-        Trabajador trabajador = ObtenerTrabajadorPorID(TrabajadorPosibleASerNuevoGerente);
+        Trabajador trabajador = ObtenerTrabajadorPorID(TrabajadorPosibleASerNuevoGerente.Id);
         trabajador.Rol_ID = 2;
         trabajador.Restaurante_ID = Usuario.Restaurante_ID;
         string cad = await instanceMétodosApiController.PutDataAsync("trabajador/actualizarTrabajadorPorGerente/", trabajador);
@@ -693,11 +695,11 @@ public class GestionarTrabajadoresController : MonoBehaviour
         contenedorAdvertenciaCambiarGerente.SetActive(false);*/
     }
 
-    private Trabajador ObtenerTrabajadorPorID(Trabajador trabajadorPosibleASerNuevoGerente)
+    private Trabajador ObtenerTrabajadorPorID(int trabajador_ID)
     {
         foreach (Trabajador trabajador in TrabajadoresEnRestaurante)
         {
-            if (trabajador.Id.Equals(trabajadorPosibleASerNuevoGerente.Id))
+            if (trabajador.Id.Equals(trabajador_ID))
             {
                 return trabajador;
             }
@@ -705,23 +707,25 @@ public class GestionarTrabajadoresController : MonoBehaviour
         return null;
     }
 
-    private int ObtenerIDTrabajadorGerenteAntesDelCambio()
-    {
-        foreach (Trabajador trabajador in TrabajadoresEnRestaurante)
-        {
-            if (trabajador.Rol_ID.Equals(2))
-            {
-                return trabajador.Id;
-            }
-        }
-        return 0;
-    }
-
     public void EliminarTrabajador()
     {
         buttonEliminar.interactable = false;
 
         int id_trabajador = ObtenerElIdDelTrabajadorAEliminar();
+
+        Trabajador t = ObtenerTrabajadorPorID(id_trabajador);
+
+        RectTransform rtText = textoAdvertenciaEliminarTrabajador.gameObject.GetComponent<RectTransform>();
+        // Si el trabajador a eliminar es Gerente, muestro
+        if (t.Rol_ID.Equals(2))
+        {
+            rtText.anchoredPosition = new Vector2(rtText.anchoredPosition.x, 46);
+            textoEntreParéntesisAlQuererEliminarTrabajador.text = "(También se eliminarán el restaurante y sus trabajadores)";
+        }
+        else
+        {
+            rtText.anchoredPosition = new Vector2(rtText.anchoredPosition.x, 0);
+        }
 
         string nombreTrabajador = botónPulsadoParaEliminar.gameObject.GetComponentInChildren<TMP_InputField>().text.Trim();
 
@@ -733,6 +737,7 @@ public class GestionarTrabajadoresController : MonoBehaviour
 
     public void CancelarEliminarTrabajador()
     {
+        textoEntreParéntesisAlQuererEliminarTrabajador.text = "";
         contenedorAdvertenciaEliminarTrabajador.SetActive(false);
     }
 
@@ -773,6 +778,7 @@ public class GestionarTrabajadoresController : MonoBehaviour
                 contenedorAdvertenciaEliminarTrabajador.SetActive(false);
             }
         }
+        textoEntreParéntesisAlQuererEliminarTrabajador.text = "";
     }
 
     private bool TrabajadorAEliminarEsGerente(int id_trabajador)
