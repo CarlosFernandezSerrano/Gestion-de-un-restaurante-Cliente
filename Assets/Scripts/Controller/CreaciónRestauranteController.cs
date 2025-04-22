@@ -69,7 +69,7 @@ public class CreaciónRestauranteController : MonoBehaviour
         canvasCreaciónRestaurante.SetActive(false);
     }
 
-    public async void ConfirmarOpciones()
+    public async void ConfirmarOpcionesAsync()
     {
         Debug.Log("Confirmo las opciones");
         string nombreRestaurante = inputFieldNombreRestaurante.text.Trim();

@@ -41,7 +41,6 @@ public class LogInAppController : MonoBehaviour
         instanceMétodosAPIController = MétodosAPIController.InstanceMétodosAPIController;
         instanceTrabajadorController = TrabajadorController.InstanceTrabajadorController;
                 
-        //StartCoroutine(DeleteData());
     }
 
     // Update is called once per frame
@@ -173,7 +172,7 @@ public class LogInAppController : MonoBehaviour
 
     
 
-    public void irAlCanvasRegistrarse()
+    public void IrAlCanvasRegistrarse()
     {
         canvasInicioSesiónUsuario.SetActive(false);
         canvasRegistroUsuario.SetActive(true);

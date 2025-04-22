@@ -62,7 +62,7 @@ public class RegisterAppController : MonoBehaviour
         inputTextoContraseñaRepetida.text = "";
     }
 
-    public void ConfirmarRegistroUsuario()
+    public void ConfirmarRegistrarUsuario()
     {
         textoErrorRegistro.text = "";
         StartCoroutine(DesactivarPorUnTiempoLosBotonesYLuegoActivarCuandoHayaRespuestaDeLaAPIdePlayFab());
