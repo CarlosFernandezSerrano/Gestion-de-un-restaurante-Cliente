@@ -4721,7 +4721,7 @@ PrefabInstance:
       objectReference: {fileID: 1510492301}
     - target: {fileID: 7618563136000166266, guid: 39d3133ea78e56b4abcaa9114e92cac1, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: irAlCanvasRegistrarse
+      value: IrAlCanvasRegistrarse
       objectReference: {fileID: 0}
     - target: {fileID: 7618563136000166266, guid: 39d3133ea78e56b4abcaa9114e92cac1, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
@@ -5345,7 +5345,7 @@ PrefabInstance:
       objectReference: {fileID: 802823506}
     - target: {fileID: 1950156124321495883, guid: bfecb644de7b0c741b9cab9addc7e934, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ConfirmarRegistroUsuario
+      value: ConfirmarRegistrarUsuario
       objectReference: {fileID: 0}
     - target: {fileID: 1950156124321495883, guid: bfecb644de7b0c741b9cab9addc7e934, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
