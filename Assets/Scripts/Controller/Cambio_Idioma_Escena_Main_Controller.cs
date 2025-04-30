@@ -55,7 +55,7 @@ public class Cambio_Idioma_Escena_Main_Controller : MonoBehaviour
         {
             case "Español":
                 // Textos en canvas Log In
-                textLogIn.text = "Inicia Sesión";
+                textLogIn.text = "Iniciar Sesión";
                 textNombreLogIn.text = "Nombre";
                 textPasswordLogIn.text = "Contraseña";
                 textInputFieldNombreLogIn.text = "Mínimo 3 caracteres...";
