@@ -28,6 +28,9 @@ public class LogInAppController : MonoBehaviour
     [SerializeField] private Button botónAcceder;
     [SerializeField] private GameObject canvasIdiomasLogInYRegistro;
     [SerializeField] private TMP_InputField[] inputFields; // Asigno los InputFields en el orden de tabulación deseado
+    [SerializeField] private RectTransform rtBotónIdiomaSpanish;
+    [SerializeField] private RectTransform rtBotónIdiomaEnglish;
+    [SerializeField] private RectTransform rtTextoRegistrarse;
 
     //private bool mensajeAPIPlayFabDevuelto = false;
 
@@ -174,6 +177,10 @@ public class LogInAppController : MonoBehaviour
 
     public void IrAlCanvasRegistrarse()
     {
+        // Pongo los botones de idiomas con una "Y" específica para el canvas
+        rtBotónIdiomaSpanish.anchoredPosition = new Vector2(rtBotónIdiomaSpanish.anchoredPosition.x, rtTextoRegistrarse.anchoredPosition.y);
+        rtBotónIdiomaEnglish.anchoredPosition = new Vector2(rtBotónIdiomaEnglish.anchoredPosition.x, rtTextoRegistrarse.anchoredPosition.y);
+
         canvasInicioSesiónUsuario.SetActive(false);
         canvasRegistroUsuario.SetActive(true);
 

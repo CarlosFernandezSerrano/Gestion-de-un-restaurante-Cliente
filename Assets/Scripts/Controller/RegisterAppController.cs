@@ -25,6 +25,9 @@ public class RegisterAppController : MonoBehaviour
     [SerializeField] private Button botónIniciarSesión;
     [SerializeField] private GameObject canvasIdiomasLogInYRegistro;
     [SerializeField] private TMP_InputField[] inputFields; // Asigno los InputFields en el orden de tabulación deseado
+    [SerializeField] private RectTransform rtBotónIdiomaSpanish;
+    [SerializeField] private RectTransform rtBotónIdiomaEnglish;
+    [SerializeField] private RectTransform rtTextoIniciarSesión;
 
 
     MétodosAPIController instanceMétodosAPIController;
@@ -51,6 +54,10 @@ public class RegisterAppController : MonoBehaviour
     
     public void CambiarACanvasIniciarSesión()
     {
+        // Pongo los botones de idiomas con una "Y" específica para el canvas
+        rtBotónIdiomaSpanish.anchoredPosition = new Vector2(rtBotónIdiomaSpanish.anchoredPosition.x, rtTextoIniciarSesión.anchoredPosition.y);
+        rtBotónIdiomaEnglish.anchoredPosition = new Vector2(rtBotónIdiomaEnglish.anchoredPosition.x, rtTextoIniciarSesión.anchoredPosition.y);
+
         canvasRegistroUsuario.SetActive(false);
         canvasIniciarSesiónUsuario.SetActive(true);
 

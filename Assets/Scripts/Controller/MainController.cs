@@ -31,6 +31,9 @@ public class MainController : MonoBehaviour
     [SerializeField] private Button botónEditarRestaurante;
     [SerializeField] private Button botónGestionarMesas;
     [SerializeField] private Button botónGestionarTrabajadores;
+    [SerializeField] private RectTransform rtBotónIdiomaSpanish;
+    [SerializeField] private RectTransform rtBotónIdiomaEnglish;
+    [SerializeField] private RectTransform rtTextoIniciarSesión;
 
 
     private bool telónMoviéndose = false;
@@ -260,6 +263,11 @@ public class MainController : MonoBehaviour
     public void CerrarSesión()
     {
         PlayerPrefs.SetInt("UsuarioRegistrado", 0);
+        
+        // Pongo los botones de idiomas con una "Y" específica para el canvas de iniciar sesión
+        rtBotónIdiomaSpanish.anchoredPosition = new Vector2(rtBotónIdiomaSpanish.anchoredPosition.x, rtTextoIniciarSesión.anchoredPosition.y);
+        rtBotónIdiomaEnglish.anchoredPosition = new Vector2(rtBotónIdiomaEnglish.anchoredPosition.x, rtTextoIniciarSesión.anchoredPosition.y);
+
         canvasLogInUsuario.SetActive(true);
         canvasIdiomasLogInYRegistro.SetActive(true);
         PresionarBotónPerfil();
