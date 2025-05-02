@@ -31,7 +31,8 @@ public class GestionarTrabajadoresController : MonoBehaviour
     [SerializeField] private TMP_Text textoEntreParéntesisAlQuererEliminarTrabajador;
     [SerializeField] private GameObject contenedorErrorAlGuardarTrabajadores;
     [SerializeField] private TMP_Text textoErrorAlGuardarTrabajadores;
-    
+    [SerializeField] private Sprite imgRectangleMarroncitoParaMostrar;
+
 
     private List<Trabajador> TrabajadoresEnRestaurante = new List<Trabajador>();
     private List<Trabajador> TrabajadoresSinRestaurante = new List<Trabajador>();
@@ -379,10 +380,21 @@ public class GestionarTrabajadoresController : MonoBehaviour
         botonGO.name = "Button-" + trabajador.Id;
 
         // Referencias de componentes
+        Image imgButton = botonGO.GetComponent<Image>();
         Button button = botonGO.GetComponent<Button>();
         TMP_InputField inputField = botonGO.GetComponentInChildren<TMP_InputField>();
         TMP_Dropdown dropdown = botonGO.GetComponentInChildren<TMP_Dropdown>();
 
+        // Pongo una imagen específica al botón
+        imgButton.sprite = imgRectangleMarroncitoParaMostrar;
+
+        // Reduzco el alpha del inputField del botón
+        Image imgInputField = inputField.gameObject.GetComponent<Image>();
+        Color colorInputField = imgInputField.color;
+        colorInputField.a = 47f / 255f;
+        imgInputField.color = colorInputField;
+
+        // Pongo el nombre del trabajador en el inputField
         inputField.text = trabajador.Nombre;
 
         List<string> opciones = new List<string> { "Empleado", "Gerente"};
