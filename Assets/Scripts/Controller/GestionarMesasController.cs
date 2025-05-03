@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -33,6 +34,9 @@ public class GestionarMesasController : MonoBehaviour
     [SerializeField] private Scrollbar scrollbarHistorialReservas; 
     [SerializeField] private RectTransform rectTransformContentHistorialReservas;
     [SerializeField] private Sprite imgCuadradoBordeNegroFino;
+    [SerializeField] private GameObject imgConTextoDeBuscarReserva;
+    [SerializeField] private GameObject ImgYTextoCrearReserva;
+    [SerializeField] private GameObject ImgYTextoHistorialReservas;
 
     private List<Mesa> Mesas;
 
@@ -1354,6 +1358,42 @@ public class GestionarMesasController : MonoBehaviour
             }
         }
         return reservas;
+    }
+
+    public void MostrarImgConTextoDeBuscarReserva()
+    {
+        Debug.Log("Activando imagen desde EventTrigger");
+        imgConTextoDeBuscarReserva.SetActive(true);
+    }
+
+    public void OcultarImgConTextoDeBuscarReserva()
+    {
+        Debug.Log("Ocultando imagen desde EventTrigger");
+        imgConTextoDeBuscarReserva.SetActive(false);
+    }
+
+    public void MostrarImgYTextoDeCrearReserva()
+    {
+        Debug.Log("Activando imagen desde EventTrigger");
+        ImgYTextoCrearReserva.SetActive(true);
+    }
+
+    public void OcultarImgYTextoDeCrearReserva()
+    {
+        Debug.Log("Ocultando imagen desde EventTrigger");
+        ImgYTextoCrearReserva.SetActive(false);
+    }
+
+    public void MostrarImgYTextoDeHistorialReservas()
+    {
+        Debug.Log("Activando imagen desde EventTrigger");
+        ImgYTextoHistorialReservas.SetActive(true);
+    }
+
+    public void OcultarImgYTextoDeHistorialReservas()
+    {
+        Debug.Log("Ocultando imagen desde EventTrigger");
+        ImgYTextoHistorialReservas.SetActive(false);
     }
 
     public List<Mesa> GetMesas()
