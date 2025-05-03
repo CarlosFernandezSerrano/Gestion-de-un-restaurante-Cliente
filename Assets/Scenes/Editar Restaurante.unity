@@ -9516,6 +9516,7 @@ MonoBehaviour:
   tmpInputFieldPrefab: {fileID: 476926517351533604, guid: f3eb7c47497e91f4dbcf1404765fbba6, type: 3}
   "horaL\xEDmiteParaComer": {fileID: 534835936}
   "minutoL\xEDmiteParaComer": {fileID: 1291180130}
+  imgCuadradoBordeNegroFino: {fileID: 21300000, guid: 291d767454cafe149ad33c53c646949d, type: 3}
   padreDeLosBotonesMesa: {fileID: 99731598}
 --- !u!1 &1525870345
 GameObject:

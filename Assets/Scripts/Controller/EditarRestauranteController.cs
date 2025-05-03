@@ -37,6 +37,7 @@ public class EditarRestauranteController : MonoBehaviour
     [SerializeField] private GameObject tmpInputFieldPrefab; // Prefab de InputField TMP
     [SerializeField] private TMP_Dropdown horaLímiteParaComer;
     [SerializeField] private TMP_Dropdown minutoLímiteParaComer;
+    [SerializeField] private Sprite imgCuadradoBordeNegroFino;
 
     private string NombreRestaurante;
     private string HoraApertura;
@@ -1006,6 +1007,7 @@ public class EditarRestauranteController : MonoBehaviour
 
         // Agrego un componente Image
         Image img = imgObject.AddComponent<Image>();
+        img.sprite = imgCuadradoBordeNegroFino;
         /*Sprite newSprite = Resources.Load<Sprite>("Editar Restaurante/circle perfect 1.0");
         if (newSprite != null)
         {

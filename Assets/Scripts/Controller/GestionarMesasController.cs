@@ -32,6 +32,7 @@ public class GestionarMesasController : MonoBehaviour
     [SerializeField] private GameObject canvasHistorialReservas;
     [SerializeField] private Scrollbar scrollbarHistorialReservas; 
     [SerializeField] private RectTransform rectTransformContentHistorialReservas;
+    [SerializeField] private Sprite imgCuadradoBordeNegroFino;
 
     private List<Mesa> Mesas;
 
@@ -891,6 +892,7 @@ public class GestionarMesasController : MonoBehaviour
 
         // Agrego un componente Image
         Image img = imgObject.AddComponent<Image>();
+        img.sprite = imgCuadradoBordeNegroFino;
         /*Sprite newSprite = Resources.Load<Sprite>("Editar Restaurante/circle perfect 1.0");
         if (newSprite != null)
         {
