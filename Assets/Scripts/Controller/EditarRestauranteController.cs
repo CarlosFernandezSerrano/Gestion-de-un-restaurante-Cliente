@@ -38,6 +38,7 @@ public class EditarRestauranteController : MonoBehaviour
     [SerializeField] private TMP_Dropdown horaLímiteParaComer;
     [SerializeField] private TMP_Dropdown minutoLímiteParaComer;
     [SerializeField] private Sprite imgCuadradoBordeNegroFino;
+    [SerializeField] private Button buttonSinTiempoLímite;
 
     private string NombreRestaurante;
     private string HoraApertura;
@@ -650,6 +651,9 @@ public class EditarRestauranteController : MonoBehaviour
         buttonVolver.interactable = false;
         buttonGuardar.interactable = false;
         buttonAñadirMesa.interactable = false;
+        buttonSinTiempoLímite.interactable = false;
+        horaLímiteParaComer.interactable = false;
+        minutoLímiteParaComer.interactable = false;
     }
 
     public void GuardarYSalir()
