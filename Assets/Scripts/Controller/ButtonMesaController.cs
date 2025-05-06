@@ -1,3 +1,5 @@
+using Assets.Scripts.Model;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -129,8 +131,11 @@ public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHan
         {
             // Actualizamos la referencia del botón seleccionado
             buttonSeleccionadoParaBorrar = this;
+
+            PonerTodosLosBotonesEnBlanco();
+            PonerBotónSeleccionadoConCírculoAmarillo(buttonSeleccionadoParaBorrar);
             //Debug.Log("Botón marcado: " + gameObject.name);
-            
+
             instanceEditarRestauranteController.ActivarPapelera();
             // (Opcional) Aquí puedes cambiar el color o aplicar alguna animación para indicar selección.
             isDragging = false; // No queremos que inicie un arrastre con clic derecho.
@@ -140,16 +145,52 @@ public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHan
         else if (eventData.button == PointerEventData.InputButton.Left)
         {
             // Si el clic izquierdo es en algo que no es el botón papelera, se desmarca
-            // Aquí asumimos que al botón papelera le asignarás un Tag, por ejemplo "TrashButton"
             if (!gameObject.CompareTag("TrashButton"))
             {
                 // Si se ha marcado algún botón previamente y se hace clic en otro elemento,
                 // se deselecciona el botón marcado.
+                if (buttonSeleccionadoParaBorrar != null)
+                {
+                    // Pongo el color del botón seleccionado para borrar en blanco
+                    Image imgButtonAEliminar = buttonSeleccionadoParaBorrar.transform.Find("Imagen Circle").GetComponent<Image>();
+                    imgButtonAEliminar.color = Color.white;
+                }
                 buttonSeleccionadoParaBorrar = null;
+
                 instanceEditarRestauranteController.DesactivarPapelera();
                 //Debug.Log("Selección desmarcada");
             }
             isDragging = true;
+        }
+    }
+
+    private void PonerTodosLosBotonesEnBlanco()
+    {
+        foreach (Transform child in containerRect.gameObject.transform)
+        {
+            Image img = child.transform.Find("Imagen Circle").GetComponent<Image>();
+            img.color = Color.white;
+        }
+    }
+
+    private void PonerBotónSeleccionadoConCírculoAmarillo(ButtonMesaController buttonSeleccionadoParaBorrar)
+    {
+        Debug.Log("Name button: " + buttonSeleccionadoParaBorrar.name);
+        Image img = buttonSeleccionadoParaBorrar.transform.Find("Imagen Circle").GetComponent<Image>();
+        PonerColorCorrectoAImg(img, "#FFE700");
+    }
+
+    public void PonerColorCorrectoAImg(Image img, string hexadecimal)
+    {
+        Color newColor;
+        // Intento convertir el string hexadecimal a Color
+        if (UnityEngine.ColorUtility.TryParseHtmlString(hexadecimal, out newColor))
+        {
+            img.color = newColor;
+        }
+        else
+        {
+            Debug.LogError("El formato del color hexadecimal es inválido.");
         }
     }
 
