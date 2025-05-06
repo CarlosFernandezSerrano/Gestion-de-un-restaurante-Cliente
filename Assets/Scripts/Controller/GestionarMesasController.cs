@@ -1341,7 +1341,7 @@ public class GestionarMesasController : MonoBehaviour
     private List<Reserva> ObtenerTodasLasReservasDeHace1Mes()
     {
         DateTime fechaActual = DateTime.Today;
-        DateTime fechaHaceUnMes = fechaActual.AddMonths(-1); // Le resto un mes a la fecha actual
+        DateTime fechaHaceUnMes = fechaActual.AddMonths(-1); // Le resto un mes a la fecha actual 
         TimeSpan horaActual = TimeSpan.Parse(DateTime.Now.ToString("HH:mm"));
         List<Reserva> reservas = new List<Reserva>();
         foreach (Mesa mesa in Mesas)
