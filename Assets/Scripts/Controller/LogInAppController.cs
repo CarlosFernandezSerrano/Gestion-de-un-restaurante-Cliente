@@ -1,16 +1,9 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using System;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using UnityEngine.Networking;
-using System.Text;
-using UnityEditor.PackageManager.UI;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using UnityEditor.PackageManager;
 using Assets.Scripts.Model;
 using Assets.Scripts.Controller;
 

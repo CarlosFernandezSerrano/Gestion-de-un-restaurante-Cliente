@@ -1,17 +1,11 @@
 using Assets.Scripts.Controller;
 using Assets.Scripts.Model;
 using Newtonsoft.Json;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
-using UnityEditor.PackageManager;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 public class GestionarTrabajadoresController : MonoBehaviour
 {

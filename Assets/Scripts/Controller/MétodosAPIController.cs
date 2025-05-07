@@ -1,12 +1,8 @@
 using Assets.Scripts.Model;
 using Newtonsoft.Json;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -14,6 +10,7 @@ public class MétodosAPIController : MonoBehaviour
 {
 
     private bool mostrandoImgNoConexión = false;
+    private static string URL = "http://localhost:7233/"; //https://localhost:7233/
 
     GeneralController instanceGeneralController;
 
@@ -41,7 +38,7 @@ public class MétodosAPIController : MonoBehaviour
 
     public async Task<string> GetDataAsync(string cad)
     {
-        string url = "https://localhost:7233/" + cad;
+        string url = URL + cad;
 
         // Creo la solicitud GET
         using (UnityWebRequest request = UnityWebRequest.Get(url))
@@ -108,7 +105,7 @@ public class MétodosAPIController : MonoBehaviour
 
     public async Task<string> PostDataAsync(string cad, object objeto)
     {
-        string url = "https://localhost:7233/" + cad;
+        string url = URL + cad;
 
         // Convierto el objeto a JSON
         string json = JsonConvert.SerializeObject(objeto);
@@ -151,7 +148,7 @@ public class MétodosAPIController : MonoBehaviour
 
     public async Task<string> PutDataAsync(string cad, object objeto)
     {
-        string url = "https://localhost:7233/" + cad;
+        string url = URL + cad;
 
         // Convierto el objeto a JSON
         string json = JsonConvert.SerializeObject(objeto);
@@ -194,7 +191,7 @@ public class MétodosAPIController : MonoBehaviour
 
     public async Task<string> DeleteDataAsync(string cad)
     {
-        string url = "https://localhost:7233/" + cad;
+        string url = URL + cad;
 
         // Usamos el método Delete que ya configura la petición DELETE sin cuerpo.
         using (UnityWebRequest request = UnityWebRequest.Delete(url))
