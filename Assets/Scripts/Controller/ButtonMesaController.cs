@@ -113,6 +113,13 @@ public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHan
     // Detecta cuando se presiona el botón (inicia el arrastre)
     public void OnPointerDown(PointerEventData eventData)
     {
+        // Compruebo si el botón no es interactuable
+        Button btn = GetComponent<Button>();
+        if (btn != null && !btn.interactable)
+        {
+            return; // Salgo si el botón no es interactuable
+        }
+
         // Verificar si este objeto es hijo del contenedorPadre
         if (transform.parent != containerRect.transform)
         {
@@ -158,7 +165,7 @@ public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHan
         }
     }
 
-    private void PonerTodosLosBotonesEnBlanco()
+    public void PonerTodosLosBotonesEnBlanco()
     {
         foreach (Transform child in containerRect.gameObject.transform)
         {

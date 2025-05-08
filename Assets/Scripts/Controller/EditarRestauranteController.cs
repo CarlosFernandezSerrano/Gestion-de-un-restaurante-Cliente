@@ -709,18 +709,6 @@ public class EditarRestauranteController : MonoBehaviour
 
         // Pinto 
         imgCartel.localEulerAngles = new Vector3(0, 0, 0); // Pongo la z en 0
-        /*for (int i = 0; i < 180; i++)
-        {
-            // Actualizo
-            float j = imgCartel.localEulerAngles.z - velocidad * Time.deltaTime;
-
-            // Pinto 
-            imgCartel.localEulerAngles = new Vector3(0, 0, j);
-
-            // Espero
-            //yield return new WaitForSeconds(0.001f);
-            yield return null;
-        }*/
 
         // Espero X segundos
         yield return new WaitForSeconds(tiempoDeEspera);
@@ -752,19 +740,6 @@ public class EditarRestauranteController : MonoBehaviour
         // Pinto 
         imgCartel.localEulerAngles = new Vector3(0, 0, 180); // Pongo la z en 180
 
-        /*for (int i = 0; i < 180; i++)
-        {
-            // Actualizo
-            float k = imgCartel.localEulerAngles.z - 1;// velocidad * Time.deltaTime;
-            Debug.Log("Z: " + imgCartel.localEulerAngles.z);
-            // Pinto 
-            imgCartel.localEulerAngles = new Vector3(0, 0, k);
-
-            // Espero
-            yield return new WaitForSeconds(0.5f);
-            //yield return null;
-        }*/
-
         buttonGuardar.interactable = true;
     }
 
@@ -788,10 +763,11 @@ public class EditarRestauranteController : MonoBehaviour
     {
         float y = rtManosAdvertencia.anchoredPosition.y;
 
+        float velocidad = 1500;
         while (y < -188)
         {
             // Actualizo 
-            y = rtManosAdvertencia.anchoredPosition.y + 2;
+            y = rtManosAdvertencia.anchoredPosition.y + velocidad * Time.deltaTime;
 
             // Pinto
             rtManosAdvertencia.anchoredPosition = new Vector2(rtManosAdvertencia.anchoredPosition.x, y);
@@ -815,6 +791,7 @@ public class EditarRestauranteController : MonoBehaviour
         if (resultado.Result.Equals(1))
         {
             StartCoroutine(MostrarManosAdvertencia(1f, "", ""));
+            PonerNoInteractuablesBotonesMesaEnMapa();
         }
         else // La mesa no tiene ninguna reserva, se puede eliminar de la BDD sin problemas
         {
@@ -822,15 +799,32 @@ public class EditarRestauranteController : MonoBehaviour
         }
     }
 
+    private void PonerNoInteractuablesBotonesMesaEnMapa()
+    {
+        foreach (Transform child in padreDeLosBotonesMesa)
+        {
+            child.gameObject.GetComponent<Button>().interactable = false;
+        }
+    }
+
+    private void PonerInteractuablesBotonesMesaEnMapa()
+    {
+        foreach (Transform child in padreDeLosBotonesMesa)
+        {
+            child.gameObject.GetComponent<Button>().interactable = true;
+        }
+    }
+
     private IEnumerator MostrarObjetoSello()
     {
         rtImgObjetoSello.gameObject.SetActive(true);
 
+        float velocidad = 2000f;
         // Muevo el sello hacia la izquierda
         while (rtImgObjetoSello.anchoredPosition.x > 0)
         {
             // Actualizo 
-            float x = rtImgObjetoSello.anchoredPosition.x - 2;
+            float x = rtImgObjetoSello.anchoredPosition.x - velocidad * Time.deltaTime;
 
             // Pinto
             rtImgObjetoSello.anchoredPosition = new Vector2(x, rtImgObjetoSello.anchoredPosition.y);
@@ -882,7 +876,7 @@ public class EditarRestauranteController : MonoBehaviour
         while (rtImgObjetoSello.anchoredPosition.x < 1295)
         {
             // Actualizo 
-            float x = rtImgObjetoSello.anchoredPosition.x + 2;
+            float x = rtImgObjetoSello.anchoredPosition.x + velocidad * Time.deltaTime;
 
             // Pinto
             rtImgObjetoSello.anchoredPosition = new Vector2(x, rtImgObjetoSello.anchoredPosition.y);
@@ -926,6 +920,9 @@ public class EditarRestauranteController : MonoBehaviour
         rtManosAdvertencia.gameObject.SetActive(false);
         rtManosAdvertencia.anchoredPosition = new Vector2(rtManosAdvertencia.anchoredPosition.x, -898f);
         rtManosAdvertencia.gameObject.SetActive(true);
+
+        instanceButtonMesaController.PonerTodosLosBotonesEnBlanco();
+        PonerInteractuablesBotonesMesaEnMapa();
     }
 
     public void EliminarMesaConReservas()
