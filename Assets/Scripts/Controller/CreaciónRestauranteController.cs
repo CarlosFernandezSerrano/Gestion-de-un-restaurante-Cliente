@@ -144,10 +144,11 @@ public class CreaciónRestauranteController : MonoBehaviour
 
     private IEnumerator MoverManoHaciaLaIzquierda(RectTransform rt, int distancia)
     {
-        for (int i = 0; i < distancia; i++)
+        float velocidad = 1000f; 
+        while (rt.anchoredPosition.x >= 716)
         {
             //Actualizo
-            float x = rt.anchoredPosition.x - 1;
+            float x = rt.anchoredPosition.x - velocidad * Time.deltaTime;
 
             // Pinto
             rt.anchoredPosition = new Vector2(x, rt.anchoredPosition.y);
@@ -180,25 +181,28 @@ public class CreaciónRestauranteController : MonoBehaviour
 
     private IEnumerator MoverManoErrorHaciaArriba(RectTransform rt, int distancia)
     {
-        for (int i = 0; i < distancia; i++)
+        float velocidad = 1000f;
+        while (rt.anchoredPosition.y <= -425)
         {
             //Actualizo
-            float y = rt.anchoredPosition.y + 1;
+            float y = rt.anchoredPosition.y + velocidad * Time.deltaTime;
 
             // Pinto
             rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, y);
 
             // Espero al siguiente frame antes de continuar. Más fluido que usar un WaitForSeconds(), ya que el movimiento no se basa en los FPS.
             yield return null;
+
         }
     }
 
     private IEnumerator MoverManoErrorHaciaAbajo(RectTransform rt, int distancia)
     {
-        for (int i = 0; i < distancia; i++)
+        float velocidad = 1000f;
+        while (rt.anchoredPosition.y >= -836)
         {
             //Actualizo
-            float y = rt.anchoredPosition.y - 1;
+            float y = rt.anchoredPosition.y - velocidad * Time.deltaTime;
 
             // Pinto
             rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, y);
