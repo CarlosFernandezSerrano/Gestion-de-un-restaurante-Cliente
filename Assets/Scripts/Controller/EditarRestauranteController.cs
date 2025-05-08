@@ -20,12 +20,12 @@ public class EditarRestauranteController : MonoBehaviour
     [SerializeField] private TMP_Dropdown minutoCierre;
     [SerializeField] private TMP_InputField inputFieldNombreRestaurante;
     [SerializeField] private GameObject imgHayCambiosSinGuardar;
-    [SerializeField] private UnityEngine.UI.Button buttonGuardar;
-    [SerializeField] private UnityEngine.UI.Button buttonVolver;
-    [SerializeField] private UnityEngine.UI.Button buttonAñadirMesa;
+    [SerializeField] private Button buttonGuardar;
+    [SerializeField] private Button buttonVolver;
+    [SerializeField] private Button buttonAñadirMesa;
     [SerializeField] private RectTransform imgCartel;
     [SerializeField] private TMP_Text textError;
-    [SerializeField] private UnityEngine.UI.Button botónPapelera;
+    [SerializeField] private Button botónPapelera;
     [SerializeField] private RectTransform rtManosAdvertencia;
     [SerializeField] private RectTransform rtImgObjetoSello;
     [SerializeField] private RawImage imgSelloTintaEN;
@@ -87,12 +87,41 @@ public class EditarRestauranteController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        /*string hora_Apertura = horaApertura.options[horaApertura.value].text;
 
+        if (hora_Apertura.Length > 0)
+        {
+            try
+            {
+                int hora_a = int.Parse(hora_Apertura);
+                List<string> opcionesHorasCierre = new List<string>();
+                for (int i = hora_a; i < 24; i++)
+                {
+                    if (i < 10)
+                    {
+                        opcionesHoras.Add("0" + i);
+                    }
+                    else
+                    {
+                        opcionesHoras.Add("" + i);
+                    }
+                }
+
+                AgregarOpcionesADropdown(horaCierre, opcionesHoras2);
+            }
+            catch (Exception ex)
+            {
+                Debug.Log("Exception: " + ex);
+            }
+            
+        }*/
+        
     }
 
     private void InicializarValoresDropdowns()
     {
         List<string> opcionesHoras = new List<string> { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" };
+        List<string> opcionesHoras2 = new List<string> {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" };        
         List<string> opcionesMinutos = new List<string> { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09",
                                                           "10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
                                                           "20", "21", "22", "23", "24", "25", "26", "27", "28", "29",
@@ -106,7 +135,7 @@ public class EditarRestauranteController : MonoBehaviour
                                                           "50", "51", "52", "53", "54", "55", "56", "57", "58", "59" };
         AgregarOpcionesADropdown(horaApertura, opcionesHoras);
         AgregarOpcionesADropdown(minutoApertura, opcionesMinutos);
-        AgregarOpcionesADropdown(horaCierre, opcionesHoras);
+        AgregarOpcionesADropdown(horaCierre, opcionesHoras2);
         AgregarOpcionesADropdown(minutoCierre, opcionesMinutos);
         AgregarOpcionesADropdown(horaLímiteParaComer, opcionesHoras);
         AgregarOpcionesADropdown(minutoLímiteParaComer, opcionesMinutosLimite);
@@ -660,6 +689,16 @@ public class EditarRestauranteController : MonoBehaviour
         minutoLímiteParaComer.interactable = false;
     }
 
+    private void ActivarBotonesDelCanvas()
+    {
+        buttonVolver.interactable = true;
+        buttonGuardar.interactable = true;
+        buttonAñadirMesa.interactable = true;
+        buttonSinTiempoLímite.interactable = true;
+        horaLímiteParaComer.interactable = true;
+        minutoLímiteParaComer.interactable = true;
+    }
+
     public void GuardarYSalir()
     {
         StartCoroutine(GuardoYSalgo());
@@ -1160,6 +1199,13 @@ public class EditarRestauranteController : MonoBehaviour
             textErrorComensales.SetActive(true);
         }
         
+    }
+
+    public void DesactivarContenedorSalirDelCanvas()
+    {
+        imgHayCambiosSinGuardar.SetActive(false);
+
+        ActivarBotonesDelCanvas();
     }
 
     public GameObject GetContenedorAsignarComensales()

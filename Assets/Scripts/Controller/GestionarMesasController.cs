@@ -77,7 +77,7 @@ public class GestionarMesasController : MonoBehaviour
 
         InvokeRepeating(nameof(ActualizarHora), 0f, 1f); // Llama a ActualizarHora() cada 1 segundo
 
-        InvokeRepeating(nameof(ObtenerDatosRestauranteAsync), 0f, 1f); // Llama a ObtenerDatosRestauranteAsync() cada 1 segundo
+        InvokeRepeating(nameof(ObtenerDatosRestauranteAsync), 0f, 0.3f); // Llama a ObtenerDatosRestauranteAsync() cada 1 segundo
 
         
     }
@@ -229,7 +229,7 @@ public class GestionarMesasController : MonoBehaviour
                 string[] tiempoPermitido = Restaurante.TiempoPermitidoParaComer.Split(":");
                 int horas = int.Parse(tiempoPermitido[0].Trim());
                 int minutos = int.Parse(tiempoPermitido[1].Trim());
-                Debug.Log("Resultado tiempo permitido - Horas:" + horas + "; Minutos:" + minutos + "*");
+                //Debug.Log("Resultado tiempo permitido - Horas:" + horas + "; Minutos:" + minutos + "*");
 
                 // Sumo el tiempo que puso el gerente en la escena "Editar Restaurante" en tiempo permitido para comer
                 TimeSpan sumaTiempo = TimeSpan.FromHours(horas) + TimeSpan.FromMinutes(minutos);
@@ -402,7 +402,7 @@ public class GestionarMesasController : MonoBehaviour
             string[] tiempoPermitido = Restaurante.TiempoPermitidoParaComer.Split(":");
             int horas = int.Parse(tiempoPermitido[0].Trim());
             int minutos = int.Parse(tiempoPermitido[1].Trim());
-            Debug.Log("Resultado tiempo permitido - Horas:" + horas + "; Minutos:" + minutos + "*");
+            //Debug.Log("Resultado tiempo permitido - Horas:" + horas + "; Minutos:" + minutos + "*");
 
             // Sumo el tiempo que puso el gerente en la escena "Editar Restaurante" en tiempo permitido para comer
             TimeSpan sumaTiempo = TimeSpan.FromHours(horas) + TimeSpan.FromMinutes(minutos);
@@ -646,9 +646,9 @@ public class GestionarMesasController : MonoBehaviour
                 // Muestro las reservas que tiene la mesa
                 foreach (var reserva in mesa.Reservas)
                 {
-                    Debug.Log("Reservas mesa " + mesa.Id + ": " + reserva.Mostrar());
+                    //Debug.Log("Reservas mesa " + mesa.Id + ": " + reserva.Mostrar());
                     DateTime fechaReserva = DateTime.Parse(reserva.Fecha);
-                    Debug.Log("Fecha Hoy: " + fechaHoy + "; Fecha Reserva: " + fechaReserva);
+                    //Debug.Log("Fecha Hoy: " + fechaHoy + "; Fecha Reserva: " + fechaReserva);
                     if (fechaReserva >= fechaHoy)
                     {
                         reservas.Add(reserva);
@@ -982,7 +982,7 @@ public class GestionarMesasController : MonoBehaviour
         Button botónMesaSelected = botónMesaSeleccionado;
         int id_Mesa = ObtenerIDMesaDelNombreDelBotónMesa(botónMesaSelected);
 
-        textReservasHoyMesa.text = "Reservas Hoy Mesa " + ObtenerIDMesaDelMapa(botónMesaSelected);
+        textReservasHoyMesa.text = "Registros Hoy Mesa " + ObtenerIDMesaDelMapa(botónMesaSelected);
 
         // Obtengo las reservas pendientes que tiene la mesa, ya sean de hoy o en adelante
         List<Reserva> reservasMesaPendientes = ObtenerReservasMesaDeHoyEnAdelante(id_Mesa);
