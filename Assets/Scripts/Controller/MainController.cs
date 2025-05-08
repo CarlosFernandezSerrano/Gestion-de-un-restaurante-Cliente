@@ -197,29 +197,19 @@ public class MainController : MonoBehaviour
 
     private IEnumerator MoverTelónHaciaAbajo(RectTransform rt)
     {
-        // 193
+        float velocidad = 1000f;
         while (rt.anchoredPosition.y > 193)
         {
             //Actualizo
-            float yTelon = rt.anchoredPosition.y - 2;
+            float yTelon = rt.anchoredPosition.y - velocidad * Time.deltaTime;
 
             // Pinto
             rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, yTelon);
 
             // Espero al siguiente frame antes de continuar. Más fluido que usar un WaitForSeconds(), ya que el movimiento no se basa en los FPS.
-            yield return new WaitForSeconds(0.0010f);
+            yield return null;
         }
-        /*for (int i = 0; i < 950; i++)
-        {
-            //Actualizo
-            float y = rt.anchoredPosition.y - 1;
-
-            // Pinto
-            rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, y);
-
-            // Espero al siguiente frame antes de continuar. Más fluido que usar un WaitForSeconds(), ya que el movimiento no se basa en los FPS.
-            yield return new WaitForSeconds(0.003f);
-        }*/
+        
         telónMoviéndose = false;
         telónAbajo = true;
         botónCerrarSesión.interactable = true;
@@ -227,30 +217,19 @@ public class MainController : MonoBehaviour
 
     private IEnumerator MoverTelónHaciaArriba(RectTransform rt)
     {
-        // 1143
+        float velocidad = 1000f;
         while (rt.anchoredPosition.y < 1143)
         {
             //Actualizo
-            float y = rt.anchoredPosition.y + 2;
+            float y = rt.anchoredPosition.y + velocidad * Time.deltaTime;
 
             // Pinto
             rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, y);
 
             // Espero
-            yield return new WaitForSeconds(0.0010f);
+            yield return null;
         }
 
-        /*for (int i = 0; i < 950; i++)
-        {
-            //Actualizo
-            float y = rt.anchoredPosition.y + 1;
-
-            // Pinto
-            rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, y);
-
-            // Espero
-            yield return new WaitForSeconds(0.003f);
-        }*/
         telónMoviéndose = false;
         telónAbajo = false;
         botónCerrarSesión.interactable = true;

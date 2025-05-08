@@ -99,12 +99,17 @@ public class EditarRestauranteController : MonoBehaviour
                                                           "30", "31", "32", "33", "34", "35", "36", "37", "38", "39",
                                                           "40", "41", "42", "43", "44", "45", "46", "47", "48", "49",
                                                           "50", "51", "52", "53", "54", "55", "56", "57", "58", "59" };
+        List<string> opcionesMinutosLimite = new List<string> { "00", "15", "16", "17", "18", "19",
+                                                          "20", "21", "22", "23", "24", "25", "26", "27", "28", "29",
+                                                          "30", "31", "32", "33", "34", "35", "36", "37", "38", "39",
+                                                          "40", "41", "42", "43", "44", "45", "46", "47", "48", "49",
+                                                          "50", "51", "52", "53", "54", "55", "56", "57", "58", "59" };
         AgregarOpcionesADropdown(horaApertura, opcionesHoras);
         AgregarOpcionesADropdown(minutoApertura, opcionesMinutos);
         AgregarOpcionesADropdown(horaCierre, opcionesHoras);
         AgregarOpcionesADropdown(minutoCierre, opcionesMinutos);
         AgregarOpcionesADropdown(horaLímiteParaComer, opcionesHoras);
-        AgregarOpcionesADropdown(minutoLímiteParaComer, opcionesMinutos);
+        AgregarOpcionesADropdown(minutoLímiteParaComer, opcionesMinutosLimite);
     }
 
     private async void ObtenerDatosRestauranteAsync()
@@ -686,34 +691,79 @@ public class EditarRestauranteController : MonoBehaviour
         textError.fontSize = tamañoLetra; // Pongo el tamaño de letra que quiero
         textError.text = cad;
 
+        float velocidad = 500f;
+
         // Subo el cartel
-        for (int i = 0; i < 180; i++)
+        while (imgCartel.localEulerAngles.z > 0 && imgCartel.localEulerAngles.z <= 180)
         {
             // Actualizo
-            float j = imgCartel.localEulerAngles.z - 1;
+            float j = imgCartel.localEulerAngles.z - velocidad * Time.deltaTime;
 
             // Pinto 
             imgCartel.localEulerAngles = new Vector3(0, 0, j);
 
             // Espero
-            yield return new WaitForSeconds(0.001f);
+            //yield return new WaitForSeconds(0.015f);
+            yield return null;
         }
+
+        // Pinto 
+        imgCartel.localEulerAngles = new Vector3(0, 0, 0); // Pongo la z en 0
+        /*for (int i = 0; i < 180; i++)
+        {
+            // Actualizo
+            float j = imgCartel.localEulerAngles.z - velocidad * Time.deltaTime;
+
+            // Pinto 
+            imgCartel.localEulerAngles = new Vector3(0, 0, j);
+
+            // Espero
+            //yield return new WaitForSeconds(0.001f);
+            yield return null;
+        }*/
 
         // Espero X segundos
         yield return new WaitForSeconds(tiempoDeEspera);
 
         // Bajo el cartel
-        for (int i = 0; i < 180; i++)
+
+        // Actualizo
+        float k = imgCartel.localEulerAngles.z - velocidad * Time.deltaTime;
+        Debug.Log("Z: " + imgCartel.localEulerAngles.z);
+        // Pinto 
+        imgCartel.localEulerAngles = new Vector3(0, 0, k);
+
+        // Espero
+        yield return null;
+
+        while (imgCartel.localEulerAngles.z > 180)
         {
             // Actualizo
-            float k = imgCartel.localEulerAngles.z - 1;
+            float q = imgCartel.localEulerAngles.z - velocidad * Time.deltaTime;
 
+            // Pinto 
+            imgCartel.localEulerAngles = new Vector3(0, 0, q);
+
+            // Espero
+            //yield return new WaitForSeconds(0.001f);
+            yield return null;
+        }
+
+        // Pinto 
+        imgCartel.localEulerAngles = new Vector3(0, 0, 180); // Pongo la z en 180
+
+        /*for (int i = 0; i < 180; i++)
+        {
+            // Actualizo
+            float k = imgCartel.localEulerAngles.z - 1;// velocidad * Time.deltaTime;
+            Debug.Log("Z: " + imgCartel.localEulerAngles.z);
             // Pinto 
             imgCartel.localEulerAngles = new Vector3(0, 0, k);
 
             // Espero
-            yield return new WaitForSeconds(0.001f);
-        }
+            yield return new WaitForSeconds(0.5f);
+            //yield return null;
+        }*/
 
         buttonGuardar.interactable = true;
     }

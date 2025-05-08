@@ -63,9 +63,9 @@ public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHan
             //if (Mathf.Abs(otherPos.x - spawnPos.x) < marginX && Mathf.Abs(otherPos.y - spawnPos.y) < marginY)
             if (Mathf.Abs(otherPos.x - spawnPos.x) < (otherSize.x / 2f + defaultSize.x / 2f) && Mathf.Abs(otherPos.y - spawnPos.y) < (otherSize.y / 2f + defaultSize.y / 2f))
             {
-                Debug.Log("Ya existe un botón en el centro. No se creará uno nuevo.");
+                Debug.Log("Ya existe una mesa en el centro. No se creará una nuevo.");
 
-                string cad = "Ya existe un botón en el centro.";
+                string cad = "Ya existe una mesa en el centro.";
                 StartCoroutine(instanceEditarRestauranteController.MovimientoCartelDeMadera(2f, cad, 0f, 12f));
                 return;
             }

@@ -66,7 +66,7 @@ public class Cambio_Idioma_Escena_Main_Controller : MonoBehaviour
                 textPasswordRegistrarse.text = "Contraseña";
                 textRepeatPasswordRegistrarse.text = "Confirmar Contraseña";
                 textInputFieldNombreRegistrarse.text = "Mínimo 3 caracteres...";
-                textInputFieldPasswordRegistrarse.text = "Mínimo 3 caracteres...";
+                textInputFieldPasswordRegistrarse.text = "Mínimo 6 caracteres...";
                 textInputFieldRepeatPasswordRegistrarse.text = "Repetir contraseña...";
                 textIniciarSesionRegistrarse.text = "Iniciar Sesión";
                 textConfirmarRegistrarse.text = "Confirmar";
