@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public class CreaciónRestauranteController : MonoBehaviour
@@ -23,6 +24,7 @@ public class CreaciónRestauranteController : MonoBehaviour
     [SerializeField] private TMP_Text textoErrorRegistro;
     [SerializeField] private GameObject manoError;
     [SerializeField] private GameObject manoOkay;
+    [SerializeField] private Button buttonConfirmarOpciones;
 
 
     private bool manoErrorMoviéndose = false;
@@ -68,6 +70,8 @@ public class CreaciónRestauranteController : MonoBehaviour
 
     public async void ConfirmarOpcionesAsync()
     {
+        buttonConfirmarOpciones.interactable = false;
+
         Debug.Log("Confirmo las opciones");
         string nombreRestaurante = inputFieldNombreRestaurante.text.Trim();
         Debug.Log("Length InputField Nombre Restaurante: " + nombreRestaurante.Length);
@@ -176,6 +180,7 @@ public class CreaciónRestauranteController : MonoBehaviour
             yield return StartCoroutine(MoverManoErrorHaciaAbajo(rt, 350));
 
             manoErrorMoviéndose = false;
+            buttonConfirmarOpciones.interactable = true;
         }
     }
 
@@ -238,6 +243,6 @@ public class CreaciónRestauranteController : MonoBehaviour
 
         canvasCreaciónRestaurante.SetActive(false);
 
-        //Desactivar el botón de comprar el servicio y mostrar opciones conseguidas: edición del restaurante, etc.
+        buttonConfirmarOpciones.interactable = true;
     }
 }

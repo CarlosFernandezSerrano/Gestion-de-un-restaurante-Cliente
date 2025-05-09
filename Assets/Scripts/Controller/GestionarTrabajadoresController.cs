@@ -167,7 +167,12 @@ public class GestionarTrabajadoresController : MonoBehaviour
             if (nombre.Length.Equals(0))
             {
                 //buttonGuardar.interactable = false;
-                textoError.text = "Nombre vacío";
+                textoError.text = "Error: nombre vacío";
+                return true;
+            }
+
+            if (nombre.Length < 3){
+                textoError.text = "Error: nombre con menos de 3 caracteres";
                 return true;
             }
         }
@@ -382,6 +387,7 @@ public class GestionarTrabajadoresController : MonoBehaviour
         // Pongo una imagen específica al botón
         imgButton.sprite = imgRectangleMarroncitoParaMostrar;
 
+        // Configuro el inputField
         // Reduzco el alpha del inputField del botón
         Image imgInputField = inputField.gameObject.GetComponent<Image>();
         Color colorInputField = imgInputField.color;
@@ -390,6 +396,9 @@ public class GestionarTrabajadoresController : MonoBehaviour
 
         // Pongo el nombre del trabajador en el inputField
         inputField.text = trabajador.Nombre;
+
+        // Limito el número de caracteres que puede tener el inputField
+        inputField.characterLimit = 17;
 
         List<string> opciones = new List<string> { "Empleado", "Gerente"};
         AgregarOpcionesADropdown(dropdown, opciones);

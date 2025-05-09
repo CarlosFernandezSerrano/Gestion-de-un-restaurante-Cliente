@@ -557,9 +557,9 @@ public class CrearReservaController : MonoBehaviour
         if (resultado.Result.Equals(1))
         {
             Debug.Log("+ +Reserva registrada correctamente en mesa: " + reserva.Mesa_Id);
+            textResultadoMesasDisponibles.text = "Reserva registrada correctamente";
             Poner4ValoresEnCrearVacíos();
             PonerValoresEnLasOpcionesDeCrear("", "", "");
-            textResultadoMesasDisponibles.text = "";
             AsignarValoresConcretosEnDropdowns();
         }
         else

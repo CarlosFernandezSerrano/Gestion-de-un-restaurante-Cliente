@@ -4782,6 +4782,10 @@ PrefabInstance:
       propertyPath: m_CaretColor.r
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3126185416137951792, guid: 39d3133ea78e56b4abcaa9114e92cac1, type: 3}
+      propertyPath: m_CharacterLimit
+      value: 17
+      objectReference: {fileID: 0}
     - target: {fileID: 3305424614939526681, guid: 39d3133ea78e56b4abcaa9114e92cac1, type: 3}
       propertyPath: m_CaretColor.b
       value: 0
@@ -5820,6 +5824,10 @@ PrefabInstance:
     - target: {fileID: 3609973965130226026, guid: bfecb644de7b0c741b9cab9addc7e934, type: 3}
       propertyPath: m_CaretColor.r
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3609973965130226026, guid: bfecb644de7b0c741b9cab9addc7e934, type: 3}
+      propertyPath: m_CharacterLimit
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 3609973965130226026, guid: bfecb644de7b0c741b9cab9addc7e934, type: 3}
       propertyPath: m_CustomCaretColor
@@ -12624,6 +12632,7 @@ MonoBehaviour:
   textoErrorRegistro: {fileID: 1444881944}
   manoError: {fileID: 152140633}
   manoOkay: {fileID: 1213084917}
+  buttonConfirmarOpciones: {fileID: 1083404331}
 --- !u!1 &1797278397
 GameObject:
   m_ObjectHideFlags: 0
