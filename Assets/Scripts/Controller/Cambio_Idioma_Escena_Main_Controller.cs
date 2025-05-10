@@ -57,7 +57,7 @@ public class Cambio_Idioma_Escena_Main_Controller : MonoBehaviour
                 textPasswordLogIn.text = "Contraseña";
                 textInputFieldNombreLogIn.text = "Mínimo 3 caracteres...";
                 textInputFieldPasswordLogIn.text = "Mínimo 6 caracteres...";
-                textButtonRegistrarseLogIn.text = "Registrarse";
+                textButtonRegistrarseLogIn.text = "Información";
                 textButtonAccederLogIn.text = "Acceder"; // Faltan más texto por poner (error, éxito...)
                 
                 // Textos en canvas Registrarse

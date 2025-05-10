@@ -4691,6 +4691,10 @@ PrefabInstance:
       value: -75
       objectReference: {fileID: 0}
     - target: {fileID: 1362919755553582094, guid: 39d3133ea78e56b4abcaa9114e92cac1, type: 3}
+      propertyPath: m_text
+      value: "Informaci\xF3n"
+      objectReference: {fileID: 0}
+    - target: {fileID: 1362919755553582094, guid: 39d3133ea78e56b4abcaa9114e92cac1, type: 3}
       propertyPath: m_fontSize
       value: 56
       objectReference: {fileID: 0}
@@ -5034,6 +5038,14 @@ PrefabInstance:
       propertyPath: m_fontColor32.rgba
       value: 4294967295
       objectReference: {fileID: 0}
+    - target: {fileID: 8302145748193442543, guid: 39d3133ea78e56b4abcaa9114e92cac1, type: 3}
+      propertyPath: m_Name
+      value: "Button Informaci\xF3n"
+      objectReference: {fileID: 0}
+    - target: {fileID: 8302145748193442543, guid: 39d3133ea78e56b4abcaa9114e92cac1, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8521088360691449739, guid: 39d3133ea78e56b4abcaa9114e92cac1, type: 3}
       propertyPath: m_Name
       value: "Canvas Iniciar Sesi\xF3n"
@@ -5274,22 +5286,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasRegistroUsuario: {fileID: 903220649}
-  "canvasIniciarSesi\xF3nUsuario": {fileID: 1175882022}
   textoErrorRegistro: {fileID: 1037642375}
   "texto\xC9xitoRegistro": {fileID: 667017549}
   inputTextoNombre: {fileID: 903220652}
   "inputTextoContrase\xF1a": {fileID: 903220651}
   "inputTextoContrase\xF1aRepetida": {fileID: 903220650}
   "bot\xF3nConfirmar": {fileID: 1755878167}
-  "bot\xF3nIniciarSesi\xF3n": {fileID: 1513071580}
-  canvasIdiomasLogInYRegistro: {fileID: 1990073573}
   inputFields:
   - {fileID: 903220652}
   - {fileID: 903220651}
   - {fileID: 903220650}
-  "rtBot\xF3nIdiomaSpanish": {fileID: 408493765}
-  "rtBot\xF3nIdiomaEnglish": {fileID: 1090970004}
-  "rtTextoIniciarSesi\xF3n": {fileID: 1417826609}
 --- !u!4 &802823507
 Transform:
   m_ObjectHideFlags: 0
@@ -11011,17 +11017,6 @@ MonoBehaviour:
   "rtBot\xF3nIdiomaSpanish": {fileID: 408493765}
   "rtBot\xF3nIdiomaEnglish": {fileID: 1090970004}
   rtTextoRegistrarse: {fileID: 1583957836}
---- !u!114 &1513071580 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1888282256921419692, guid: bfecb644de7b0c741b9cab9addc7e934, type: 3}
-  m_PrefabInstance: {fileID: 903220648}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1515774063 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5421427288468978472, guid: bfecb644de7b0c741b9cab9addc7e934, type: 3}

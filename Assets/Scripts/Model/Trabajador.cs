@@ -3,7 +3,6 @@ using Newtonsoft.Json;
 
 public class Trabajador 
 {
-    public static Trabajador instanceCiente { get; private set; }
 
     public int Id { get; set; }
     public string Nombre { get; set; }

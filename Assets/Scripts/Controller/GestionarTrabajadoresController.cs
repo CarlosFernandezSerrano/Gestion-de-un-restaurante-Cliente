@@ -26,6 +26,7 @@ public class GestionarTrabajadoresController : MonoBehaviour
     [SerializeField] private GameObject contenedorErrorAlGuardarTrabajadores;
     [SerializeField] private TMP_Text textoErrorAlGuardarTrabajadores;
     [SerializeField] private Sprite imgRectangleMarroncitoParaMostrar;
+    [SerializeField] private GameObject canvasRegistrarUsuario;
 
 
     private List<Trabajador> TrabajadoresEnRestaurante = new List<Trabajador>();
@@ -38,8 +39,15 @@ public class GestionarTrabajadoresController : MonoBehaviour
 
     MétodosAPIController instanceMétodosApiController;
 
+    public static GestionarTrabajadoresController InstanceGestionarTrabajadoresController { get; private set; }
+
     private void Awake()
     {
+        if (InstanceGestionarTrabajadoresController == null)
+        {
+            InstanceGestionarTrabajadoresController = this;
+        }
+
         SceneManager.LoadSceneAsync("General Controller", LoadSceneMode.Additive);
     }
 
@@ -58,7 +66,7 @@ public class GestionarTrabajadoresController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        GestionarBuscarTrabajador();
+        //GestionarBuscarTrabajador();
 
         GestionarCambiosEnTrabajadores();
     }
@@ -591,29 +599,33 @@ public class GestionarTrabajadoresController : MonoBehaviour
         textoBotón.text = " "+nombreTrabajador;
     }
 
-    public async void AñadirTrabajadorARestaurante()
+    public async void AñadirTrabajadorARestaurante(string nombreTrabajador)
     {
-        buttonAñadir.interactable = false;
+        Debug.Log("+++++A"); // 
+        string cad = await instanceMétodosApiController.PostDataAsync("trabajador/obtenerTrabajadorPorNombre", new Trabajador(nombreTrabajador, "", 0, 0));
+        
+        // Deserializo la respuesta
+        Trabajador trabajador = JsonConvert.DeserializeObject<Trabajador>(cad);
 
-        string nombreTrabajador = inputFieldBuscarTrabajador.text.Trim();
+        int id_Trabajador = trabajador.Id;
 
-        int id_Trabajador = ObtenerIdTrabajadorPorNombre(nombreTrabajador);
+        Trabajador trabajador2 = new Trabajador(id_Trabajador, "", "", 0, Usuario.Restaurante_ID);
 
-        Trabajador trabajador = new Trabajador(id_Trabajador, "", "", 0, Usuario.Restaurante_ID);
-
-        string cad = await instanceMétodosApiController.PutDataAsync("trabajador/actualizarRestauranteIDTrabajador", trabajador);
+        string cad2 = await instanceMétodosApiController.PutDataAsync("trabajador/actualizarRestauranteIDTrabajador", trabajador2);
 
         // Deserializo la respuesta
-        Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
+        Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad2);
 
         if (resultado.Result.Equals(1))
         {
+            Debug.Log("+++++B");
             inputFieldBuscarTrabajador.text = "";
             EliminarObjetosHijoDeScrollView(rtScrollViewContent);
             ObtenerTrabajadoresDeUnRestauranteAsync();
         }
         else
         {
+            Debug.Log("+++++C");
             inputFieldBuscarTrabajador.text = "Error";
         }
 
@@ -848,6 +860,10 @@ public class GestionarTrabajadoresController : MonoBehaviour
         contenedorErrorAlGuardarTrabajadores.SetActive(false);
     }
 
+    public void ActivarCanvasRegistrarUsuario()
+    {
+        canvasRegistrarUsuario.SetActive(true);
+    }
 
     public void IrALaEscenaMain()
     {

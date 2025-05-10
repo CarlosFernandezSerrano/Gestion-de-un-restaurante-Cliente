@@ -11,30 +11,25 @@ using Newtonsoft.Json.Linq;
 public class RegisterAppController : MonoBehaviour
 {
     [SerializeField] private GameObject canvasRegistroUsuario;
-    [SerializeField] private GameObject canvasIniciarSesiónUsuario;
     [SerializeField] private TMP_Text textoErrorRegistro;
     [SerializeField] private TMP_Text textoÉxitoRegistro;
     [SerializeField] private TMP_InputField inputTextoNombre;
     [SerializeField] private TMP_InputField inputTextoContraseña;
     [SerializeField] private TMP_InputField inputTextoContraseñaRepetida;
     [SerializeField] private Button botónConfirmar;
-    [SerializeField] private Button botónIniciarSesión;
-    [SerializeField] private GameObject canvasIdiomasLogInYRegistro;
     [SerializeField] private TMP_InputField[] inputFields; // Asigno los InputFields en el orden de tabulación deseado
-    [SerializeField] private RectTransform rtBotónIdiomaSpanish;
-    [SerializeField] private RectTransform rtBotónIdiomaEnglish;
-    [SerializeField] private RectTransform rtTextoIniciarSesión;
 
 
     MétodosAPIController instanceMétodosAPIController;
     TrabajadorController instanceTrabajadorController;
+    GestionarTrabajadoresController instanceGestionarTrabajadoresController;
 
     // Start is called before the first frame update
     void Start()
     {
         instanceMétodosAPIController = MétodosAPIController.InstanceMétodosAPIController;
         instanceTrabajadorController = TrabajadorController.InstanceTrabajadorController;
-
+        instanceGestionarTrabajadoresController = GestionarTrabajadoresController.InstanceGestionarTrabajadoresController;
     }
 
 
@@ -48,16 +43,12 @@ public class RegisterAppController : MonoBehaviour
     }
 
     
-    public void CambiarACanvasIniciarSesión()
+    public void DesactivarCanvasRegistrarUsuario()
     {
-        // Pongo los botones de idiomas con una "Y" específica para el canvas
-        rtBotónIdiomaSpanish.anchoredPosition = new Vector2(rtBotónIdiomaSpanish.anchoredPosition.x, rtTextoIniciarSesión.anchoredPosition.y);
-        rtBotónIdiomaEnglish.anchoredPosition = new Vector2(rtBotónIdiomaEnglish.anchoredPosition.x, rtTextoIniciarSesión.anchoredPosition.y);
-
         canvasRegistroUsuario.SetActive(false);
-        canvasIniciarSesiónUsuario.SetActive(true);
 
         textoErrorRegistro.text = "";
+        textoÉxitoRegistro.text = "";
 
         //Dejo vacíos los campos por si se vuelve a ver este canvas
         inputTextoNombre.text = "";
@@ -135,14 +126,11 @@ public class RegisterAppController : MonoBehaviour
 
     private IEnumerator DesactivarPorUnTiempoLosBotonesYLuegoActivarCuandoHayaRespuestaDeLaAPIdePlayFab()
     {
-
-        botónIniciarSesión.interactable = false;
         botónConfirmar.interactable = false;
 
         //yield return new WaitUntil(() => mensajeAPIPlayFabDevuelto);
         yield return new WaitForSeconds(1.5f);
 
-        botónIniciarSesión.interactable = true;
         botónConfirmar.interactable = true;
     }
 
@@ -174,21 +162,16 @@ public class RegisterAppController : MonoBehaviour
             case 1:
                 textoErrorRegistro.text = "";
 
-                string tokenValue = jsonObject["token"].Value<string>();
-                Usuario.Token = tokenValue;
-                Debug.Log("Token: " + Usuario.Token);
-                FicheroController.GestionarEncriptarFicheroUserInfo(Usuario.ID, Usuario.Idioma, tokenValue); // Guardo el token en el fichero
-
                 if (Usuario.Idioma.CompareTo("Español") == 0 || Usuario.Idioma == null)
                 {
-                    textoÉxitoRegistro.text = "Trabajador registrado correctamente";
+                    textoÉxitoRegistro.text = "Trabajador registrado y añadido correctamente al restaurante";
+                    instanceGestionarTrabajadoresController.AñadirTrabajadorARestaurante(username);
                 }
                 else
                 {
                     textoÉxitoRegistro.text = "Worker registered correctly";
                 }
-                GestionarRegistroExitoso();
-                instanceTrabajadorController.ObtenerDatosTrabajadorPorNombreAsync(new Trabajador(username, "", 0, 0));
+                DejarVacíosLosCampos();
                 break;
             case 2:
                 if (Usuario.Idioma.CompareTo("Español") == 0 || Usuario.Idioma == null)
@@ -204,34 +187,15 @@ public class RegisterAppController : MonoBehaviour
     }
 
     
-
-    // Método llamado cuando el registro es exitoso
-    private void GestionarRegistroExitoso()
+    private void DejarVacíosLosCampos()
     {
-        StartCoroutine(FinRegistroUsuario());
-
-        string nombreUsuario = inputTextoNombre.text.Trim();
-
-        Usuario.Nombre = nombreUsuario;
-    }
-
-    private IEnumerator FinRegistroUsuario()
-    {
-        yield return new WaitForSeconds(1f); // 1f = duración que espera antes de ocultar el canvas y así mostrar el mensaje de "Usuario registrado con éxito" un poco.
-
-        textoÉxitoRegistro.text = "";
+        //textoÉxitoRegistro.text = "";
         textoErrorRegistro.text = "";
         
-        canvasIdiomasLogInYRegistro.SetActive(false);
-        canvasRegistroUsuario.SetActive(false);
-
-        // Dejo vacíos los campos por si se vuelve a ver este canvas
+        // Dejo vacíos los campos
         inputTextoNombre.text = "";
         inputTextoContraseña.text = "";
         inputTextoContraseñaRepetida.text = "";
-
-        PlayerPrefs.SetInt("UsuarioRegistrado", 1);
-        PlayerPrefs.Save();
     }
 
 
