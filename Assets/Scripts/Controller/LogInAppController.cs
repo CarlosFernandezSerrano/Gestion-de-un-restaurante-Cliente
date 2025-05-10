@@ -24,6 +24,7 @@ public class LogInAppController : MonoBehaviour
     [SerializeField] private RectTransform rtBotónIdiomaSpanish;
     [SerializeField] private RectTransform rtBotónIdiomaEnglish;
     [SerializeField] private RectTransform rtTextoRegistrarse;
+    [SerializeField] private GameObject canvasInformaciónApp;
 
     //private bool mensajeAPIPlayFabDevuelto = false;
 
@@ -168,14 +169,11 @@ public class LogInAppController : MonoBehaviour
 
     
 
-    public void IrAlCanvasRegistrarse()
+    public void IrAlCanvasInformationApp()
     {
-        // Pongo los botones de idiomas con una "Y" específica para el canvas
-        rtBotónIdiomaSpanish.anchoredPosition = new Vector2(rtBotónIdiomaSpanish.anchoredPosition.x, rtTextoRegistrarse.anchoredPosition.y);
-        rtBotónIdiomaEnglish.anchoredPosition = new Vector2(rtBotónIdiomaEnglish.anchoredPosition.x, rtTextoRegistrarse.anchoredPosition.y);
-
         canvasInicioSesiónUsuario.SetActive(false);
-        canvasRegistroUsuario.SetActive(true);
+        canvasIdiomasLogInYRegistro.SetActive(false);
+        canvasInformaciónApp.SetActive(true);
 
         textoErrorLogin.text = "";
 
@@ -183,6 +181,15 @@ public class LogInAppController : MonoBehaviour
         inputFieldNombreLogin.text = "";
         inputFieldPasswordLogin.text = "";
     }
+
+    public void ActivarCanvasIniciarSesión()
+    {
+        canvasInformaciónApp.SetActive(false);
+        canvasInicioSesiónUsuario.SetActive(true);
+        canvasIdiomasLogInYRegistro.SetActive(true);
+    }
+
+
 
     /// <summary>
     /// Método para cambiar de componente con TAB en la interfaz gráfica.
