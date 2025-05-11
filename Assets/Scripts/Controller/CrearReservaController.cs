@@ -26,6 +26,7 @@ public class CrearReservaController : MonoBehaviour
     [SerializeField] private TMP_Text textValorHoraEnCrear;
     [SerializeField] private TMP_Text textValorNumComensalesEnCrear;
     [SerializeField] private Button buttonCrear;
+    [SerializeField] private GameObject canvasInfoMesasDisponibles;
 
 
     private List<int> mesasDisponiblesEnMapa = new List<int>();
@@ -643,4 +644,15 @@ public class CrearReservaController : MonoBehaviour
         canvasCrearReserva.SetActive(false);
         textResultadoMesasDisponibles.text = "";
     }
+
+    public void ActivarCanvasInfoMesasDisponibles()
+    {
+        canvasInfoMesasDisponibles.SetActive(true);
+    }
+
+    public void DesactivarCanvasInfoMesasDisponibles()
+    {
+        canvasInfoMesasDisponibles.SetActive(false);
+    }
+
 }
