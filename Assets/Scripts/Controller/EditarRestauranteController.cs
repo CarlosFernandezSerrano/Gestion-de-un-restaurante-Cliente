@@ -135,7 +135,7 @@ public class EditarRestauranteController : MonoBehaviour
                                                           "50", "51", "52", "53", "54", "55", "56", "57", "58", "59" };
         AgregarOpcionesADropdown(horaApertura, opcionesHoras);
         AgregarOpcionesADropdown(minutoApertura, opcionesMinutos);
-        AgregarOpcionesADropdown(horaCierre, opcionesHoras2);
+        AgregarOpcionesADropdown(horaCierre, opcionesHoras);
         AgregarOpcionesADropdown(minutoCierre, opcionesMinutos);
         AgregarOpcionesADropdown(horaLímiteParaComer, opcionesHoras);
         AgregarOpcionesADropdown(minutoLímiteParaComer, opcionesMinutosLimite);

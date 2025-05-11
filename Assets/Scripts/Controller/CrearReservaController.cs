@@ -99,6 +99,8 @@ public class CrearReservaController : MonoBehaviour
 
                 BuscoElIndiceYLoPongoSiLoEncuentro(dropDownHoras, hora);
                 BuscoElIndiceYLoPongoSiLoEncuentro(dropDownMinutos, minuto);
+
+                textResultadoMesasDisponibles.text = " Hora pasada.";
             }
 
             // Si la fecha de la reserva es menor que la fecha actual, se pone la fecha actual en los dropdowns
@@ -227,6 +229,7 @@ public class CrearReservaController : MonoBehaviour
 
         List<string> opcionesHoras = new List<string>();
         
+        // Si la hora de apertura es igual a la hora de cierre
         if (hora_a.Equals(hora_c))
         {
             opcionesHoras = new List<string> { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09",
@@ -234,18 +237,52 @@ public class CrearReservaController : MonoBehaviour
                                                           "20", "21", "22", "23" };
         }
         else
-        {
-            for (int i = hora_a; i < hora_c + 1; i++)
+        { 
+            // Si la hora de apertura es mayor que la hora de cierre. Ejemplo: 05:00 - 02:00
+            if (hora_a > hora_c)
             {
-                if (i < 10)
+                int i = hora_a;
+                while (i < 24)
                 {
-                    opcionesHoras.Add("0" + i);
+                    if (i < 10)
+                    {
+                        opcionesHoras.Add("0" + i);
+                    }
+                    else
+                    {
+                        opcionesHoras.Add("" + i);
+                    }
+                    i++;
                 }
-                else
+                for (int j = 0; j < hora_c + 1; j++)
                 {
-                    opcionesHoras.Add("" + i);
+                    if (j < 10)
+                    {
+                        opcionesHoras.Add("0" + j);
+                    }
+                    else
+                    {
+                        opcionesHoras.Add("" + j);
+                    }
                 }
             }
+            else // Ejemplo: 17:00 - 22:00
+            {
+                for (int i = hora_a; i < hora_c + 1; i++)
+                {
+                    if (i < 10)
+                    {
+                        opcionesHoras.Add("0" + i);
+                    }
+                    else
+                    {
+                        opcionesHoras.Add("" + i);
+                    }
+                }
+            }
+            
+
+            
         }
 
         List<string> opcionesMinutos = new List<string> { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09",
@@ -361,18 +398,43 @@ public class CrearReservaController : MonoBehaviour
             if (fechaActual == fechaReserva && horaReserva < horaActual)
             {
                 Debug.Log("++Error, fecha correcta, pero hora pasada");
-                textResultadoMesasDisponibles.text = " Hora pasada.";
+                textResultadoMesasDisponibles.text = " Hora pasada, son las "+ DateTime.Now.ToString("HH:mm")+".";
                 return;
             }
 
             TimeSpan hora_Apertura = TimeSpan.Parse(instanceGestionarMesasController.GetHoraAperturaRestaurante());
             TimeSpan hora_Cierre = TimeSpan.Parse(instanceGestionarMesasController.GetHoraCierreRestaurante());
-            // Si se pone una hora cuando el restaurante no está de servicio, sale error
-            if (horaReserva < hora_Apertura || horaReserva > hora_Cierre) 
+            // Si la hora de apertura es igual a la hora de cierre
+            if (hora_Apertura == hora_Cierre)
             {
-                textResultadoMesasDisponibles.text = " Hora incorrecta.";
-                return;
+                Debug.Log("Resultado hora cierre antes: "+hora_Cierre);
+                // Resto 1 minuto a la hora cierre para que calcule bien
+                hora_Cierre = hora_Cierre - TimeSpan.FromMinutes(1);
+                if (hora_Cierre < TimeSpan.Zero)
+                    hora_Cierre += TimeSpan.FromHours(24);
+                Debug.Log("Resultado hora cierre: " + hora_Cierre + "; 1 minuto:" + TimeSpan.FromMinutes(1));
             }
+            // Si se pone una hora cuando el restaurante no está de servicio, sale error
+            if (hora_Apertura > hora_Cierre)
+            {
+                Debug.Log("Reparando");
+                if (horaReserva > hora_Cierre && horaReserva < hora_Apertura)
+                {
+                    textResultadoMesasDisponibles.text = " Hora incorrecta.";
+                    return;
+                }
+            }
+            else
+            {
+                if (horaReserva < hora_Apertura && horaReserva > hora_Cierre || horaReserva > hora_Cierre && horaReserva > hora_Apertura || horaReserva < hora_Cierre && horaReserva < hora_Apertura)
+                {
+                    textResultadoMesasDisponibles.text = " Hora incorrecta.";
+                    return;
+                }
+            }
+            
+
+            
 
             List<Mesa> mesasRestaurante = instanceGestionarMesasController.GetMesas();
             if (mesasRestaurante.Count > 0)
