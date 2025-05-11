@@ -331,6 +331,53 @@ public class GestionarMesasController : MonoBehaviour
                         PonerColorCorrectoAImg(img, colorHexadecimalVerde);
                     }
                 }
+                else // Si límite de tiempo es = 0
+                {
+                    // Pongo la mesa en no disponible si existe una reserva pendiente ahora
+                    if (ExisteUnaReservaPendienteAhoraParaUnaMesaSinTiempoLímite(reservasMesaParaHoy, horaActualTimeSpan))
+                    {
+                        Debug.Log("- -Pasa por if");
+                        // Actualizo la mesa en la BDD en "Disponible" = false 
+                        string cad = await instanceMétodosApiController.PutDataAsync("mesa/actualizarCampoDisponible", new Mesa(reserva.Mesa_Id, 0, 0, 0, 0, 0, 0, 0, false, 0, new List<Reserva>()));
+
+                        // Deserializo la respuesta
+                        Resultado resultado2 = JsonConvert.DeserializeObject<Resultado>(cad);
+
+                        if (resultado2.Result.Equals(1))
+                        {
+                            Debug.Log("Mesa puesta en no disponible correctamente");
+                        }
+                        else
+                        {
+                            Debug.Log("Error al intentar actualizar la mesa");
+                        }
+
+                        Image img = padreDeLosBotonesMesa.gameObject.transform.Find("Button-" + reserva.Mesa_Id + "/Imagen Circle").GetComponent<Image>();
+                        PonerColorCorrectoAImg(img, colorHexadecimalRojo);
+
+                    }
+                    else // No hay ninguna reserva ahora mismo en uso, pongo la mesa en disponible
+                    {
+                        Debug.Log("- -Pasa por else");
+                        // Actualizo la mesa en la BDD en "Disponible" = true 
+                        string cad = await instanceMétodosApiController.PutDataAsync("mesa/actualizarCampoDisponible", new Mesa(reserva.Mesa_Id, 0, 0, 0, 0, 0, 0, 0, true, 0, new List<Reserva>()));
+
+                        // Deserializo la respuesta
+                        Resultado resultado2 = JsonConvert.DeserializeObject<Resultado>(cad);
+
+                        if (resultado2.Result.Equals(1))
+                        {
+                            Debug.Log("Mesa puesta en disponible correctamente");
+                        }
+                        else
+                        {
+                            Debug.Log("Error al intentar actualizar la mesa");
+                        }
+
+                        Image img = padreDeLosBotonesMesa.gameObject.transform.Find("Button-" + reserva.Mesa_Id + "/Imagen Circle").GetComponent<Image>();
+                        PonerColorCorrectoAImg(img, colorHexadecimalVerde);
+                    }
+                }
             }
             // Si hay más de una reserva con estado "Pendiente" en una mesa
             if (reservasPendientesEnUnaMesaHoy.Count > 1)
@@ -338,6 +385,22 @@ public class GestionarMesasController : MonoBehaviour
                 await TerminoTodasLasReservasPendientesMenosLaÚltima(reservasPendientesEnUnaMesaHoy);
             }
         }
+    }
+
+    private bool ExisteUnaReservaPendienteAhoraParaUnaMesaSinTiempoLímite(List<Reserva> reservasMesaParaHoy, TimeSpan horaActualTimeSpan)
+    {
+        foreach (Reserva reserva in reservasMesaParaHoy)
+        {
+            string horaReserva = reserva.Hora;
+            TimeSpan horaReservaTimeSpan = TimeSpan.Parse(horaReserva);
+
+            // Si hay una reserva pendiente en uso, actualizo sólo la mesa a "No Disponible" porque la reserva ya está creada
+            if (horaActualTimeSpan >= horaReservaTimeSpan && reserva.Estado.CompareTo("" + EstadoReserva.Pendiente) == 0)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     private async Task TerminoTodasLasReservasPendientesMenosLaÚltima(List<Reserva> reservasPendientesEnUnaMesaHoy)
