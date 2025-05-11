@@ -72,7 +72,7 @@ public class Cambio_Idioma_Escena_Main_Controller : MonoBehaviour
                 textConfirmarRegistrarse.text = "Confirmar";
 
                 // Texto en canvas Inicio App
-                textComprarInicio.text = "Comprar";
+                textComprarInicio.text = "Crear Restaurante";
                 textPerfilInicio.text = "Perfil";
                 textCerrarSesiónInicio.text = "Cerrar sesión";
                 textIdiomaInicio.text = "Idioma";
@@ -102,7 +102,7 @@ public class Cambio_Idioma_Escena_Main_Controller : MonoBehaviour
                 textConfirmarRegistrarse.text = "Confirm";
 
                 // Texto en canvas Inicio App
-                textComprarInicio.text = "Buy";
+                textComprarInicio.text = "Create Restaurant";
                 textPerfilInicio.text = "Profile";
                 textCerrarSesiónInicio.text = "Log out";
                 textIdiomaInicio.text = "Language";
