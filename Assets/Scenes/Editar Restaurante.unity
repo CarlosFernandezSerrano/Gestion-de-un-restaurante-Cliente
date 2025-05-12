@@ -3550,7 +3550,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Cancelar
+  m_text: 'No guardar
 
 '
   m_isRightToLeft: 0
@@ -3958,8 +3958,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -384, y: -191}
-  m_SizeDelta: {x: 335.4133, y: 303.3735}
+  m_AnchoredPosition: {x: -374.9303, y: -191}
+  m_SizeDelta: {x: 317.2739, y: 303.3735}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &441516994
 MonoBehaviour:
@@ -6151,6 +6151,7 @@ Transform:
   m_Children:
   - {fileID: 1499560292}
   - {fileID: 1929820257}
+  - {fileID: 1829548960}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &759948032
@@ -7741,7 +7742,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 4
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -8554,8 +8555,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 97.67454, y: 101.04761}
-  m_SizeDelta: {x: 193.6925, y: 85.3332}
+  m_AnchoredPosition: {x: 83.139, y: 100.15201}
+  m_SizeDelta: {x: 164.62, y: 83.542}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1044678374
 MonoBehaviour:
@@ -10014,8 +10015,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 140, y: -89}
-  m_SizeDelta: {x: 237.328, y: 80.0358}
+  m_AnchoredPosition: {x: 153, y: -89}
+  m_SizeDelta: {x: 287, y: 80.0358}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1296089582
 MonoBehaviour:
@@ -12926,6 +12927,70 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1828924939}
   m_CullTransparentMesh: 1
+--- !u!1 &1829548959
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1829548960}
+  - component: {fileID: 1829548961}
+  m_Layer: 0
+  m_Name: GestionarCambioIdiomaEscenaEditarRest
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1829548960
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1829548959}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 756476818}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1829548961
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1829548959}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf312192f8684de4b80a8aaac9158fdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textNombreRestEdit: {fileID: 904782324}
+  textHoraAperturaEdit: {fileID: 1997552513}
+  textHoraCierreEdit: {fileID: 384529930}
+  textTiempoPermitidoEdit: {fileID: 455760839}
+  textBtnSinTiempoEdit: {fileID: 2041286740}
+  textGuardarEdit: {fileID: 1525870347}
+  "textA\xF1adirMesaEdit": {fileID: 1680804663}
+  textPapeleraEdit: {fileID: 164358706}
+  textCuidadoEdit: {fileID: 1430556132}
+  textAdvertencia1Edit: {fileID: 441516994}
+  textAdvertencia2Edit: {fileID: 1442484257}
+  textBtnCancelarEdit: {fileID: 66605064}
+  textBtnEliminarEdit: {fileID: 1981747750}
+  textHayCambiosSinGuardarEdit: {fileID: 265459493}
+  textNoGuardarEdit: {fileID: 393554255}
+  textGuardarEnHayCambiosEdit: {fileID: 1440838771}
+  textEncabezadoInfoManejo: {fileID: 1988085822}
+  "textRat\xF3n1InfoManejo": {fileID: 219813743}
+  "textRat\xF3n2InfoManejo": {fileID: 264358430}
+  "textRat\xF3n3InfoManejo": {fileID: 64335015}
 --- !u!1 &1833584350
 GameObject:
   m_ObjectHideFlags: 0
@@ -15995,8 +16060,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -140, y: -89}
-  m_SizeDelta: {x: 237.328, y: 80.0358}
+  m_AnchoredPosition: {x: -153, y: -89}
+  m_SizeDelta: {x: 287, y: 80.0358}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2132423395
 MonoBehaviour:
