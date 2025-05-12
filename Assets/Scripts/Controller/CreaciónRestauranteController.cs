@@ -127,7 +127,15 @@ public class CreaciónRestauranteController : MonoBehaviour
         else
         {
             Debug.Log("Nombre tiene menos de 3 caracteres");
-            textoErrorRegistro.text = "El nombre tiene menos de 3 caracteres.";
+            if (Usuario.Idioma.CompareTo("Español") == 0 || Usuario.Idioma == null)
+            {
+                textoErrorRegistro.text = "El nombre tiene menos de 3 caracteres.";
+            }
+            else
+            {
+                textoErrorRegistro.text = "The name has less than 3 characters.";
+            }
+                
             StartCoroutine(MostrarManoError(2f));
         }
 

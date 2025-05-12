@@ -11,27 +11,43 @@ public class Cambio_Idioma_Escena_Main_Controller : MonoBehaviour
     [SerializeField] private TMP_Text textPasswordLogIn;
     [SerializeField] private TMP_Text textInputFieldNombreLogIn;
     [SerializeField] private TMP_Text textInputFieldPasswordLogIn;
-    [SerializeField] private TMP_Text textButtonRegistrarseLogIn;
+    [SerializeField] private TMP_Text textButtonInformación;
     [SerializeField] private TMP_Text textButtonAccederLogIn;
+    [SerializeField] private TMP_Text textButtonSalirAppEnLogIn;
 
-    // Textos en canvas Registrarse
-    [SerializeField] private TMP_Text textRegistrarse;
-    [SerializeField] private TMP_Text textNombreRegistrarse;
-    [SerializeField] private TMP_Text textPasswordRegistrarse;
-    [SerializeField] private TMP_Text textRepeatPasswordRegistrarse;
-    [SerializeField] private TMP_Text textInputFieldNombreRegistrarse;
-    [SerializeField] private TMP_Text textInputFieldPasswordRegistrarse;
-    [SerializeField] private TMP_Text textInputFieldRepeatPasswordRegistrarse;
-    [SerializeField] private TMP_Text textIniciarSesionRegistrarse;
-    [SerializeField] private TMP_Text textConfirmarRegistrarse;
+
+    // Textos en canvas Info
+    [SerializeField] private TMP_Text textInfo;
+    [SerializeField] private TMP_Text textArribaInfo;
+    [SerializeField] private TMP_Text textNumTeléfono;
+    [SerializeField] private TMP_Text textCorreoElectrónico;
+    [SerializeField] private TMP_Text textAbajoInfo;
+    [SerializeField] private TMP_Text textBtnVolver;
+    [SerializeField] private TMP_Text textSalirDeLaApp;
 
     // Texto en canvas Inicio App
-    [SerializeField] private TMP_Text textComprarInicio;
+    [SerializeField] private TMP_Text textCrearRestauranteInicio;
     [SerializeField] private TMP_Text textPerfilInicio;
     [SerializeField] private TMP_Text textCerrarSesiónInicio;
     [SerializeField] private TMP_Text textIdiomaInicio;
     [SerializeField] private TMP_Text textRestauranteInicio;
     [SerializeField] private TMP_Text textNombreInicio;
+    [SerializeField] private TMP_Text textRolUsuarioInicio;
+    [SerializeField] private TMP_Text textEditarRestauranteInicio;
+    [SerializeField] private TMP_Text textGestionarMesasInicio;
+    [SerializeField] private TMP_Text textGestionarTrabajadoresInicio;
+    [SerializeField] private TMP_Text textSalirDeLaAppInicio;
+
+    // Texto en canvas crear restaurante
+    [SerializeField] private TMP_Text textNombreCrearRest;
+    [SerializeField] private TMP_Text textPlaceHolderNombreCrearRest;
+    [SerializeField] private TMP_Text textHorarioCrearRest;
+    [SerializeField] private TMP_Text textAperturaCrearRest;
+    [SerializeField] private TMP_Text textCierreCrearRest;
+    [SerializeField] private TMP_Text textConfirmarOpcionesCrearRest;
+    [SerializeField] private TMP_Text textNotaCrearRest;
+    [SerializeField] private TMP_Text textInfoServicioCrearRest;
+    [SerializeField] private TMP_Text textBtnVerVídeoCrearRest;
 
 
     // Start is called before the first frame update
@@ -57,27 +73,53 @@ public class Cambio_Idioma_Escena_Main_Controller : MonoBehaviour
                 textPasswordLogIn.text = "Contraseña";
                 textInputFieldNombreLogIn.text = "Mínimo 3 caracteres...";
                 textInputFieldPasswordLogIn.text = "Mínimo 6 caracteres...";
-                textButtonRegistrarseLogIn.text = "Información";
-                textButtonAccederLogIn.text = "Acceder"; // Faltan más texto por poner (error, éxito...)
-                
-                // Textos en canvas Registrarse
-                textRegistrarse.text = "Registrarse";
-                textNombreRegistrarse.text = "Nombre";
-                textPasswordRegistrarse.text = "Contraseña";
-                textRepeatPasswordRegistrarse.text = "Confirmar Contraseña";
-                textInputFieldNombreRegistrarse.text = "Mínimo 3 caracteres...";
-                textInputFieldPasswordRegistrarse.text = "Mínimo 6 caracteres...";
-                textInputFieldRepeatPasswordRegistrarse.text = "Repetir contraseña...";
-                textIniciarSesionRegistrarse.text = "Iniciar Sesión";
-                textConfirmarRegistrarse.text = "Confirmar";
+                textButtonInformación.text = "Información";
+                textButtonAccederLogIn.text = "Acceder";
+                textButtonSalirAppEnLogIn.text = "Salir de la app";
+
+                // Textos en canvas Info
+                textInfo.text = "INFORMACIÓN";
+                textArribaInfo.text = "Para obtener el servicio, póngase en contacto con nosotros a través de los siguientes medios.";
+                textNumTeléfono.text = "Número de teléfono";
+                textCorreoElectrónico.text = "Correo electrónico";
+                textAbajoInfo.text = "Si usted es empleado de un restaurante y no tiene una cuenta, hable con su gerente.";
+                textBtnVolver.text = "Volver para iniciar sesión";
+                textSalirDeLaApp.text = "Salir de la app";
 
                 // Texto en canvas Inicio App
-                textComprarInicio.text = "Crear Restaurante";
+                textCrearRestauranteInicio.text = "Crear Restaurante";
                 textPerfilInicio.text = "Perfil";
                 textCerrarSesiónInicio.text = "Cerrar sesión";
                 textIdiomaInicio.text = "Idioma";
                 textRestauranteInicio.text = "Restaurante";
                 textNombreInicio.text = "Nombre";
+                if (Usuario.Rol_ID > 0)
+                {
+                    if (Usuario.Rol_ID.Equals(1))
+                    {
+                        textRolUsuarioInicio.text = "Empleado";
+                    }
+                    else
+                    {
+                        textRolUsuarioInicio.text = "Gerente";
+                    }
+                }
+                textEditarRestauranteInicio.text = "Editar \r\nRestaurante";
+                textGestionarMesasInicio.text = "Gestionar \r\nMesas";
+                textGestionarTrabajadoresInicio.text = "Gestionar\r\nTrabajadores";
+                textSalirDeLaAppInicio.text = "Salir de la app";
+
+                // Texto en canvas crear restaurante
+                textNombreCrearRest.text = "Nombre";
+                textPlaceHolderNombreCrearRest.text = "Max. 17 caracteres...";
+                textHorarioCrearRest.text = "Horario";
+                textAperturaCrearRest.text = "Apertura";
+                textCierreCrearRest.text = "Cierre";
+                textConfirmarOpcionesCrearRest.text = "Confirmar opciones";
+                textNotaCrearRest.text = "Nota:";
+                textInfoServicioCrearRest.text = "este servicio ofrece la gestión perfecta de un restaurante.";
+                textBtnVerVídeoCrearRest.text = "Ver vídeo";
+
                 break;
 
             case "English":
@@ -87,27 +129,54 @@ public class Cambio_Idioma_Escena_Main_Controller : MonoBehaviour
                 textPasswordLogIn.text = "Password";
                 textInputFieldNombreLogIn.text = "Minimum 3 characters...";
                 textInputFieldPasswordLogIn.text = "Minimum 6 characters...";
-                textButtonRegistrarseLogIn.text = "Register";
+                textButtonInformación.text = "Information";
                 textButtonAccederLogIn.text = "Access";
+                textButtonSalirAppEnLogIn.text = "Exit the app";
 
-                // Textos en canvas Registrarse
-                textRegistrarse.text = "Register";
-                textNombreRegistrarse.text = "Name";
-                textPasswordRegistrarse.text = "Password";
-                textRepeatPasswordRegistrarse.text = "Confirm password";
-                textInputFieldNombreRegistrarse.text = "Minimum 3 characters...";
-                textInputFieldPasswordRegistrarse.text = "Minimum 6 characters...";
-                textInputFieldRepeatPasswordRegistrarse.text = "Repeat password...";
-                textIniciarSesionRegistrarse.text = "Login";
-                textConfirmarRegistrarse.text = "Confirm";
+                // Textos en canvas Info
+                textInfo.text = "INFORMATION";
+                textArribaInfo.text = "To obtain the service, please contact us through the following means.";
+                textNumTeléfono.text = "Phone number";
+                textCorreoElectrónico.text = "Email";
+                textAbajoInfo.text = "If you are a restaurant employee and do not have a check, speak to your manager.";
+                textBtnVolver.text = "Return to log in";
+                textSalirDeLaApp.text = "Exit the app";
+
 
                 // Texto en canvas Inicio App
-                textComprarInicio.text = "Create Restaurant";
+                textCrearRestauranteInicio.text = "Create Restaurant";
                 textPerfilInicio.text = "Profile";
                 textCerrarSesiónInicio.text = "Log out";
                 textIdiomaInicio.text = "Language";
                 textRestauranteInicio.text = "Restaurant";
                 textNombreInicio.text = "Name";
+                if (Usuario.Rol_ID > 0)
+                {
+                    if (Usuario.Rol_ID.Equals(1))
+                    {
+                        textRolUsuarioInicio.text = "Employee";
+                    }
+                    else
+                    {
+                        textRolUsuarioInicio.text = "Manager";
+                    }
+                }
+                textEditarRestauranteInicio.text = "Edit \r\nRestaurant";
+                textGestionarMesasInicio.text = "Manage \r\nTables";
+                textGestionarTrabajadoresInicio.text = "Manage\r\nWorkers";
+                textSalirDeLaAppInicio.text = "Exit the app";
+
+                // Texto en canvas crear restaurante
+                textNombreCrearRest.text = "Name";
+                textPlaceHolderNombreCrearRest.text = "Max. 17 characters...";
+                textHorarioCrearRest.text = "Schedule";
+                textAperturaCrearRest.text = "Opening";
+                textCierreCrearRest.text = "Closing";
+                textConfirmarOpcionesCrearRest.text = "Confirm options";
+                textNotaCrearRest.text = "Note:";
+                textInfoServicioCrearRest.text = "this service offers perfect restaurant management.";
+                textBtnVerVídeoCrearRest.text = "Watch video";
+
                 break;
         }
 

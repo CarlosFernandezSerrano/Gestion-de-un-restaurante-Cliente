@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System.Collections;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Assets.Scripts.Controller
@@ -111,10 +112,24 @@ namespace Assets.Scripts.Controller
             switch (Usuario.Rol_ID)
             {
                 case 1:
-                    textUserRol.text = "Empleado";
+                    if (Usuario.Idioma.CompareTo("Español") == 0)
+                    {
+                        textUserRol.text = "Empleado";
+                    }
+                    else
+                    {
+                        textUserRol.text = "Employee";
+                    }
                     break;
                 case 2:
-                    textUserRol.text = "Gerente";
+                    if (Usuario.Idioma.CompareTo("Español") == 0)
+                    {
+                        textUserRol.text = "Gerente";
+                    }
+                    else
+                    {
+                        textUserRol.text = "Manager";
+                    }
                     break;
             }
             if (Usuario.Restaurante_ID.Equals(0))
