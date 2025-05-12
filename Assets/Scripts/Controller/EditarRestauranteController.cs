@@ -38,6 +38,7 @@ public class EditarRestauranteController : MonoBehaviour
     [SerializeField] private TMP_Dropdown minutoLímiteParaComer;
     [SerializeField] private Sprite imgCuadradoBordeNegroFino;
     [SerializeField] private Button buttonSinTiempoLímite;
+    [SerializeField] private GameObject canvasInfoManejoMesas;
 
     private string NombreRestaurante;
     private string HoraApertura;
@@ -86,36 +87,7 @@ public class EditarRestauranteController : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-        /*string hora_Apertura = horaApertura.options[horaApertura.value].text;
-
-        if (hora_Apertura.Length > 0)
-        {
-            try
-            {
-                int hora_a = int.Parse(hora_Apertura);
-                List<string> opcionesHorasCierre = new List<string>();
-                for (int i = hora_a; i < 24; i++)
-                {
-                    if (i < 10)
-                    {
-                        opcionesHoras.Add("0" + i);
-                    }
-                    else
-                    {
-                        opcionesHoras.Add("" + i);
-                    }
-                }
-
-                AgregarOpcionesADropdown(horaCierre, opcionesHoras2);
-            }
-            catch (Exception ex)
-            {
-                Debug.Log("Exception: " + ex);
-            }
-            
-        }*/
-        
+    {        
     }
 
     private void InicializarValoresDropdowns()
@@ -1206,6 +1178,16 @@ public class EditarRestauranteController : MonoBehaviour
         imgHayCambiosSinGuardar.SetActive(false);
 
         ActivarBotonesDelCanvas();
+    }
+
+    public void ActivarCanvasInfoManejoMesas()
+    {
+        canvasInfoManejoMesas.SetActive(true);
+    }
+
+    public void DesactivarCanvasInfoManejoMesas()
+    {
+        canvasInfoManejoMesas.SetActive(false);
     }
 
     public GameObject GetContenedorAsignarComensales()
