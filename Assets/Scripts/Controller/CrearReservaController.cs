@@ -101,7 +101,15 @@ public class CrearReservaController : MonoBehaviour
                 BuscoElIndiceYLoPongoSiLoEncuentro(dropDownHoras, hora);
                 BuscoElIndiceYLoPongoSiLoEncuentro(dropDownMinutos, minuto);
 
-                textResultadoMesasDisponibles.text = " Hora pasada.";
+                if (Usuario.Idioma.CompareTo("Español") == 0)
+                {
+                    textResultadoMesasDisponibles.text = " Hora pasada.";
+                }
+                else
+                {
+                    textResultadoMesasDisponibles.text = " Past hour.";
+                }
+                    
             }
 
             // Si la fecha de la reserva es menor que la fecha actual, se pone la fecha actual en los dropdowns
@@ -154,12 +162,10 @@ public class CrearReservaController : MonoBehaviour
         {
             if (nombre.Length <= 7 && dni.Length.Equals(9) && num_Teléfono.Length.Equals(9))
             {
-                Debug.Log("*1Num_Telefono: " + num_Teléfono.Length);
                 return true;
             }
             else
             {
-                Debug.Log("*2Num_Telefono: " + num_Teléfono.Length);
                 return false;
             }
         }
@@ -167,12 +173,10 @@ public class CrearReservaController : MonoBehaviour
         {
             if (nombre.Length <= 7 && dni.Length.Equals(9))
             {
-                Debug.Log("*1Num_Telefono: " + num_Teléfono.Length);
                 return true;
             }
             else
             {
-                Debug.Log("*2Num_Telefono: " + num_Teléfono.Length);
                 return false;
             }
         }
@@ -399,7 +403,14 @@ public class CrearReservaController : MonoBehaviour
             if (fechaActual == fechaReserva && horaReserva < horaActual)
             {
                 Debug.Log("++Error, fecha correcta, pero hora pasada");
-                textResultadoMesasDisponibles.text = " Hora pasada, son las "+ DateTime.Now.ToString("HH:mm")+".";
+                if (Usuario.Idioma.CompareTo("Español") == 0)
+                {
+                    textResultadoMesasDisponibles.text = " Hora pasada, son las " + DateTime.Now.ToString("HH:mm") + ".";
+                }
+                else
+                {
+                    textResultadoMesasDisponibles.text = " Past hour, it's " + DateTime.Now.ToString("HH:mm") + ".";
+                }
                 return;
             }
 
@@ -421,7 +432,14 @@ public class CrearReservaController : MonoBehaviour
                 Debug.Log("Reparando");
                 if (horaReserva > hora_Cierre && horaReserva < hora_Apertura)
                 {
-                    textResultadoMesasDisponibles.text = " Hora incorrecta.";
+                    if (Usuario.Idioma.CompareTo("Español") == 0)
+                    {
+                        textResultadoMesasDisponibles.text = " Hora incorrecta.";
+                    }
+                    else
+                    {
+                        textResultadoMesasDisponibles.text = " Wrong hour.";
+                    }
                     return;
                 }
             }
@@ -429,7 +447,14 @@ public class CrearReservaController : MonoBehaviour
             {
                 if (horaReserva < hora_Apertura && horaReserva > hora_Cierre || horaReserva > hora_Cierre && horaReserva > hora_Apertura || horaReserva < hora_Cierre && horaReserva < hora_Apertura)
                 {
-                    textResultadoMesasDisponibles.text = " Hora incorrecta.";
+                    if (Usuario.Idioma.CompareTo("Español") == 0)
+                    {
+                        textResultadoMesasDisponibles.text = " Hora incorrecta.";
+                    }
+                    else
+                    {
+                        textResultadoMesasDisponibles.text = " Wrong hour.";
+                    }
                     return;
                 }
             }
@@ -486,16 +511,29 @@ public class CrearReservaController : MonoBehaviour
                     }
                     else
                     {
-                        textResultadoMesasDisponibles.text = " Ninguna";
+                        if (Usuario.Idioma.CompareTo("Español") == 0)
+                        {
+                            textResultadoMesasDisponibles.text = " Ninguna";
+                        }
+                        else
+                        {
+                            textResultadoMesasDisponibles.text = " None";
+                        }
                         PonerValoresEnLasOpcionesDeCrear("", "", "");
                     }
                 }
                 else // Ninguna mesa disponible en esa fecha a esa hora
                 {
-                    textResultadoMesasDisponibles.text = " Ninguna";
+                    if (Usuario.Idioma.CompareTo("Español") == 0)
+                    {
+                        textResultadoMesasDisponibles.text = " Ninguna";
+                    }
+                    else
+                    {
+                        textResultadoMesasDisponibles.text = " None";
+                    }
                     PonerValoresEnLasOpcionesDeCrear("", "", "");
                 }
-                
             }
             else
             {
@@ -620,7 +658,14 @@ public class CrearReservaController : MonoBehaviour
         if (resultado.Result.Equals(1))
         {
             Debug.Log("+ +Reserva registrada correctamente en mesa: " + reserva.Mesa_Id);
-            textResultadoMesasDisponibles.text = "Reserva registrada correctamente";
+            if (Usuario.Idioma.CompareTo("Español") == 0)
+            {
+                textResultadoMesasDisponibles.text = "Reserva registrada correctamente";
+            }
+            else
+            {
+                textResultadoMesasDisponibles.text = "Reservation successfully registered";
+            }
             Poner4ValoresEnCrearVacíos();
             PonerValoresEnLasOpcionesDeCrear("", "", "");
             AsignarValoresConcretosEnDropdowns();
