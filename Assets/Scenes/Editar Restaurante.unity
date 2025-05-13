@@ -12570,7 +12570,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -259.8, y: 106.8}
+  m_AnchoredPosition: {x: -261.3, y: 109.9}
   m_SizeDelta: {x: 67.9795, y: 67.7051}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1767655610
@@ -12938,7 +12938,7 @@ GameObject:
   - component: {fileID: 1829548960}
   - component: {fileID: 1829548961}
   m_Layer: 0
-  m_Name: GestionarCambioIdiomaEscenaEditarRest
+  m_Name: GestionarIdiomasEscenaEditarRest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

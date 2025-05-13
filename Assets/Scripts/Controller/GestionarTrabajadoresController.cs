@@ -89,8 +89,16 @@ public class GestionarTrabajadoresController : MonoBehaviour
                 {
                     TrabajadorPosibleASerNuevoGerente = ObtenerTrabajadorQueHaSidoPuestoGerenteExistiendoUno(trabajadoresEnScrollViewAhora);
 
-                    // Mostrar contenedor advertencia 
-                    textoContenedorAdvertenciaCambiarDeGerente.text = "¿Está dispuest@ a ceder su rol de gerente al usuario " + TrabajadorPosibleASerNuevoGerente.Nombre + "?";
+                    // Mostrar contenedor advertencia
+                    if (Usuario.Idioma.CompareTo("Español") == 0)
+                    {
+                        textoContenedorAdvertenciaCambiarDeGerente.text = "¿Está dispuest@ a ceder su rol de gerente al usuario " + TrabajadorPosibleASerNuevoGerente.Nombre + "?";
+                    }
+                    else
+                    {
+                        textoContenedorAdvertenciaCambiarDeGerente.text = "Are you willing to hand over your manager role to user " + TrabajadorPosibleASerNuevoGerente.Nombre + "?";
+                    }
+                        
                     contenedorAdvertenciaCambiarGerente.SetActive(true);
                 }
             }
@@ -175,12 +183,26 @@ public class GestionarTrabajadoresController : MonoBehaviour
             if (nombre.Length.Equals(0))
             {
                 //buttonGuardar.interactable = false;
-                textoError.text = "Error: nombre vacío";
+                if (Usuario.Idioma.CompareTo("Español") == 0)
+                {
+                    textoError.text = "Error: nombre vacío";
+                }
+                else
+                {
+                    textoError.text = "Error: empty name";
+                }
                 return true;
             }
 
             if (nombre.Length < 3){
-                textoError.text = "Error: nombre con menos de 3 caracteres";
+                if (Usuario.Idioma.CompareTo("Español") == 0)
+                {
+                    textoError.text = "Error: nombre con menos de 3 caracteres";
+                }
+                else
+                {
+                    textoError.text = "Error: name with less than 3 characters";
+                }
                 return true;
             }
         }
@@ -747,7 +769,14 @@ public class GestionarTrabajadoresController : MonoBehaviour
         if (t.Rol_ID.Equals(2))
         {
             rtText.anchoredPosition = new Vector2(rtText.anchoredPosition.x, 46);
-            textoEntreParéntesisAlQuererEliminarTrabajador.text = "(También se eliminarán el restaurante y sus trabajadores)";
+            if (Usuario.Idioma.CompareTo("Español") == 0)
+            {
+                textoEntreParéntesisAlQuererEliminarTrabajador.text = "(También se eliminarán el restaurante y sus trabajadores)";
+            }
+            else
+            {
+                textoEntreParéntesisAlQuererEliminarTrabajador.text = "(The restaurant and its workers will also be eliminated.)";
+            }
         }
         else
         {
@@ -756,7 +785,15 @@ public class GestionarTrabajadoresController : MonoBehaviour
 
         string nombreTrabajador = botónPulsadoParaEliminar.gameObject.GetComponentInChildren<TMP_InputField>().text.Trim();
 
-        textoAdvertenciaEliminarTrabajador.text = "Confirmar eliminar trabajador/a " + nombreTrabajador;
+        if (Usuario.Idioma.CompareTo("Español") == 0)
+        {
+            textoAdvertenciaEliminarTrabajador.text = "Confirmar eliminar trabajador/a " + nombreTrabajador;
+        }
+        else
+        {
+            textoAdvertenciaEliminarTrabajador.text = "Confirm delete worker " + nombreTrabajador;
+        }
+            
 
         // Mostrar contenedor con mensaje de confirmación para eliminar el trabajador
         contenedorAdvertenciaEliminarTrabajador.SetActive(true);
@@ -839,7 +876,14 @@ public class GestionarTrabajadoresController : MonoBehaviour
                 // Muestro mensaje: "El nombre X ya existe"
                 
                 Debug.Log("++Error: El nombre "+ trabajador.Nombre + " ya existe");
-                textoErrorAlGuardarTrabajadores.text = "El trabajador " + trabajador.Nombre + " ya existe";
+                if (Usuario.Idioma.CompareTo("Español") == 0)
+                {
+                    textoErrorAlGuardarTrabajadores.text = "El trabajador " + trabajador.Nombre + " ya existe";
+                }
+                else
+                {
+                    textoErrorAlGuardarTrabajadores.text = "The worker " + trabajador.Nombre + " already exists";
+                }
 
                 contenedorErrorAlGuardarTrabajadores.SetActive(true);
                 break;

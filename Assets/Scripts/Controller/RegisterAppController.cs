@@ -90,7 +90,15 @@ public class RegisterAppController : MonoBehaviour
                             else
                             {
                                 Debug.Log("El nombre no puede tener espacios entre letras");
-                                textoErrorRegistro.text = "El nombre no puede tener espacios entre letras.";
+                                if (Usuario.Idioma.CompareTo("Español") == 0)
+                                {
+                                    textoErrorRegistro.text = "El nombre no puede tener espacios entre letras.";
+                                }
+                                else
+                                {
+                                    textoErrorRegistro.text = "The name cannot have spaces between letters.";
+                                }
+                                
                             }
                         /*}
                         else
@@ -102,25 +110,53 @@ public class RegisterAppController : MonoBehaviour
                     else
                     {
                         Debug.Log("Nombre con menos de 3 caracteres");
-                        textoErrorRegistro.text = "Nombre con menos de 3 caracteres.";
+                        if (Usuario.Idioma.CompareTo("Español") == 0)
+                        {
+                            textoErrorRegistro.text = "Nombre con menos de 3 caracteres.";
+                        }
+                        else
+                        {
+                            textoErrorRegistro.text = "Name with less than 3 characters.";
+                        }
                     }
                 }
                 else
                 {
                     Debug.Log("Contraseña con menos de 6 caracteres");
-                    textoErrorRegistro.text = "Contraseña con menos de 6 caracteres.";
+                    if (Usuario.Idioma.CompareTo("Español") == 0)
+                    {
+                        textoErrorRegistro.text = "Contraseña con menos de 6 caracteres.";
+                    }
+                    else
+                    {
+                        textoErrorRegistro.text = "Password with less than 6 characters.";
+                    }
                 }
             }
             else
             {
                 Debug.Log("Contraseña diferente en ambos lados");
-                textoErrorRegistro.text = "Contraseña diferente en ambos lados.";
+                if (Usuario.Idioma.CompareTo("Español") == 0)
+                {
+                    textoErrorRegistro.text = "Contraseña diferente en ambos lados.";
+                }
+                else
+                {
+                    textoErrorRegistro.text = "Different password on both sides.";
+                }
             }
         }
         else
         {
             Debug.Log("El usuario no se puede registrar.");
-            textoErrorRegistro.text = "Rellene todos los campos por favor.";
+            if (Usuario.Idioma.CompareTo("Español") == 0)
+            {
+                textoErrorRegistro.text = "Rellene todos los campos por favor.";
+            }
+            else
+            {
+                textoErrorRegistro.text = "Please fill in all fields.";
+            }
         }
     }
 
@@ -169,7 +205,8 @@ public class RegisterAppController : MonoBehaviour
                 }
                 else
                 {
-                    textoÉxitoRegistro.text = "Worker registered correctly";
+                    textoÉxitoRegistro.text = "Worker registered and successfully added to the restaurant";
+                    instanceGestionarTrabajadoresController.AñadirTrabajadorARestaurante(username);
                 }
                 DejarVacíosLosCampos();
                 break;
