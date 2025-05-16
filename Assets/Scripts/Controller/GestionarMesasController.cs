@@ -105,7 +105,26 @@ public class GestionarMesasController : MonoBehaviour
         Restaurante.TiempoPermitidoParaComer = restaurante.TiempoParaComer;
         Mesas = restaurante.Mesas;
 
-        textNombreRestaurante.text = restaurante.Nombre;
+
+
+        string nombreRest = restaurante.Nombre;
+
+        switch (nombreRest.Length)
+        {
+            case <= 10:
+                textNombreRestaurante.fontSize = 56;
+                break;
+            case <= 12:
+                textNombreRestaurante.fontSize = 50;
+                break;
+            case <= 15:
+                textNombreRestaurante.fontSize = 43;
+                break;
+            case <= 17:
+                textNombreRestaurante.fontSize = 38;
+                break;
+        }
+        textNombreRestaurante.text = nombreRest;
 
         Debug.Log("Hora Apertura: " + restaurante.HoraApertura + "; Hora Cierre: " + restaurante.HoraCierre);
 
