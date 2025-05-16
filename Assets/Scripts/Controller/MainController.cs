@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using UnityEngine.SceneManagement;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.Video;
 
 
 public class MainController : MonoBehaviour
@@ -28,7 +29,7 @@ public class MainController : MonoBehaviour
     [SerializeField] private RectTransform rtBotónIdiomaSpanish;
     [SerializeField] private RectTransform rtBotónIdiomaEnglish;
     [SerializeField] private RectTransform rtTextoIniciarSesión;
-
+    [SerializeField] private GameObject canvasVídeoTutorialApp;
 
     private bool telónMoviéndose = false;
     private bool telónAbajo = false;
@@ -294,6 +295,19 @@ public class MainController : MonoBehaviour
         return true; // Unity cierra la aplicación automáticamente.
     }
 
+    public void ActivarCanvasVídeoTutorial()
+    {
+        canvasVídeoTutorialApp.SetActive(true);
+        VideoPlayer vp = canvasVídeoTutorialApp.GetComponent<VideoPlayer>();
+        vp.Play();
+    }
+
+    public void DesactivarCanvasTutorialVídeo()
+    {
+        VideoPlayer vp = canvasVídeoTutorialApp.GetComponent<VideoPlayer>();
+        vp.Stop();
+        canvasVídeoTutorialApp.SetActive(false);
+    }
 
     public TMP_Text getTextPerfilUserNombre()
     {
