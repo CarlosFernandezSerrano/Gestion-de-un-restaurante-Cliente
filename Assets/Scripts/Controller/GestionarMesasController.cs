@@ -771,6 +771,7 @@ public class GestionarMesasController : MonoBehaviour
             Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
             if (resultado.Result.Equals(1))
             {
+                await instanceMétodosApiController.PutDataAsync("reserva/actualizarBoolCreandoReserva", new Resultado(1));
                 Debug.Log("Reserva registrada correctamente en mesa: " + id_Mesa);
                 // Pongo mesa en No Disponible
                 string cad2 = await instanceMétodosApiController.PutDataAsync("mesa/actualizarCampoDisponible", new Mesa(id_Mesa, 0, 0, 0, 0, 0, 0, 0, false, 0, new List<Reserva>()));

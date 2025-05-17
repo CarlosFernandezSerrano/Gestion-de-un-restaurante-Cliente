@@ -657,6 +657,7 @@ public class CrearReservaController : MonoBehaviour
         Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
         if (resultado.Result.Equals(1))
         {
+            await instanceMétodosApiController.PutDataAsync("reserva/actualizarBoolCreandoReserva", new Resultado(1));
             Debug.Log("+ +Reserva registrada correctamente en mesa: " + reserva.Mesa_Id);
             if (Usuario.Idioma.CompareTo("Español") == 0)
             {
