@@ -1,8 +1,10 @@
 using Assets.Scripts.Model;
 using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Text;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -62,6 +64,7 @@ public class MétodosAPIController : MonoBehaviour
                 if (request.error.Contains("Cannot connect to destination host")) 
                 {
                     Debug.Log("Servidor apagado.");
+                    GeneralController.NoHayConexion = true;
                     if (!mostrandoImgNoConexión)
                     {
                         mostrandoImgNoConexión = true;
@@ -75,9 +78,16 @@ public class MétodosAPIController : MonoBehaviour
             string jsonResponse = request.downloadHandler.text;
             Debug.Log("Respuesta GET en JSON: " + jsonResponse);
 
+            QuitarAnimaciónNoConexiónSiLaHubiera();
+
             // Devuelvo la respuesta JSON
             return jsonResponse;
         }
+    }
+
+    private void QuitarAnimaciónNoConexiónSiLaHubiera()
+    {
+        instanceGeneralController.getImgNoConexión().SetActive(false);        
     }
 
     private IEnumerator MostrarImgNoConexión()
@@ -90,16 +100,24 @@ public class MétodosAPIController : MonoBehaviour
             // La tercera vez que muestro la imagen, ya dejo la imagen puesta y no la quito.
             if (i < 2) 
             {
+                if (!GeneralController.NoHayConexion)
+                {
+                    break;
+                }
+
                 // Espero 2 segundos para que se vea bien la imagen
                 yield return new WaitForSeconds(2f);
-            
+
+                if (!GeneralController.NoHayConexion)
+                {
+                    break;
+                }
+
                 // Hago desaparecer lentamente la imagen de "no hay conexión".
                 yield return StartCoroutine(instanceGeneralController.HacerDesaparecerLentamente(instanceGeneralController.getImgNoConexión(), 1f));
             }
             
         }
-
-
         mostrandoImgNoConexión = false;
     }
 

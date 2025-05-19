@@ -102,7 +102,8 @@ namespace Assets.Scripts.Controller
 
                 PonerDatosEnPerfilTrabajador(instanceMainController.getTextPerfilUserNombre(), instanceMainController.getTextPerfilUserRol(), instanceMainController.getTextPerfilUserRestaurante());
             }
-             
+
+            GeneralController.NoHayConexion = false;
             Debug.Log("ID Usuario: " + Usuario.ID + ", Nombre Usuario: " + Usuario.Nombre + ", Rol_ID Usuario: " + Usuario.Rol_ID + ", Restaurante_ID Usuario: " + Usuario.Restaurante_ID);
         }
 

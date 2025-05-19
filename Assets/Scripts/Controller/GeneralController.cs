@@ -6,7 +6,7 @@ public class GeneralController : MonoBehaviour
 {
     [SerializeField] private GameObject imgNoConexión;
 
-    public static bool NoHayConexion { get; set; } = false;
+    public static bool NoHayConexion { get; set; } = true;
 
     public static GeneralController InstanceGeneralController { get; private set; }
 
@@ -39,6 +39,11 @@ public class GeneralController : MonoBehaviour
         //Muestro partes del juego (como el teclado) lentamente
         while (elapsedTime < duration)
         {
+            if (!GeneralController.NoHayConexion)
+            {
+                break;
+            }
+
             elapsedTime += Time.deltaTime;
             float alpha = Mathf.Lerp(0f, 1f, elapsedTime / duration); // Interpola de 0 a 1 (totalmente invisible a visible)
 
@@ -59,6 +64,11 @@ public class GeneralController : MonoBehaviour
         //Muestro partes del juego (como el teclado) lentamente
         while (elapsedTime < duration)
         {
+            if (!GeneralController.NoHayConexion)
+            {
+                break;
+            }
+
             elapsedTime += Time.deltaTime;
             float alpha = Mathf.Lerp(1f, 0f, elapsedTime / duration); // Interpola de 1 a 0 (totalmente visible a invisible)
 

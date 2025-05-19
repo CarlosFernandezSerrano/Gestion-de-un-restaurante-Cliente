@@ -90,13 +90,16 @@ public class MainController : MonoBehaviour
     // Si el usuario tiene un restaurante_ID superior a 0 (el trabajador ya está asignado a un restaurante), se desactiva el botón de comprar el servicio
     private void QuitarBotónComprarServicio()
     {
-        if (Usuario.Restaurante_ID > 0)
+        if (!GeneralController.NoHayConexion)
         {
-            botónComprarServicio.gameObject.SetActive(false);
-        }
-        else // El trabajador no está en ningún restaurante aún y le sale el botón de comprar el servicio
-        {// Quizás no es necesario este else
-            botónComprarServicio.gameObject.SetActive(true);
+            if (Usuario.Restaurante_ID > 0)
+            {
+                botónComprarServicio.gameObject.SetActive(false);
+            }
+            else // El trabajador no está en ningún restaurante aún y le sale el botón de comprar el servicio
+            {// Quizás no es necesario este else
+                botónComprarServicio.gameObject.SetActive(true);
+            }
         }
     }
 
