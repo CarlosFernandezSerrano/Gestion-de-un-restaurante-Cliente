@@ -78,16 +78,24 @@ public class MétodosAPIController : MonoBehaviour
             string jsonResponse = request.downloadHandler.text;
             Debug.Log("Respuesta GET en JSON: " + jsonResponse);
 
-            QuitarAnimaciónNoConexiónSiLaHubiera();
+            QuitarImgNoConexiónSiLaHubiera();
 
             // Devuelvo la respuesta JSON
             return jsonResponse;
         }
     }
 
-    private void QuitarAnimaciónNoConexiónSiLaHubiera()
+    private void QuitarImgNoConexiónSiLaHubiera()
     {
-        instanceGeneralController.getImgNoConexión().SetActive(false);        
+        try
+        {
+            instanceGeneralController.getImgNoConexión().SetActive(false);
+        }
+        catch (Exception ex)
+        {
+            Debug.Log("Exception: " + ex);
+        }
+                
     }
 
     private IEnumerator MostrarImgNoConexión()

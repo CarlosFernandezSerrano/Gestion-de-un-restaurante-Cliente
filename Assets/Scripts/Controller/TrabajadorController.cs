@@ -152,6 +152,18 @@ namespace Assets.Scripts.Controller
                 // Deserializo la respuesta
                 Restaurante restaurante = JsonConvert.DeserializeObject<Restaurante>(cad);
 
+                switch (restaurante.Nombre.Length)
+                {
+                    case <= 14:
+                        textUserRestaurante.fontSize = 48;
+                        break;
+                    case <= 16:
+                        textUserRestaurante.fontSize = 41;
+                        break;
+                    case 17:
+                        textUserRestaurante.fontSize = 39;
+                        break;
+                }
                 textUserRestaurante.text = restaurante.Nombre;
             }            
         }

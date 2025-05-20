@@ -120,8 +120,11 @@ public class GestionarMesasController : MonoBehaviour
             case <= 15:
                 textNombreRestaurante.fontSize = 43;
                 break;
-            case <= 17:
+            case 16:
                 textNombreRestaurante.fontSize = 38;
+                break;
+            case 17:
+                textNombreRestaurante.fontSize = 35;
                 break;
         }
         textNombreRestaurante.text = nombreRest;

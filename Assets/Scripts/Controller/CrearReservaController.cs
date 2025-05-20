@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -109,7 +110,7 @@ public class CrearReservaController : MonoBehaviour
                 {
                     textResultadoMesasDisponibles.text = " Past hour.";
                 }
-                    
+                Espero1SegundoYQuitoElTextoDeMesasDisponiblesAsync();
             }
 
             // Si la fecha de la reserva es menor que la fecha actual, se pone la fecha actual en los dropdowns
@@ -124,9 +125,31 @@ public class CrearReservaController : MonoBehaviour
                 BuscoElIndiceYLoPongoSiLoEncuentro(dropDownDías, día);
                 BuscoElIndiceYLoPongoSiLoEncuentro(dropDownMeses, mes);
                 BuscoElIndiceYLoPongoSiLoEncuentro(dropDownAños, año);
+
+                if (Usuario.Idioma.CompareTo("Español") == 0)
+                {
+                    textResultadoMesasDisponibles.text = " Fecha pasada.";
+                }
+                else
+                {
+                    textResultadoMesasDisponibles.text = " Past date.";
+                }
+                Espero1SegundoYQuitoElTextoDeMesasDisponiblesAsync();
             }
         }
         
+    }
+
+    private async void Espero1SegundoYQuitoElTextoDeMesasDisponiblesAsync()
+    {
+        string texto = textResultadoMesasDisponibles.text.Trim();
+
+        await Task.Delay(1500); // Espero 1 segundo sin bloquear
+
+        if (texto.Contains("Fecha pasada") || texto.Contains("Past date") || texto.Contains("Hora pasada") || texto.Contains("Past hour") || texto.Contains("Ninguna") || texto.Contains("None") || texto.Contains("Reserva registrada correctamente") || texto.Contains("Reservation successfully registered"))
+        {
+            textResultadoMesasDisponibles.text = "";
+        }
     }
 
     private bool Hay7De7CamposRellenos()
@@ -519,6 +542,7 @@ public class CrearReservaController : MonoBehaviour
                         {
                             textResultadoMesasDisponibles.text = " None";
                         }
+                        Espero1SegundoYQuitoElTextoDeMesasDisponiblesAsync();
                         PonerValoresEnLasOpcionesDeCrear("", "", "");
                     }
                 }
@@ -532,6 +556,7 @@ public class CrearReservaController : MonoBehaviour
                     {
                         textResultadoMesasDisponibles.text = " None";
                     }
+                    Espero1SegundoYQuitoElTextoDeMesasDisponiblesAsync();
                     PonerValoresEnLasOpcionesDeCrear("", "", "");
                 }
             }
@@ -667,6 +692,7 @@ public class CrearReservaController : MonoBehaviour
             {
                 textResultadoMesasDisponibles.text = "Reservation successfully registered";
             }
+            Espero1SegundoYQuitoElTextoDeMesasDisponiblesAsync();
             Poner4ValoresEnCrearVacíos();
             PonerValoresEnLasOpcionesDeCrear("", "", "");
             AsignarValoresConcretosEnDropdowns();
