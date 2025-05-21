@@ -13,7 +13,7 @@ public class MétodosAPIController : MonoBehaviour
 
     private bool mostrandoImgNoConexión = false;
     private static string URL = "https://localhost:7233/"; //https://localhost:7233/
-
+    //private static string URL = "https://servidorapirestaurante-production.up.railway.app/";
     GeneralController instanceGeneralController;
 
     public static MétodosAPIController InstanceMétodosAPIController { get; private set; }
@@ -61,6 +61,7 @@ public class MétodosAPIController : MonoBehaviour
             if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
             {
                 Debug.LogError("Error: " + request.error);
+                Debug.LogError("Respuesta completa: " + request.downloadHandler.text);
                 if (request.error.Contains("Cannot connect to destination host")) 
                 {
                     Debug.Log("Servidor apagado.");
