@@ -170,9 +170,7 @@ public class HistorialReservasController : MonoBehaviour
         {
             string dosPrimerosDigitosAñoActual = System.DateTime.Now.Year.ToString().Substring(0, 2);
             fecha = fecha.Substring(0,6) + dosPrimerosDigitosAñoActual.Trim() + fecha.Substring(fecha.Length - 2);
-            Debug.Log("++++++Fecha: " + fecha.Substring(0, 6) +"; "+fecha.Substring(fecha.Length - 2));
         }
-        
 
         List<Reserva> reservasDeHace1Mes = instanceGestionarMesasController.ObtenerTodasLasReservasDeHace1Mes();
         List<Reserva> reservasTerminadasCanceladasOConfirmadas = instanceGestionarMesasController.ObtenerReservasTerminadasCanceladasOConfirmadas(reservasDeHace1Mes);
@@ -305,7 +303,7 @@ public class HistorialReservasController : MonoBehaviour
             Button botónMesaSelected = rtPadreDeLosBotonesMesa.gameObject.transform.Find("Button-" + reserva.Mesa_Id).GetComponent<Button>();
             int id_Mesa_En_Mapa = int.Parse(instanceGestionarMesasController.ObtenerIDMesaDelMapa(botónMesaSelected));
 
-            if (id_Mesa_En_Mapa.Equals(numMesa))
+            if (id_Mesa_En_Mapa.Equals(int.Parse(numMesa)))
             {
                 reservasFiltradas.Add(reserva);
             }
