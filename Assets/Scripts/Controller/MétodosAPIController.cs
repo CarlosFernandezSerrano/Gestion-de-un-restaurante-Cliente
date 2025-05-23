@@ -61,7 +61,7 @@ public class MétodosAPIController : MonoBehaviour
             if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
             {
                 Debug.LogError("Error: " + request.error);
-                Debug.LogError("Respuesta completa: " + request.downloadHandler.text);
+                //Debug.LogError("Respuesta completa: " + request.downloadHandler.text);
                 if (request.error.Contains("Cannot connect to destination host")) 
                 {
                     Debug.Log("Servidor apagado.");

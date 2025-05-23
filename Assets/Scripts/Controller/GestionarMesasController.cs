@@ -1118,7 +1118,7 @@ public class GestionarMesasController : MonoBehaviour
         return "" + botónMesaSelected.gameObject.transform.Find("Imagen Rectangle/Text").GetComponent<TextMeshProUGUI>().text.Trim();
     }
 
-    private void EliminarObjetosHijoDeScrollView(RectTransform rectTransformContent)
+    public void EliminarObjetosHijoDeScrollView(RectTransform rectTransformContent)
     {
         foreach (Transform hijo in rectTransformContent)
         {
@@ -1309,7 +1309,7 @@ public class GestionarMesasController : MonoBehaviour
         }
     }
 
-    private void CrearBotónEnScrollViewHistorialReservas(Reserva reserva)
+    public void CrearBotónEnScrollViewHistorialReservas(Reserva reserva)
     {
         // Creo un GameObject para el botón y le asigno un nombre único.
         GameObject botónGO = new GameObject("Button-" + reserva.Id);
@@ -1397,7 +1397,7 @@ public class GestionarMesasController : MonoBehaviour
         }
     }
 
-    private List<Reserva> ObtenerReservasTerminadasCanceladasOConfirmadas(List<Reserva> reservasDeHace1Mes)
+    public List<Reserva> ObtenerReservasTerminadasCanceladasOConfirmadas(List<Reserva> reservasDeHace1Mes)
     {
         List<Reserva> reservas = new List<Reserva>();
         foreach (Reserva reserva in reservasDeHace1Mes)
@@ -1410,7 +1410,7 @@ public class GestionarMesasController : MonoBehaviour
         return reservas;
     }
 
-    private List<Reserva> ObtenerReservasEnUso(List<Reserva> reservasDeHace1Mes)
+    public List<Reserva> ObtenerReservasEnUso(List<Reserva> reservasDeHace1Mes)
     {
         List<Reserva> reservas = new List<Reserva>();
         foreach (Reserva reserva in reservasDeHace1Mes)
@@ -1423,7 +1423,7 @@ public class GestionarMesasController : MonoBehaviour
         return reservas;
     }
 
-    private List<Reserva> ObtenerTodasLasReservasDeHace1Mes()
+    public List<Reserva> ObtenerTodasLasReservasDeHace1Mes()
     {
         DateTime fechaActual = DateTime.Today;
         DateTime fechaHaceUnMes = fechaActual.AddMonths(-1); // Le resto un mes a la fecha actual 
