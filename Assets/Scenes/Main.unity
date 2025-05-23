@@ -10144,6 +10144,8 @@ MonoBehaviour:
   "rtBot\xF3nIdiomaEnglish": {fileID: 1090970004}
   "rtTextoIniciarSesi\xF3n": {fileID: 1417826609}
   "canvasV\xEDdeoTutorialApp": {fileID: 1002093847}
+  videoClipEmpleado: {fileID: 32900000, guid: 3e325c6b3d8ddc14ab78e13b600e3cae, type: 3}
+  videoClipGerente: {fileID: 32900000, guid: cbbf64dc06cd9fe43884ad59494d2469, type: 3}
 --- !u!4 &1188165482
 Transform:
   m_ObjectHideFlags: 0

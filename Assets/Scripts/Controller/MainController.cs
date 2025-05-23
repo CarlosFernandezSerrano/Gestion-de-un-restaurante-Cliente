@@ -30,6 +30,8 @@ public class MainController : MonoBehaviour
     [SerializeField] private RectTransform rtBotónIdiomaEnglish;
     [SerializeField] private RectTransform rtTextoIniciarSesión;
     [SerializeField] private GameObject canvasVídeoTutorialApp;
+    [SerializeField] private VideoClip videoClipEmpleado;
+    [SerializeField] private VideoClip videoClipGerente;
 
     private bool telónMoviéndose = false;
     private bool telónAbajo = false;
@@ -300,8 +302,22 @@ public class MainController : MonoBehaviour
 
     public void ActivarCanvasVídeoTutorial()
     {
-        canvasVídeoTutorialApp.SetActive(true);
         VideoPlayer vp = canvasVídeoTutorialApp.GetComponent<VideoPlayer>();
+        
+        if (textUserRol.text.Trim().Length > 0)
+        {
+            if (textUserRol.text.Contains("Empleado") || textUserRol.text.Contains("Employee"))
+            {
+                vp.clip = videoClipEmpleado;
+            }
+            else
+            {
+                vp.clip = videoClipGerente;
+            }
+        }
+        
+        canvasVídeoTutorialApp.SetActive(true);
+        
         vp.Play();
     }
 
