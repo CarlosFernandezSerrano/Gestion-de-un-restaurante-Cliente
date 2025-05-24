@@ -166,7 +166,14 @@ public class CrearReservaController : MonoBehaviour
         // Si ninguno de los campos está vacío, devuelve true. Todos los campos están llenos.
         if (!campos.Any(string.IsNullOrWhiteSpace) && NumMesaCorrecto(num_Mesa) && LosInputFieldCumplenElTamaño(nombre, dni))
         {
-            return true;
+            if (System.Text.RegularExpressions.Regex.IsMatch(dni, @"^\d{8}[A-Za-z]$"))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         else
         {

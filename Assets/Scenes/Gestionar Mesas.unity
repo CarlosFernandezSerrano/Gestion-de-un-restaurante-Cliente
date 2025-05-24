@@ -3303,8 +3303,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 32
-  m_fontSizeBase: 32
+  m_fontSize: 34
+  m_fontSizeBase: 34
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -10970,8 +10970,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 42880856621f49945bbcb6a4765cd28a, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -13770,6 +13770,11 @@ MonoBehaviour:
   textEnUsoHistorialReservas: {fileID: 1654119209}
   textConfirmadaEncabezadoHistorialReservas: {fileID: 1849805956}
   textTerminadaCanceladaHistorialReservas: {fileID: 1199058290}
+  textPlaceHolderNombreHistorialReservas: {fileID: 1391042277}
+  textPlaceHolderNumMesaHistorialReservas: {fileID: 1540369778}
+  textPlaceHolderFechaHistorialReservas: {fileID: 1412456940}
+  textBtnBuscarHistorialReservas: {fileID: 518984447}
+  textBtnActualizarHistorialReservas: {fileID: 150068122}
   textEncabezadoBuscarReserva: {fileID: 1729649231}
   textPlaceHolderInputFieldDniBuscarReserva: {fileID: 709923594}
   textBtnBuscarEnBuscarReserva: {fileID: 290340097}
@@ -27330,17 +27335,17 @@ MonoBehaviour:
   m_VerticalScrollbarEventHandler: {fileID: 0}
   m_LayoutGroup: {fileID: 0}
   m_ScrollSensitivity: 1
-  m_ContentType: 0
+  m_ContentType: 2
   m_InputType: 0
   m_AsteriskChar: 42
-  m_KeyboardType: 0
+  m_KeyboardType: 4
   m_LineType: 0
   m_HideMobileInput: 0
   m_HideSoftKeyboard: 0
-  m_CharacterValidation: 0
+  m_CharacterValidation: 2
   m_RegexValue: 
   m_GlobalPointSize: 14
-  m_CharacterLimit: 0
+  m_CharacterLimit: 2
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls: []
@@ -29284,8 +29289,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 42880856621f49945bbcb6a4765cd28a, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4

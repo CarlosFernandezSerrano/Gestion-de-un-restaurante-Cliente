@@ -1,4 +1,5 @@
 using Assets.Scripts.Model;
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -28,6 +29,11 @@ public class Cambio_Idioma_Escena_Gestionar_Mesas_Controller : MonoBehaviour
     [SerializeField] private TMP_Text textEnUsoHistorialReservas;
     [SerializeField] private TMP_Text textConfirmadaEncabezadoHistorialReservas;
     [SerializeField] private TMP_Text textTerminadaCanceladaHistorialReservas;
+    [SerializeField] private TMP_Text textPlaceHolderNombreHistorialReservas;
+    [SerializeField] private TMP_Text textPlaceHolderNumMesaHistorialReservas;
+    [SerializeField] private TMP_Text textPlaceHolderFechaHistorialReservas;
+    [SerializeField] private TMP_Text textBtnBuscarHistorialReservas;
+    [SerializeField] private TMP_Text textBtnActualizarHistorialReservas;
 
     // Textos en canvas Buscar Reserva
     [SerializeField] private TMP_Text textEncabezadoBuscarReserva;
@@ -107,6 +113,11 @@ public class Cambio_Idioma_Escena_Gestionar_Mesas_Controller : MonoBehaviour
                 textEnUsoHistorialReservas.text = "En uso.";
                 textConfirmadaEncabezadoHistorialReservas.text = "Confirmada.";
                 textTerminadaCanceladaHistorialReservas.text = "Terminada / Cancelada.";
+                textPlaceHolderNombreHistorialReservas.text = "Nombre...";
+                textPlaceHolderNumMesaHistorialReservas.text = "Nº Mesa...";
+                textPlaceHolderFechaHistorialReservas.text = "Fecha ("+ DateTime.Now.ToString("dd/MM/yy")+")";
+                textBtnBuscarHistorialReservas.text = "Buscar";
+                textBtnActualizarHistorialReservas.text = "Actualizar";
 
                 // Textos en canvas Buscar Reserva
                 textEncabezadoBuscarReserva.text = "BUSCAR RESERVAS DE CLIENTES";
@@ -173,6 +184,11 @@ public class Cambio_Idioma_Escena_Gestionar_Mesas_Controller : MonoBehaviour
                 textEnUsoHistorialReservas.text = "In use.";
                 textConfirmadaEncabezadoHistorialReservas.text = "Confirmed.";
                 textTerminadaCanceladaHistorialReservas.text = "Completed / Cancelled.";
+                textPlaceHolderNombreHistorialReservas.text = "Name...";
+                textPlaceHolderNumMesaHistorialReservas.text = "Table Nº...";
+                textPlaceHolderFechaHistorialReservas.text = "Date (" + DateTime.Now.ToString("dd/MM/yy") + ")";
+                textBtnBuscarHistorialReservas.text = "Search";
+                textBtnActualizarHistorialReservas.text = "Update";
 
                 // Textos en canvas Buscar Reserva
                 textEncabezadoBuscarReserva.text = "SEARCH CUSTOMER RESERVATIONS";
