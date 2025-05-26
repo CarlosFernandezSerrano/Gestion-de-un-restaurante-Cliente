@@ -593,7 +593,15 @@ public class EditarRestauranteController : MonoBehaviour
             }
             else
             {
-                string cad4 = "Nombre tiene menos de 3 caracteres";
+                string cad4 = "";
+                if (Usuario.Idioma.CompareTo("Español") == 0)
+                {
+                    cad4 = "Nombre tiene menos de 3 caracteres";
+                }
+                else
+                {
+                    cad4 = "Name has less than 3 characters";
+                }
                 StartCoroutine(MovimientoCartelDeMadera(2f, cad4, 0f, 12f));
                 Debug.Log("Nombre tiene menos de 3 caracteres");
                 return false;

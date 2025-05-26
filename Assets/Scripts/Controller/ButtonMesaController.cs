@@ -1,3 +1,4 @@
+using Assets.Scripts.Model;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -65,8 +66,17 @@ public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHan
             {
                 Debug.Log("Ya existe una mesa en el centro. No se creará una nuevo.");
 
-                string cad = "Ya existe una mesa en el centro.";
-                StartCoroutine(instanceEditarRestauranteController.MovimientoCartelDeMadera(2f, cad, 0f, 12f));
+                string cad = "";
+                if (Usuario.Idioma.CompareTo("Español") == 0)
+                {
+                    cad = "Ya existe una mesa en el centro.";
+                    StartCoroutine(instanceEditarRestauranteController.MovimientoCartelDeMadera(2f, cad, 0f, 12f));
+                }
+                else
+                {
+                    cad = "There is already a table in the center.";
+                    StartCoroutine(instanceEditarRestauranteController.MovimientoCartelDeMadera(2f, cad, 7.5f, 12f));
+                }
                 return;
             }
         }
