@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class CrearReservaController : MonoBehaviour
@@ -28,6 +29,7 @@ public class CrearReservaController : MonoBehaviour
     [SerializeField] private TMP_Text textValorNumComensalesEnCrear;
     [SerializeField] private Button buttonCrear;
     [SerializeField] private GameObject canvasInfoMesasDisponibles;
+    [SerializeField] private TMP_InputField[] inputFields; // Asigno los InputFields en el orden de tabulación deseado
 
 
     private List<int> mesasDisponiblesEnMapa = new List<int>();
@@ -58,6 +60,11 @@ public class CrearReservaController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            SelectNextInputField();
+        }
+
         ActualizarBotónCrear();
 
         ActualizarHoraReserva();
@@ -146,7 +153,7 @@ public class CrearReservaController : MonoBehaviour
 
         await Task.Delay(1500); // Espero 1 segundo sin bloquear
 
-        if (texto.Contains("Fecha pasada") || texto.Contains("Past date") || texto.Contains("Hora pasada") || texto.Contains("Past hour") || texto.Contains("Ninguna") || texto.Contains("None") || texto.Contains("Reserva registrada correctamente") || texto.Contains("Reservation successfully registered"))
+        if (texto.Contains("Fecha pasada") || texto.Contains("Past date") || texto.Contains("Hora pasada") || texto.Contains("Past hour") || texto.Contains("Ninguna") || texto.Contains("None") || texto.Contains("Reserva registrada correctamente") || texto.Contains("Reservation successfully registered") || texto.Contains("Hora incorrecta") || texto.Contains("Wrong hour"))
         {
             textResultadoMesasDisponibles.text = "";
         }
@@ -441,6 +448,7 @@ public class CrearReservaController : MonoBehaviour
                 {
                     textResultadoMesasDisponibles.text = " Past hour, it's " + DateTime.Now.ToString("HH:mm") + ".";
                 }
+                Espero1SegundoYQuitoElTextoDeMesasDisponiblesAsync();
                 return;
             }
 
@@ -459,7 +467,6 @@ public class CrearReservaController : MonoBehaviour
             // Si se pone una hora cuando el restaurante no está de servicio, sale error
             if (hora_Apertura > hora_Cierre)
             {
-                Debug.Log("Reparando");
                 if (horaReserva > hora_Cierre && horaReserva < hora_Apertura)
                 {
                     if (Usuario.Idioma.CompareTo("Español") == 0)
@@ -470,6 +477,7 @@ public class CrearReservaController : MonoBehaviour
                     {
                         textResultadoMesasDisponibles.text = " Wrong hour.";
                     }
+                    Espero1SegundoYQuitoElTextoDeMesasDisponiblesAsync();
                     return;
                 }
             }
@@ -485,6 +493,7 @@ public class CrearReservaController : MonoBehaviour
                     {
                         textResultadoMesasDisponibles.text = " Wrong hour.";
                     }
+                    Espero1SegundoYQuitoElTextoDeMesasDisponiblesAsync();
                     return;
                 }
             }
@@ -734,4 +743,21 @@ public class CrearReservaController : MonoBehaviour
         canvasInfoMesasDisponibles.SetActive(false);
     }
 
+    /// <summary>
+    /// Método para cambiar de componente con TAB en la interfaz gráfica.
+    /// </summary>
+    private void SelectNextInputField()
+    {
+        GameObject current = EventSystem.current.currentSelectedGameObject;
+
+        for (int i = 0; i < inputFields.Length; i++)
+        {
+            if (inputFields[i].gameObject == current)
+            {
+                int nextIndex = (i + 1) % inputFields.Length;
+                inputFields[nextIndex].Select();
+                break;
+            }
+        }
+    }
 }

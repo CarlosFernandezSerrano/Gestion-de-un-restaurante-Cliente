@@ -9518,6 +9518,10 @@ MonoBehaviour:
   rtContentHistorialReservas: {fileID: 1161435574}
   rtPadreDeLosBotonesMesa: {fileID: 89467398}
   scrollbarHistorialReservas: {fileID: 2025698494}
+  inputFields:
+  - {fileID: 107513174}
+  - {fileID: 810347964}
+  - {fileID: 446808053}
 --- !u!1 &584303184
 GameObject:
   m_ObjectHideFlags: 0
@@ -11508,6 +11512,11 @@ MonoBehaviour:
   textValorNumComensalesEnCrear: {fileID: 1959979472}
   buttonCrear: {fileID: 1376631491}
   canvasInfoMesasDisponibles: {fileID: 2062892567}
+  inputFields:
+  - {fileID: 1232052437}
+  - {fileID: 263069178}
+  - {fileID: 2129330483}
+  - {fileID: 1833087928}
 --- !u!1 &720109023
 GameObject:
   m_ObjectHideFlags: 0

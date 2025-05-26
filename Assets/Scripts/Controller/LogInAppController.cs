@@ -227,12 +227,4 @@ public class LogInAppController : MonoBehaviour
         }
     }
 
-    
-
-    
-
-    
-
-
-    
 }
