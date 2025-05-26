@@ -278,7 +278,7 @@ public class EditarRestauranteController : MonoBehaviour
         Restaurante rest = ObtenerRestauranteConNuevasMesasCreadasParaRegistrar(); // Mesas creadas nuevas
 
 
-        bool b = await NombreRestauranteVálidoDistintoYNoRepetidoEnLaBDD();
+        bool b = NombreRestauranteVálidoDistintoYNoRepetidoEnLaBDD();
 
         // Nombre cambiado y comprobado que se puede actualizar porque no existe otro restaurante con ese nuevo nombre
         if (b)
@@ -555,7 +555,7 @@ public class EditarRestauranteController : MonoBehaviour
         
      }
 
-    private async Task<bool> NombreRestauranteVálidoDistintoYNoRepetidoEnLaBDD()
+    private bool NombreRestauranteVálidoDistintoYNoRepetidoEnLaBDD()
     {
         // Nombre del restaurante cambiado del original.
         if (NombreRestaurante.CompareTo(inputFieldNombreRestaurante.text) != 0)
@@ -566,7 +566,8 @@ public class EditarRestauranteController : MonoBehaviour
             // Si el nombre del restaurante tiene más de 2 caracteres, se crea.
             if (nombreRestaurante.Length > 2)
             {
-                string cad = await instanceMétodosApiController.GetDataAsync("restaurante/existeConNombre/" + nombreRestaurante);
+                return true;
+                /*string cad = await instanceMétodosApiController.GetDataAsync("restaurante/existeConNombre/" + nombreRestaurante);
                 // Deserializo la respuesta
                 Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
 
@@ -588,7 +589,7 @@ public class EditarRestauranteController : MonoBehaviour
                             StartCoroutine(MovimientoCartelDeMadera(2f, cad3, 6f, 11f));
                         }
                         return false;
-                }
+                }*/
             }
             else
             {
@@ -627,9 +628,9 @@ public class EditarRestauranteController : MonoBehaviour
         ComprobarSiHayCambios();        
     }
 
-    private async void ComprobarSiHayCambios()
+    private void ComprobarSiHayCambios()
     {
-        bool b = await NombreRestauranteVálidoDistintoYNoRepetidoEnLaBDD();
+        bool b = NombreRestauranteVálidoDistintoYNoRepetidoEnLaBDD();
 
         // Nombre cambiado y comprobado que se puede actualizar porque no existe otro restaurante con ese nuevo nombre
         if (b)

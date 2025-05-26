@@ -76,8 +76,8 @@ public class CreaciónRestauranteController : MonoBehaviour
         string nombreRestaurante = inputFieldNombreRestaurante.text.Trim();
         Debug.Log("Length InputField Nombre Restaurante: " + nombreRestaurante.Length);
         nombreRestaurante = Regex.Replace(nombreRestaurante, @"\s+", " "); // Reemplaza múltiples espacios por uno
-        string horaApertura = textHoraAperturaRestaurante.text + " : " + textMinutoAperturaRestaurante.text;
-        string horaCierre = textHoraCierreRestaurante.text + " : " + textMinutoCierreRestaurante.text;
+        string horaApertura = textHoraAperturaRestaurante.text + ":" + textMinutoAperturaRestaurante.text;
+        string horaCierre = textHoraCierreRestaurante.text + ":" + textMinutoCierreRestaurante.text;
 
         // Si el nombre del restaurante tiene más de 2 caracteres, se crea. Los inputField en Unity pueden contener un carácter de más invisible.
         if (nombreRestaurante.Length > 2)
@@ -102,14 +102,16 @@ public class CreaciónRestauranteController : MonoBehaviour
                         StartCoroutine(MostrarManoError(2f));
                     }
                     break;
-                case 1:
+                case > 0:
                     textoErrorRegistro.text = "";
                     Debug.Log("Restaurante registrado correctamente");
+                    Usuario.Restaurante_ID = resultado.Result;
+                    FicheroController.GestionarEncriptarFicheroUserInfo(Usuario.ID, Usuario.Restaurante_ID, Usuario.Idioma, Usuario.Token);
                     StartCoroutine(MostrarManoOkay(2f));
                     GestionarRegistroExitoso(nombreRestaurante);
                     
                     break;
-                case 2:
+                /*case 2:
                     if (Usuario.Idioma.CompareTo("Español") == 0 || Usuario.Idioma == null)
                     {
                         textoErrorRegistro.text = "El restaurante ya existe.";
@@ -120,7 +122,7 @@ public class CreaciónRestauranteController : MonoBehaviour
                         textoErrorRegistro.text = "The restaurant already exists.";
                         StartCoroutine(MostrarManoError(2f));
                     }
-                    break;
+                    break;*/
             }
             resultado.Result = -2;
         }
@@ -228,6 +230,7 @@ public class CreaciónRestauranteController : MonoBehaviour
     // Método llamado cuando el registro es exitoso
     private async void GestionarRegistroExitoso(string nombreRestaurante)
     {
+        /*
         // Obtengo el id del restaurante
         string cad2 = await instanceMétodosAPIController.GetDataAsync("restaurante/getRestaurantePorNombre/" + nombreRestaurante);
         // Deserializo
@@ -235,6 +238,7 @@ public class CreaciónRestauranteController : MonoBehaviour
         Debug.Log("Restaurante: " + restaurant.mostrar());
 
         Usuario.Restaurante_ID = restaurant.Id;
+        */
         Usuario.Rol_ID = 2; // Al comprar el servicio, el rol del usuario cambia
 
         // Actualizo el trabajador con nuevo Rol por comprar el servicio y su nuevo restaurante_ID.

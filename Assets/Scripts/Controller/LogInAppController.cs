@@ -121,7 +121,7 @@ public class LogInAppController : MonoBehaviour
                 string tokenValue = jsonObject["token"].Value<string>();
                 Usuario.Token = tokenValue;
                 Debug.Log("Token: " + Usuario.Token);
-                FicheroController.GestionarEncriptarFicheroUserInfo(Usuario.ID, Usuario.Idioma, tokenValue); // Guardo el token en el fichero
+                FicheroController.GestionarEncriptarFicheroUserInfo(Usuario.ID, Usuario.Restaurante_ID, Usuario.Idioma, tokenValue); // Guardo el token en el fichero
 
                 if (Usuario.Idioma.CompareTo("Español") == 0 || Usuario.Idioma == null)
                 {
