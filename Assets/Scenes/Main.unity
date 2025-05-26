@@ -5565,7 +5565,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2444773511383279619, guid: 39d3133ea78e56b4abcaa9114e92cac1, type: 3}
       propertyPath: m_Color.a
-      value: 0.39215687
+      value: 0.50980395
       objectReference: {fileID: 0}
     - target: {fileID: 2444773511383279619, guid: 39d3133ea78e56b4abcaa9114e92cac1, type: 3}
       propertyPath: m_Color.b
@@ -5870,6 +5870,14 @@ PrefabInstance:
     - target: {fileID: 7994218440282362253, guid: 39d3133ea78e56b4abcaa9114e92cac1, type: 3}
       propertyPath: m_fontColor32.rgba
       value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 8160641349178966754, guid: 39d3133ea78e56b4abcaa9114e92cac1, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 1695
+      objectReference: {fileID: 0}
+    - target: {fileID: 8160641349178966754, guid: 39d3133ea78e56b4abcaa9114e92cac1, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 847
       objectReference: {fileID: 0}
     - target: {fileID: 8302145748193442543, guid: 39d3133ea78e56b4abcaa9114e92cac1, type: 3}
       propertyPath: m_Name
@@ -10477,7 +10485,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -738.02844, y: 465.46002}
+  m_AnchoredPosition: {x: -745, y: 482}
   m_SizeDelta: {x: 381.9602, y: 87.5448}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1226446370
