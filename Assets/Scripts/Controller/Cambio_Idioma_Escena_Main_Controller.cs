@@ -69,10 +69,10 @@ public class Cambio_Idioma_Escena_Main_Controller : MonoBehaviour
             case "Español":
                 // Textos en canvas Log In
                 textLogIn.text = "Iniciar Sesión";
-                textNombreLogIn.text = "Nombre";
-                textPasswordLogIn.text = "Contraseña";
-                textInputFieldNombreLogIn.text = "Mínimo 3 caracteres...";
-                textInputFieldPasswordLogIn.text = "Mínimo 6 caracteres...";
+                textNombreLogIn.text = "Nombre:";
+                textPasswordLogIn.text = "Contraseña:";
+                textInputFieldNombreLogIn.text = " Mínimo 3 caracteres...";
+                textInputFieldPasswordLogIn.text = " Mínimo 6 caracteres...";
                 textButtonInformación.text = "Información";
                 textButtonAccederLogIn.text = "Acceder";
                 textButtonSalirAppEnLogIn.text = "Salir de la app";
@@ -125,10 +125,10 @@ public class Cambio_Idioma_Escena_Main_Controller : MonoBehaviour
             case "English":
                 // Textos en canvas Log In
                 textLogIn.text = "Login";
-                textNombreLogIn.text = "Name";
-                textPasswordLogIn.text = "Password";
-                textInputFieldNombreLogIn.text = "Minimum 3 characters...";
-                textInputFieldPasswordLogIn.text = "Minimum 6 characters...";
+                textNombreLogIn.text = "Name:";
+                textPasswordLogIn.text = "Password:";
+                textInputFieldNombreLogIn.text = " Minimum 3 characters...";
+                textInputFieldPasswordLogIn.text = " Minimum 6 characters...";
                 textButtonInformación.text = "Information";
                 textButtonAccederLogIn.text = "Access";
                 textButtonSalirAppEnLogIn.text = "Exit the app";

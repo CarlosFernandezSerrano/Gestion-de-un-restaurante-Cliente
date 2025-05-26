@@ -1068,7 +1068,14 @@ public class GestionarMesasController : MonoBehaviour
         Button botónMesaSelected = botónMesaSeleccionado;
         int id_Mesa = ObtenerIDMesaDelNombreDelBotónMesa(botónMesaSelected);
 
-        textReservasHoyMesa.text = "Registros Hoy Mesa " + ObtenerIDMesaDelMapa(botónMesaSelected);
+        if (Usuario.Idioma.CompareTo("Español") == 0)
+        {
+            textReservasHoyMesa.text = "Registros Hoy Mesa " + ObtenerIDMesaDelMapa(botónMesaSelected);
+        }
+        else
+        {
+            textReservasHoyMesa.text = "Registrations Today Table " + ObtenerIDMesaDelMapa(botónMesaSelected);
+        }
 
         // Obtengo las reservas pendientes que tiene la mesa, ya sean de hoy o en adelante
         List<Reserva> reservasMesaPendientes = ObtenerReservasMesaDeHoyEnAdelante(id_Mesa);

@@ -40,6 +40,21 @@ public class RegisterAppController : MonoBehaviour
         {
             SelectNextInputField();
         }
+
+        if (botónConfirmar.IsInteractable())
+        {
+            // Detectar Enter principal
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                ConfirmarRegistrarUsuario();
+            }
+
+            // Detectar Enter del teclado numérico
+            if (Input.GetKeyDown(KeyCode.KeypadEnter))
+            {
+                ConfirmarRegistrarUsuario();
+            }
+        }
     }
 
     

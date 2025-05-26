@@ -47,6 +47,24 @@ public class LogInAppController : MonoBehaviour
         {
             SelectNextInputField();
         }
+
+        if (botónAcceder.IsInteractable())
+        {
+            // Detectar Enter principal
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                Debug.Log("Se ha pulsado Enter");
+                ConfirmarIniciarSesión();
+            }
+
+            // Detectar Enter del teclado numérico
+            if (Input.GetKeyDown(KeyCode.KeypadEnter))
+            {
+                Debug.Log("Se ha pulsado Enter del teclado numérico");
+                ConfirmarIniciarSesión();
+            }
+        }
+        
     }
 
 

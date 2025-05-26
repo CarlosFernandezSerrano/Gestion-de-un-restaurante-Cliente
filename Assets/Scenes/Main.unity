@@ -5797,7 +5797,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7684698242439754512, guid: 39d3133ea78e56b4abcaa9114e92cac1, type: 3}
       propertyPath: m_fontSize
-      value: 52
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 7684698242439754512, guid: 39d3133ea78e56b4abcaa9114e92cac1, type: 3}
       propertyPath: m_fontStyle
@@ -5817,7 +5817,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7684698242439754512, guid: 39d3133ea78e56b4abcaa9114e92cac1, type: 3}
       propertyPath: m_fontSizeBase
-      value: 52
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 7684698242439754512, guid: 39d3133ea78e56b4abcaa9114e92cac1, type: 3}
       propertyPath: m_fontColor32.rgba
@@ -5913,7 +5913,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9034856847622291987, guid: 39d3133ea78e56b4abcaa9114e92cac1, type: 3}
       propertyPath: m_fontSize
-      value: 52
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 9034856847622291987, guid: 39d3133ea78e56b4abcaa9114e92cac1, type: 3}
       propertyPath: m_fontStyle
@@ -5933,7 +5933,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9034856847622291987, guid: 39d3133ea78e56b4abcaa9114e92cac1, type: 3}
       propertyPath: m_fontSizeBase
-      value: 52
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 9034856847622291987, guid: 39d3133ea78e56b4abcaa9114e92cac1, type: 3}
       propertyPath: m_fontColor32.rgba
@@ -8570,7 +8570,7 @@ VideoPlayer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1002093847}
   m_Enabled: 1
-  m_VideoClip: {fileID: 32900000, guid: 3e325c6b3d8ddc14ab78e13b600e3cae, type: 3}
+  m_VideoClip: {fileID: 0}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
   m_TargetCamera: {fileID: 0}
