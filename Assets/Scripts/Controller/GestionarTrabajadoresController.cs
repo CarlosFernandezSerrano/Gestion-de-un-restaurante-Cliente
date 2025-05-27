@@ -507,8 +507,15 @@ public class GestionarTrabajadoresController : MonoBehaviour
         Debug.Log("Obtener datos trabajadores");
         string cad = await instanceMétodosApiController.GetDataAsync("trabajador/getTrabajadoresDeRestaurante/" + Usuario.Restaurante_ID);
 
-        // Deserializo la respuesta
-        TrabajadoresEnRestaurante = JsonConvert.DeserializeObject<List<Trabajador>>(cad);
+        try
+        {
+            // Deserializo la respuesta
+            TrabajadoresEnRestaurante = JsonConvert.DeserializeObject<List<Trabajador>>(cad);
+        }
+        catch (Exception ex)
+        {
+            Debug.Log("Error: " + ex);
+        }
 
         CrearBotonesTrabajadores();
     }
@@ -926,14 +933,23 @@ public class GestionarTrabajadoresController : MonoBehaviour
         // Si el trabajador a eliminar es Gerente, muestro
         if (t.Rol_ID.Equals(2))
         {
-            rtText.anchoredPosition = new Vector2(rtText.anchoredPosition.x, 46);
-            if (Usuario.Idioma.CompareTo("Español") == 0)
+            List<Trabajador> trabajadoresEnScrollViewAhora = ObtenerDatosTrabajadoresEnScrollView();
+
+            if (HayUnÚnicoGerente(trabajadoresEnScrollViewAhora))
             {
-                textoEntreParéntesisAlQuererEliminarTrabajador.text = "(También se eliminarán el restaurante y sus trabajadores)";
+                rtText.anchoredPosition = new Vector2(rtText.anchoredPosition.x, 46);
+                if (Usuario.Idioma.CompareTo("Español") == 0)
+                {
+                    textoEntreParéntesisAlQuererEliminarTrabajador.text = "(También se eliminarán el restaurante y sus trabajadores)";
+                }
+                else
+                {
+                    textoEntreParéntesisAlQuererEliminarTrabajador.text = "(The restaurant and its workers will also be eliminated.)";
+                }
             }
             else
             {
-                textoEntreParéntesisAlQuererEliminarTrabajador.text = "(The restaurant and its workers will also be eliminated.)";
+                rtText.anchoredPosition = new Vector2(rtText.anchoredPosition.x, 0);
             }
         }
         else
@@ -967,8 +983,10 @@ public class GestionarTrabajadoresController : MonoBehaviour
     {
         int id_trabajador = ObtenerElIdDelTrabajadorAEliminar();
 
-        // Si el trabajador a eliminar es Gerente, elimino su restaurante. Al eliminar el restaurante, también se eliminan automáticamente todos sus trabajadores
-        if (TrabajadorAEliminarEsGerente(id_trabajador))
+        List<Trabajador> trabajadoresEnScrollViewAhora = ObtenerDatosTrabajadoresEnScrollView();
+
+        // Si el trabajador a eliminar es Gerente y sólo queda uno, elimino su restaurante. Al eliminar el restaurante, también se eliminan automáticamente todos sus trabajadores
+        if (TrabajadorAEliminarEsGerente(id_trabajador) && HayUnÚnicoGerente(trabajadoresEnScrollViewAhora))
         {
             // Elimino el restaurante del gerente, quien tiene gestión total del servicio
             string cad2 = await instanceMétodosApiController.DeleteDataAsync("restaurante/eliminarxid/" + Usuario.Restaurante_ID);
@@ -985,6 +1003,13 @@ public class GestionarTrabajadoresController : MonoBehaviour
         }
         else
         {
+            bool ElTrabajadorEliminadoEsElQueElimina = false;
+            // Si el usuario eliminado es el mismo que elimina, se le envía al menú principal
+            if (Usuario.ID.Equals(id_trabajador))
+            {
+                ElTrabajadorEliminadoEsElQueElimina = true;
+            }
+
             string cad = await instanceMétodosApiController.DeleteDataAsync("trabajador/eliminarxid/" + id_trabajador);
 
             // Deserializo la respuesta
@@ -993,6 +1018,12 @@ public class GestionarTrabajadoresController : MonoBehaviour
             if (resultado.Result.Equals(1))
             {
                 Debug.Log("Trabajador eliminado con éxito");
+
+                if (ElTrabajadorEliminadoEsElQueElimina)
+                {
+                    SceneManager.LoadScene("Main");
+                    return;
+                }
 
                 // El trabajador eliminado no era gerente, no se han eliminado todos los trabajadores del restaurante en la BDD, y se actualiza el Scroll View
                 EliminarObjetosHijoDeScrollView(rtScrollViewContent);
