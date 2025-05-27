@@ -1,6 +1,7 @@
 using Assets.Scripts.Controller;
 using Assets.Scripts.Model;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -35,7 +36,8 @@ public class GestionarTrabajadoresController : MonoBehaviour
     private bool BuscandoTrabajadoresSinRest = false;
     private string TextoInputFieldAntes = "";
     private Button botónPulsadoParaEliminar;
-    private Trabajador TrabajadorPosibleASerNuevoGerente;
+    private Trabajador TrabajadorPosibleACambiarDeRol;
+
 
     MétodosAPIController instanceMétodosApiController;
 
@@ -60,7 +62,7 @@ public class GestionarTrabajadoresController : MonoBehaviour
 
         InvokeRepeating(nameof(ObtenerTrabajadoresSinRestauranteAsync), 0f, 1f); // Llama a ObtenerTrabajadoresSinRestaurante() cada 1 segundo
 
-        ObtenerTrabajadoresDeUnRestauranteAsync();
+        ObtenerTrabajadoresDeUnRestauranteYCrearBotonesAsync();
     }
 
     // Update is called once per frame
@@ -77,34 +79,80 @@ public class GestionarTrabajadoresController : MonoBehaviour
 
         if (!HayUnInputFieldVacíoEnNombresTrabajadores() && (AlgúnNombreCambiado(trabajadoresEnScrollViewAhora) || AlgúnRolCambiado(trabajadoresEnScrollViewAhora)) )
         {
-            if (AlgúnRolCambiado(trabajadoresEnScrollViewAhora) && Hay2TrabajadoresConRolGerente(trabajadoresEnScrollViewAhora))
+            if (AlgúnRolCambiado(trabajadoresEnScrollViewAhora) )//&& Hay2OMásTrabajadoresConRolGerente(trabajadoresEnScrollViewAhora))
             {
+                
                 // Si hay más de un gerente, no se puede guardar
                 buttonGuardar.interactable = false;
 
-                Debug.Log("+: Sólo puede haber un gerente");
-
-                // Si el contenedor no está activo, se activa/muestra
-                if (!contenedorAdvertenciaCambiarGerente.activeSelf)
+                if (CantGerentesEnScrollMenorQueEnLaBDD(trabajadoresEnScrollViewAhora))
                 {
-                    TrabajadorPosibleASerNuevoGerente = ObtenerTrabajadorQueHaSidoPuestoGerenteExistiendoUno(trabajadoresEnScrollViewAhora);
-
-                    // Mostrar contenedor advertencia
-                    if (Usuario.Idioma.CompareTo("Español") == 0)
+                    if (CantGerentesEnScrollIgualACero(trabajadoresEnScrollViewAhora))
                     {
-                        textoContenedorAdvertenciaCambiarDeGerente.text = "¿Está dispuest@ a ceder su rol de gerente al usuario " + TrabajadorPosibleASerNuevoGerente.Nombre + "?";
+                        if (!contenedorAdvertenciaCambiarGerente.activeSelf)
+                        {
+                            TrabajadorPosibleACambiarDeRol = ObtenerTrabajadorQueHaSidoPuestoEmpleadoSiendoGerente(trabajadoresEnScrollViewAhora);
+
+                            // Mostrar contenedor advertencia
+                            if (Usuario.Idioma.CompareTo("Español") == 0)
+                            {
+                                textoErrorAlGuardarTrabajadores.text = "El restaurante no puede estar sin un gerente";
+                            }
+                            else
+                            {
+                                textoErrorAlGuardarTrabajadores.text = "The restaurant cannot be without a manager";
+                            }
+
+                            contenedorErrorAlGuardarTrabajadores.SetActive(true);
+
+                            CancelarAsignarNuevoRol();
+                        }
                     }
                     else
                     {
-                        textoContenedorAdvertenciaCambiarDeGerente.text = "Are you willing to hand over your manager role to user " + TrabajadorPosibleASerNuevoGerente.Nombre + "?";
+                        if (!contenedorAdvertenciaCambiarGerente.activeSelf)
+                        {
+                            TrabajadorPosibleACambiarDeRol = ObtenerTrabajadorQueHaSidoPuestoEmpleadoSiendoGerente(trabajadoresEnScrollViewAhora);
+
+                            // Mostrar contenedor advertencia
+                            if (Usuario.Idioma.CompareTo("Español") == 0)
+                            {
+                                textoContenedorAdvertenciaCambiarDeGerente.text = "¿Está dispuest@ a otorgar el rol de empleado al usuario " + TrabajadorPosibleACambiarDeRol.Nombre + "?";
+                            }
+                            else
+                            {
+                                textoContenedorAdvertenciaCambiarDeGerente.text = "Are you willing to hand over your manager role to user " + TrabajadorPosibleACambiarDeRol.Nombre + "?";
+                            }
+
+                            contenedorAdvertenciaCambiarGerente.SetActive(true);
+                        }
                     }
-                        
-                    contenedorAdvertenciaCambiarGerente.SetActive(true);
                 }
+                else
+                {
+                    // Si el contenedor no está activo, se activa/muestra
+                    if (!contenedorAdvertenciaCambiarGerente.activeSelf)
+                    {
+                        TrabajadorPosibleACambiarDeRol = ObtenerTrabajadorQueHaSidoPuestoGerenteExistiendoUno(trabajadoresEnScrollViewAhora);
+
+                        // Mostrar contenedor advertencia
+                        if (Usuario.Idioma.CompareTo("Español") == 0)
+                        {
+                            textoContenedorAdvertenciaCambiarDeGerente.text = "¿Está dispuest@ a otorgar el rol de gerente al usuario " + TrabajadorPosibleACambiarDeRol.Nombre + "?";
+                        }
+                        else
+                        {
+                            textoContenedorAdvertenciaCambiarDeGerente.text = "Are you willing to hand over your manager role to user " + TrabajadorPosibleACambiarDeRol.Nombre + "?";
+                        }
+
+                        contenedorAdvertenciaCambiarGerente.SetActive(true);
+                    }
+                }
+                //Debug.Log("+: Sólo puede haber un gerente");                
             }
             else
             {
-                if (HayUnÚnicoGerente(trabajadoresEnScrollViewAhora))
+                if (AlgúnNombreCambiado(trabajadoresEnScrollViewAhora)) //Hay2OMásTrabajadoresConRolGerente(trabajadoresEnScrollViewAhora))//if (HayUnÚnicoGerente(trabajadoresEnScrollViewAhora))
                 {
                     buttonGuardar.interactable = true;
                 }
@@ -118,6 +166,61 @@ public class GestionarTrabajadoresController : MonoBehaviour
         {
             buttonGuardar.interactable = false;
         }
+    }
+
+    private bool CantGerentesEnScrollIgualACero(List<Trabajador> trabajadoresEnScrollViewAhora)
+    {
+        int contGerentesEnScroll = 0;
+        foreach (Trabajador trabajadorEnScroll in trabajadoresEnScrollViewAhora)
+        {
+            if (trabajadorEnScroll.Rol_ID.Equals(2))
+            {
+                contGerentesEnScroll++;
+            }
+        }
+
+        return contGerentesEnScroll.Equals(0);
+    }
+
+    private Trabajador ObtenerTrabajadorQueHaSidoPuestoEmpleadoSiendoGerente(List<Trabajador> trabajadoresEnScrollViewAhora)
+    {
+        foreach (Trabajador trabajadorRest in TrabajadoresEnRestaurante)
+        {
+            foreach (Trabajador trabajadorEnScroll in trabajadoresEnScrollViewAhora)
+            {
+                if (trabajadorRest.Id.Equals(trabajadorEnScroll.Id))
+                {
+                    if (trabajadorRest.Rol_ID.Equals(2) && trabajadorEnScroll.Rol_ID.Equals(1))
+                    {
+                        return trabajadorEnScroll;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private bool CantGerentesEnScrollMenorQueEnLaBDD(List<Trabajador> trabajadoresEnScrollViewAhora)
+    {
+        int contGerentesEnRest = 0;
+        foreach (Trabajador trabajadorRest in TrabajadoresEnRestaurante)
+        {
+            if (trabajadorRest.Rol_ID.Equals(2))
+            {
+                contGerentesEnRest++;
+            }
+        }
+
+        int contGerentesEnScroll = 0;
+        foreach (Trabajador trabajadorEnScroll in trabajadoresEnScrollViewAhora)
+        {
+            if (trabajadorEnScroll.Rol_ID.Equals(2))
+            {
+                contGerentesEnScroll++;
+            }
+        }
+
+        return contGerentesEnScroll < contGerentesEnRest;
     }
 
     private bool HayUnÚnicoGerente(List<Trabajador> trabajadoresEnScrollViewAhora)
@@ -134,7 +237,7 @@ public class GestionarTrabajadoresController : MonoBehaviour
         return cont.Equals(1); // Si sólo hay un gerente, devuelve true, sino false
     }
 
-    private bool Hay2TrabajadoresConRolGerente(List<Trabajador> trabajadoresEnScrollViewAhora)
+    private bool Hay2OMásTrabajadoresConRolGerente(List<Trabajador> trabajadoresEnScrollViewAhora)
     {
         int cont = 0;
         foreach (Trabajador trabajador in trabajadoresEnScrollViewAhora)
@@ -151,28 +254,46 @@ public class GestionarTrabajadoresController : MonoBehaviour
 
     private Trabajador ObtenerTrabajadorQueHaSidoPuestoGerenteExistiendoUno(List<Trabajador> trabajadoresEnScrollViewAhora)
     {
-        Trabajador t = ObtenerTrabajadorGerenteEnRestaurante();
+        //Trabajador t = ObtenerTrabajadorGerenteEnRestaurante();
+        List<Trabajador> trabajadoresGerente = ObtenerTrabajadoresGerenteEnRestaurante();
 
-        foreach (Trabajador trabajador in trabajadoresEnScrollViewAhora)
+        foreach (Trabajador trabajadorRest in TrabajadoresEnRestaurante)
+        {
+            foreach (Trabajador trabajadorEnScroll in trabajadoresEnScrollViewAhora)
+            {
+                if (trabajadorRest.Id.Equals(trabajadorEnScroll.Id))
+                {
+                    if (trabajadorRest.Rol_ID.Equals(1) && trabajadorEnScroll.Rol_ID.Equals(2))
+                    {
+                        return trabajadorEnScroll;
+                    }
+                }                
+            }
+        }
+        return null;
+        /*foreach (Trabajador trabajador in trabajadoresEnScrollViewAhora)
         {
             if (trabajador.Rol_ID.Equals(2) && trabajador.Nombre.CompareTo(t.Nombre) != 0)
             {
                 return trabajador;
             }
         }
-        return null;
+        return null;*/
     }
 
-    private Trabajador ObtenerTrabajadorGerenteEnRestaurante()
+    private List<Trabajador> ObtenerTrabajadoresGerenteEnRestaurante()
     {
+        List<Trabajador> trabajadores = new List<Trabajador>(); // Nuevo
         foreach (Trabajador trabajador in TrabajadoresEnRestaurante)
         {
             if (trabajador.Rol_ID.Equals(2))
             {
-                return trabajador;
+                //return trabajador;
+                trabajadores.Add(trabajador);
             }
         }
-        return null;
+        //return null;
+        return trabajadores;
     }
 
     private bool HayUnInputFieldVacíoEnNombresTrabajadores()
@@ -217,14 +338,17 @@ public class GestionarTrabajadoresController : MonoBehaviour
             int cont = 0;
             foreach (Trabajador trabajadorScrollViewAhora in trabajadoresEnScrollViewAhora)
             {
-                // Recorro todos los nombres que hay ahora en el scrollview y compruebo si cada nombre de los TrabajadoresEnRestaurante están idénticos, sino, hay cambios.
-                if (trabajador.Nombre.CompareTo(trabajadorScrollViewAhora.Nombre) != 0)
+                if (trabajador.Id.Equals(trabajadorScrollViewAhora.Id))
                 {
-                    cont++;
+                    // Recorro todos los nombres que hay ahora en el scrollview y compruebo si cada nombre de los TrabajadoresEnRestaurante están idénticos, sino, hay cambios.
+                    if (trabajador.Nombre.CompareTo(trabajadorScrollViewAhora.Nombre) != 0)
+                    {
+                        cont++;
+                    }
                 }
             }
             // Un nombre ha sido cambiado
-            if (cont.Equals(trabajadoresEnScrollViewAhora.Count))
+            if (cont > 0)
             {
                 return true;
             }
@@ -378,7 +502,7 @@ public class GestionarTrabajadoresController : MonoBehaviour
         }
     }
 
-    private async void ObtenerTrabajadoresDeUnRestauranteAsync()
+    private async void ObtenerTrabajadoresDeUnRestauranteYCrearBotonesAsync()
     {
         Debug.Log("Obtener datos trabajadores");
         string cad = await instanceMétodosApiController.GetDataAsync("trabajador/getTrabajadoresDeRestaurante/" + Usuario.Restaurante_ID);
@@ -440,7 +564,7 @@ public class GestionarTrabajadoresController : MonoBehaviour
                 break;
             case 2:
                 BuscoElIndiceYLoPongoSiLoEncuentro(dropdown, "Gerente");
-                dropdown.interactable = false;
+                //dropdown.interactable = false;
                 break;
         }
 
@@ -643,7 +767,7 @@ public class GestionarTrabajadoresController : MonoBehaviour
             Debug.Log("+++++B");
             inputFieldBuscarTrabajador.text = "";
             EliminarObjetosHijoDeScrollView(rtScrollViewContent);
-            ObtenerTrabajadoresDeUnRestauranteAsync();
+            ObtenerTrabajadoresDeUnRestauranteYCrearBotonesAsync();
         }
         else
         {
@@ -666,12 +790,12 @@ public class GestionarTrabajadoresController : MonoBehaviour
         return 0;
     }
 
-    public void CancelarAsignarNuevoGerente()
+    public void CancelarAsignarNuevoRol()
     {
-        TMP_Dropdown dropdown = rtScrollViewContent.transform.Find("Button-" + TrabajadorPosibleASerNuevoGerente.Id).GetComponentInChildren<TMP_Dropdown>();
+        TMP_Dropdown dropdown = rtScrollViewContent.transform.Find("Button-" + TrabajadorPosibleACambiarDeRol.Id).GetComponentInChildren<TMP_Dropdown>();
 
         //Pongo el rol que tenía el trabajador al cancelar el ponerle gerente
-        int rol_ID = ObtenerRol_IDTrabajadorEnRestaurante(TrabajadorPosibleASerNuevoGerente.Id);
+        int rol_ID = ObtenerRol_IDTrabajadorEnRestaurante(TrabajadorPosibleACambiarDeRol.Id);
 
         switch (rol_ID)
         {
@@ -698,20 +822,45 @@ public class GestionarTrabajadoresController : MonoBehaviour
         return 0;
     }
 
-    public async void ConfirmarAsignarNuevoGerente()
+    public async void ConfirmarAsignarNuevoRol()
     {
-        // Obtengo y actualizo el trabajador que va a ser a partir de ahora el nuevo gerente del restaurante
-        Trabajador trabajador = ObtenerTrabajadorPorID(TrabajadorPosibleASerNuevoGerente.Id);
-        trabajador.Rol_ID = 2;
+        // Obtengo y actualizo el trabajador que va a ser a partir de ahora un nuevo gerente del restaurante
+        Trabajador trabajador = ObtenerTrabajadorPorID(TrabajadorPosibleACambiarDeRol.Id);
+
+        switch (trabajador.Rol_ID)
+        {
+            case 1:
+                trabajador.Rol_ID = 2;
+                break;
+            case 2:
+                trabajador.Rol_ID = 1;
+                break;
+        }
+        
         trabajador.Restaurante_ID = Usuario.Restaurante_ID;
         string cad = await instanceMétodosApiController.PutDataAsync("trabajador/actualizarTrabajadorPorGerente/", trabajador);
 
         // Deserializo la respuesta
         Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
 
-        // Actualización exitosa del nuevo gerente
+        // Actualización exitosa del nuevo rol
         if (resultado.Result.Equals(1))
         {
+            Debug.Log("Actualización nuevo rol exitosa");
+
+            contenedorAdvertenciaCambiarGerente.SetActive(false);
+
+            // Si el mismo usuario que era gerente se ha puesto así mismo empleado, sale al menú principal
+            if (Usuario.Nombre.CompareTo(trabajador.Nombre) == 0)
+            {
+                SceneManager.LoadScene("Main");
+            }
+            else
+            {
+                ObtenerTrabajadoresDeUnRestauranteAsync();
+            }
+
+            /*
             // Ahora actualizo al que antes era gerente poniéndolo empleado
             Trabajador t = new Trabajador(Usuario.ID, Usuario.Nombre, "", 1, Usuario.Restaurante_ID);
             string cad2 = await instanceMétodosApiController.PutDataAsync("trabajador/actualizarTrabajadorPorGerente/", t);
@@ -722,7 +871,7 @@ public class GestionarTrabajadoresController : MonoBehaviour
             if (resultado2.Result.Equals(1))
             {
                 SceneManager.LoadScene("Main");
-            }
+            }*/
         }
 
         /*TMP_Dropdown dropdownPosibleFuturoGerente = rtScrollViewContent.transform.Find("Button-" + TrabajadorPosibleASerNuevoGerente.Id).GetComponentInChildren<TMP_Dropdown>();
@@ -742,6 +891,15 @@ public class GestionarTrabajadoresController : MonoBehaviour
         Debug.Log("+Nuevo gerente hecho");
 
         contenedorAdvertenciaCambiarGerente.SetActive(false);*/
+    }
+
+    private async void ObtenerTrabajadoresDeUnRestauranteAsync()
+    {
+        Debug.Log("Obtener datos trabajadores");
+        string cad = await instanceMétodosApiController.GetDataAsync("trabajador/getTrabajadoresDeRestaurante/" + Usuario.Restaurante_ID);
+
+        // Deserializo la respuesta
+        TrabajadoresEnRestaurante = JsonConvert.DeserializeObject<List<Trabajador>>(cad);
     }
 
     private Trabajador ObtenerTrabajadorPorID(int trabajador_ID)
@@ -838,7 +996,7 @@ public class GestionarTrabajadoresController : MonoBehaviour
 
                 // El trabajador eliminado no era gerente, no se han eliminado todos los trabajadores del restaurante en la BDD, y se actualiza el Scroll View
                 EliminarObjetosHijoDeScrollView(rtScrollViewContent);
-                ObtenerTrabajadoresDeUnRestauranteAsync();
+                ObtenerTrabajadoresDeUnRestauranteYCrearBotonesAsync();
                 contenedorAdvertenciaEliminarTrabajador.SetActive(false);
             }
         }
@@ -896,7 +1054,7 @@ public class GestionarTrabajadoresController : MonoBehaviour
 
         // Tengo que eliminar todos los hijos (botones en este caso) de Content antes de poner nuevos (trabajadores actualizados)
         EliminarObjetosHijoDeScrollView(rtScrollViewContent);
-        ObtenerTrabajadoresDeUnRestauranteAsync();
+        ObtenerTrabajadoresDeUnRestauranteYCrearBotonesAsync();
     }
 
     public void PulsarOkayDelContenedorErrorAlGuardarTrabajadores()

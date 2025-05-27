@@ -4529,7 +4529,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 815603970}
         m_TargetAssemblyTypeName: GestionarTrabajadoresController, Assembly-CSharp
-        m_MethodName: CancelarAsignarNuevoGerente
+        m_MethodName: CancelarAsignarNuevoRol
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6887,7 +6887,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 815603970}
         m_TargetAssemblyTypeName: GestionarTrabajadoresController, Assembly-CSharp
-        m_MethodName: ConfirmarAsignarNuevoGerente
+        m_MethodName: ConfirmarAsignarNuevoRol
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
