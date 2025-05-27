@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 using Assets.Scripts.Model;
 using Assets.Scripts.Controller;
 using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 
 
 public class RegisterAppController : MonoBehaviour
@@ -19,6 +20,9 @@ public class RegisterAppController : MonoBehaviour
     [SerializeField] private Button botÛnConfirmar;
     [SerializeField] private TMP_InputField[] inputFields; // Asigno los InputFields en el orden de tabulaciÛn deseado
 
+
+    private bool esperandoEnError = false;
+    private bool esperandoEnExito = false;
 
     MÈtodosAPIController instanceMÈtodosAPIController;
     TrabajadorController instanceTrabajadorController;
@@ -173,6 +177,7 @@ public class RegisterAppController : MonoBehaviour
                 textoErrorRegistro.text = "Please fill in all fields.";
             }
         }
+        Espero1SegundoYQuitoElTextoDe…xitoOErrorAsync();
     }
 
     private IEnumerator DesactivarPorUnTiempoLosBotonesYLuegoActivarCuandoHayaRespuestaDeLaAPIdePlayFab()
@@ -236,6 +241,7 @@ public class RegisterAppController : MonoBehaviour
                 }
                 break;            
         }
+        Espero1SegundoYQuitoElTextoDe…xitoOErrorAsync();
     }
 
     
@@ -250,6 +256,37 @@ public class RegisterAppController : MonoBehaviour
         inputTextoContraseÒaRepetida.text = "";
     }
 
+    private async void Espero1SegundoYQuitoElTextoDe…xitoOErrorAsync()
+    {
+        if (textoErrorRegistro.text.Trim().Length > 0)
+        {
+            if (!esperandoEnError)
+            {
+                esperandoEnError = true;
+                await Task.Delay(1500); // Espero 1 segundo sin bloquear
+
+                textoErrorRegistro.text = "";
+
+                esperandoEnError = false;
+                return;
+            }
+            
+        }
+
+        if (texto…xitoRegistro.text.Trim().Length > 0)
+        {
+            if (!esperandoEnExito)
+            {
+                esperandoEnExito = true;
+                await Task.Delay(1500); // Espero 1 segundo sin bloquear
+
+                texto…xitoRegistro.text = "";
+
+                esperandoEnExito = false;
+                return;
+            }
+        }
+    }
 
     /// <summary>
     ///  MÈtodo para cambiar de componente con TAB en la interfaz gr·fica.
