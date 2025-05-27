@@ -930,6 +930,7 @@ public class GestionarTrabajadoresController : MonoBehaviour
         Trabajador t = ObtenerTrabajadorPorID(id_trabajador);
 
         RectTransform rtText = textoAdvertenciaEliminarTrabajador.gameObject.GetComponent<RectTransform>();
+        textoEntreParéntesisAlQuererEliminarTrabajador.text = "";
         // Si el trabajador a eliminar es Gerente, muestro
         if (t.Rol_ID.Equals(2))
         {
@@ -937,7 +938,7 @@ public class GestionarTrabajadoresController : MonoBehaviour
 
             if (HayUnÚnicoGerente(trabajadoresEnScrollViewAhora))
             {
-                rtText.anchoredPosition = new Vector2(rtText.anchoredPosition.x, 46);
+                rtText.anchoredPosition = new Vector2(rtText.anchoredPosition.x, 55);
                 if (Usuario.Idioma.CompareTo("Español") == 0)
                 {
                     textoEntreParéntesisAlQuererEliminarTrabajador.text = "(También se eliminarán el restaurante y sus trabajadores)";
