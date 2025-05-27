@@ -42,11 +42,13 @@ public class BuscarReservaController : MonoBehaviour
 
     public void BuscarReservasDeCliente()
     {
-        if (inputFieldDniCliente.text.Trim().Length > 5)
+        if (inputFieldDniCliente.text.Trim().Length.Equals(9))
         {
             dniEnInputField = inputFieldDniCliente.text.Trim();
 
             BuscarReservasCliente(dniEnInputField);
+
+            inputFieldDniCliente.text = "";
         }        
     }
 

@@ -156,6 +156,7 @@ public class CrearReservaController : MonoBehaviour
         if (texto.Contains("Fecha pasada") || texto.Contains("Past date") || texto.Contains("Hora pasada") || texto.Contains("Past hour") || texto.Contains("Ninguna") || texto.Contains("None") || texto.Contains("Reserva registrada correctamente") || texto.Contains("Reservation successfully registered") || texto.Contains("Hora incorrecta") || texto.Contains("Wrong hour"))
         {
             textResultadoMesasDisponibles.text = "";
+            textResultadoMesasDisponibles.fontSize = 56;
         }
     }
 
@@ -700,6 +701,7 @@ public class CrearReservaController : MonoBehaviour
         {
             await instanceMétodosApiController.PutDataAsync("reserva/actualizarBoolCreandoReserva", new Resultado(1));
             Debug.Log("+ +Reserva registrada correctamente en mesa: " + reserva.Mesa_Id);
+            textResultadoMesasDisponibles.fontSize = 42;
             if (Usuario.Idioma.CompareTo("Español") == 0)
             {
                 textResultadoMesasDisponibles.text = "Reserva registrada correctamente";
