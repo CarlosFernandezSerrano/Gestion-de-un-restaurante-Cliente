@@ -69,9 +69,9 @@ public class Cambio_Idioma_Escena_Editar_Restaurante_Controller : MonoBehaviour
 
                 // Textos en canvas Info Manejo Mesas
                 textEncabezadoInfoManejo.text = "INFORMACIÓN MANEJO DE MESAS";
-                textRatón1InfoManejo.text = "Para mover una mesa a cualquier lugar del mapa.";
+                textRatón1InfoManejo.text = "Para mover una mesa a cualquier lugar del mapa, o desactivar una mesa marcada.";
                 textRatón2InfoManejo.text = "Para agrandar o reducir el tamaño de una mesa.";
-                textRatón3InfoManejo.text = "Para seleccionar una mesa y activar la papelera en el caso de querer eliminarla.";
+                textRatón3InfoManejo.text = "Para seleccionar una mesa y editar su cantidad de comensales o, activar la papelera en caso de querer eliminarla.";
 
                 break;
 
@@ -98,9 +98,9 @@ public class Cambio_Idioma_Escena_Editar_Restaurante_Controller : MonoBehaviour
 
                 // Textos en canvas Info Manejo Mesas
                 textEncabezadoInfoManejo.text = "TABLE HANDLING INFORMATION";
-                textRatón1InfoManejo.text = "To move a table to any location on the map.";
+                textRatón1InfoManejo.text = "To move a table anywhere on the map, or deactivate a marked table.";
                 textRatón2InfoManejo.text = "To enlarge or reduce the size of a table.";
-                textRatón3InfoManejo.text = "To select a table and activate the bin in case you want to delete it.";
+                textRatón3InfoManejo.text = "To select a table and edit its number of guests, or activate the bin if you want to delete it.";
 
                 break;
         }
