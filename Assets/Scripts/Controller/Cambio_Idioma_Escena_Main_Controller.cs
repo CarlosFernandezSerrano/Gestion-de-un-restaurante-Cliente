@@ -117,7 +117,7 @@ public class Cambio_Idioma_Escena_Main_Controller : MonoBehaviour
                 textCierreCrearRest.text = "Cierre";
                 textConfirmarOpcionesCrearRest.text = "Confirmar opciones";
                 textNotaCrearRest.text = "Nota:";
-                textInfoServicioCrearRest.text = "este servicio ofrece la gestión perfecta de un restaurante.";
+                textInfoServicioCrearRest.text = "Este servicio ofrece una excelente gestión de su restaurante.";
                 textBtnVerVídeoCrearRest.text = "Ver vídeo";
 
                 break;
@@ -174,7 +174,7 @@ public class Cambio_Idioma_Escena_Main_Controller : MonoBehaviour
                 textCierreCrearRest.text = "Closing";
                 textConfirmarOpcionesCrearRest.text = "Confirm options";
                 textNotaCrearRest.text = "Note:";
-                textInfoServicioCrearRest.text = "this service offers perfect restaurant management.";
+                textInfoServicioCrearRest.text = "This service offers excellent management of your restaurant.";
                 textBtnVerVídeoCrearRest.text = "Watch video";
 
                 break;
