@@ -206,7 +206,7 @@ public class MainController : MonoBehaviour
 
     private IEnumerator MoverTelónHaciaAbajo(RectTransform rt)
     {
-        float velocidad = 1000f;
+        float velocidad = 1200f;
         while (rt.anchoredPosition.y > 193)
         {
             //Actualizo
@@ -226,7 +226,7 @@ public class MainController : MonoBehaviour
 
     private IEnumerator MoverTelónHaciaArriba(RectTransform rt)
     {
-        float velocidad = 1000f;
+        float velocidad = 1200f;
         while (rt.anchoredPosition.y < 1143)
         {
             //Actualizo
