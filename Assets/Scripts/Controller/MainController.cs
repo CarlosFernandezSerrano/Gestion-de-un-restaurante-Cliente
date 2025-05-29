@@ -32,6 +32,9 @@ public class MainController : MonoBehaviour
     [SerializeField] private GameObject canvasVídeoTutorialApp;
     [SerializeField] private VideoClip videoClipEmpleado;
     [SerializeField] private VideoClip videoClipGerente;
+    [SerializeField] private Image imgBtnOnYPausa;
+    [SerializeField] private Sprite imgPausa;
+    [SerializeField] private Sprite imgPlay;
 
     private bool telónMoviéndose = false;
     private bool telónAbajo = false;
@@ -326,6 +329,27 @@ public class MainController : MonoBehaviour
         VideoPlayer vp = canvasVídeoTutorialApp.GetComponent<VideoPlayer>();
         vp.Stop();
         canvasVídeoTutorialApp.SetActive(false);
+
+        imgBtnOnYPausa.sprite = imgPausa;
+    }
+
+    public void PausarODespausarVídeo()
+    {
+        VideoPlayer vp = canvasVídeoTutorialApp.GetComponent<VideoPlayer>();
+        if (imgBtnOnYPausa.sprite == imgPausa)
+        {
+            vp.Pause();
+            imgBtnOnYPausa.sprite = imgPlay;
+            return;
+        }
+
+        if (imgBtnOnYPausa.sprite == imgPlay)
+        {
+            vp.Play();
+            imgBtnOnYPausa.sprite = imgPausa;
+            return;
+        }
+
     }
 
     public TMP_Text getTextPerfilUserNombre()
