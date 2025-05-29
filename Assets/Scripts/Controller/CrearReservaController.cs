@@ -160,7 +160,6 @@ public class CrearReservaController : MonoBehaviour
         if (texto.Contains("Fecha pasada") || texto.Contains("Past date") || texto.Contains("Ninguna") || texto.Contains("None") || texto.Contains("Reserva registrada") || texto.Contains("Reservation registered") || texto.Contains("Hora incorrecta") || texto.Contains("Wrong hour") || texto.Contains("No hay una fecha puesta") || texto.Contains("There is no date set") || texto.Contains("Error,") || texto.Contains("Hora pasada, son las") || texto.Contains("Past hour, it's"))
         {
             textResultadoMesasDisponibles.text = "";
-            textResultadoMesasDisponibles.fontSize = 56;
         }
     }
 
