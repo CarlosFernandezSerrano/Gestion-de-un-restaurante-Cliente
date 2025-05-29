@@ -73,7 +73,7 @@ public class MainController : MonoBehaviour
 
         // Método para prevenir
         QuitarYPonerBotonesSegúnElTrabajador();
-
+        
     }
 
     
@@ -366,4 +366,5 @@ public class MainController : MonoBehaviour
     {
         return textUserRestaurante;
     }
+
 }

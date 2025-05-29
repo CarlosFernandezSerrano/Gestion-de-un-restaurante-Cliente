@@ -177,7 +177,7 @@ public class CrearReservaController : MonoBehaviour
         // Si ninguno de los campos está vacío, devuelve true. Todos los campos están llenos.
         if (!campos.Any(string.IsNullOrWhiteSpace) && NumMesaCorrecto(num_Mesa) && LosInputFieldCumplenElTamaño(nombre, dni))
         {
-            if (System.Text.RegularExpressions.Regex.IsMatch(dni, @"^\d{8}[A-Za-z]$"))
+            if (System.Text.RegularExpressions.Regex.IsMatch(dni, @"^\d{8}[A-Za-z]$") && DNIValido(dni))
             {
                 return true;
             }
@@ -190,6 +190,24 @@ public class CrearReservaController : MonoBehaviour
         {
             return false;
         }
+    }
+
+    public static bool DNIValido(string dni)
+    {
+        if (string.IsNullOrWhiteSpace(dni) || dni.Length != 9)
+            return false;
+
+        string letras = "TRWAGMYFPDXBNJZSQVHLCKE";
+        string numeros = dni.Substring(0, 8);
+        char letra = char.ToUpper(dni[8]);
+
+        if (!int.TryParse(numeros, out int numeroDni))
+            return false;
+
+        int indice = numeroDni % 23;
+        char letraEsperada = letras[indice];
+
+        return letra == letraEsperada;
     }
 
     private bool LosInputFieldCumplenElTamaño(string nombreInputField, string dniInputField)
