@@ -327,9 +327,15 @@ public class GestionarMesasController : MonoBehaviour
                             Debug.Log("Error al intentar actualizar la mesa");
                         }
 
-                        Image img = padreDeLosBotonesMesa.gameObject.transform.Find("Button-" + reserva.Mesa_Id + "/Imagen Circle").GetComponent<Image>();
-                        PonerColorCorrectoAImg(img, colorHexadecimalRojo);
-
+                        try
+                        {
+                            Image img = padreDeLosBotonesMesa.gameObject.transform.Find("Button-" + reserva.Mesa_Id + "/Imagen Circle").GetComponent<Image>();
+                            PonerColorCorrectoAImg(img, colorHexadecimalRojo);
+                        }
+                        catch (Exception ex)
+                        {
+                            //Debug.Log("Exception: " + ex);
+                        }
                     }
                     else // No hay ninguna reserva ahora mismo en uso, pongo la mesa en disponible
                     {

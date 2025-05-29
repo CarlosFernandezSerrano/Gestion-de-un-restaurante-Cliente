@@ -64,6 +64,7 @@ public class Cambio_Idioma_Escena_Gestionar_Mesas_Controller : MonoBehaviour
     [SerializeField] private TMP_Text textPlaceHolderInputFieldNumTeléfono14CeldasEnCrearReserva;
     [SerializeField] private TMP_Text textPlaceHolderInputFieldMesa14CeldasEnCrearReserva;
     [SerializeField] private TMP_Text textBtnCrearEnCrearReserva;
+    [SerializeField] private TMP_Text textPlaceHolderFechaEnCrearReserva;
 
     // Textos en canvas Info mesas disponibles
     [SerializeField] private TMP_Text textEncabezadoInfoMesasDisponibles;
@@ -134,14 +135,14 @@ public class Cambio_Idioma_Escena_Gestionar_Mesas_Controller : MonoBehaviour
                 // Textos en canvas Crear Reserva
                 textEncabezadoCrearReserva.fontSize = 150;
                 textEncabezadoCrearReserva.text = "Crear Reserva";
-                text6CeldasEnCrearReserva.text = "         Día                  Hora         Nº Comensales";
+                text6CeldasEnCrearReserva.text = "       Fecha                Hora         Nº Comensales";
                 textBtnBuscarMesasDisponiblesCrearReserva.text = "Buscar Mesas Disponibles";
                 textMesasDisponiblesCrearReserva.text = "Mesas disponibles:";
                 textNombre14CeldasEnCrearReserva.text = "Nombre";
                 textDNI14CeldasEnCrearReserva.text = "DNI";
                 textNumTeléfono14CeldasEnCrearReserva.fontSize = 48;
                 textNumTeléfono14CeldasEnCrearReserva.text = "Nº\nTeléfono";
-                textDía14CeldasEnCrearReserva.text = "Día";
+                textDía14CeldasEnCrearReserva.text = "Fecha";
                 textHora14CeldasEnCrearReserva.text = "Hora";
                 textNumCom14CeldasEnCrearReserva.fontSize = 48;
                 textNumCom14CeldasEnCrearReserva.text = "Nº\nCom.";
@@ -151,6 +152,7 @@ public class Cambio_Idioma_Escena_Gestionar_Mesas_Controller : MonoBehaviour
                 textPlaceHolderInputFieldNumTeléfono14CeldasEnCrearReserva.text = "Max 9 carac...";
                 textPlaceHolderInputFieldMesa14CeldasEnCrearReserva.text = "Mesa...";
                 textBtnCrearEnCrearReserva.text = "Crear";
+                textPlaceHolderFechaEnCrearReserva.text = "Selecciona una fecha";
 
                 // Textos en canvas Info mesas disponibles
                 textEncabezadoInfoMesasDisponibles.text = "INFORMACIÓN MESAS DISPONIBLES";
@@ -205,14 +207,14 @@ public class Cambio_Idioma_Escena_Gestionar_Mesas_Controller : MonoBehaviour
                 // Textos en canvas Crear Reserva
                 textEncabezadoCrearReserva.fontSize = 138;
                 textEncabezadoCrearReserva.text = "Create Reservation"; 
-                text6CeldasEnCrearReserva.text = "         Day                  Hour              Guests";
+                text6CeldasEnCrearReserva.text = "        Date                 Hour               Guests";
                 textBtnBuscarMesasDisponiblesCrearReserva.text = "Search for Available Tables";
                 textMesasDisponiblesCrearReserva.text = "Available tables:";
                 textNombre14CeldasEnCrearReserva.text = "Name";
                 textDNI14CeldasEnCrearReserva.text = "DNI";
                 textNumTeléfono14CeldasEnCrearReserva.fontSize = 46;
                 textNumTeléfono14CeldasEnCrearReserva.text = "Telephone";
-                textDía14CeldasEnCrearReserva.text = "Day";
+                textDía14CeldasEnCrearReserva.text = "Date";
                 textHora14CeldasEnCrearReserva.text = "Hour";
                 textNumCom14CeldasEnCrearReserva.fontSize = 41;
                 textNumCom14CeldasEnCrearReserva.text = "Guests";
@@ -222,6 +224,7 @@ public class Cambio_Idioma_Escena_Gestionar_Mesas_Controller : MonoBehaviour
                 textPlaceHolderInputFieldNumTeléfono14CeldasEnCrearReserva.text = "Max 9 chara...";
                 textPlaceHolderInputFieldMesa14CeldasEnCrearReserva.text = "Table...";
                 textBtnCrearEnCrearReserva.text = "Create";
+                textPlaceHolderFechaEnCrearReserva.text = "Select a date";
 
                 // Textos en canvas Info mesas disponibles
                 textEncabezadoInfoMesasDisponibles.text = "INFORMATION ON AVAILABLE TABLES";
