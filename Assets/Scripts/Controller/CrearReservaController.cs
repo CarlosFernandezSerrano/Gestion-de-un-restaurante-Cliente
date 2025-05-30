@@ -809,7 +809,11 @@ public class CrearReservaController : MonoBehaviour
     {
         canvasCrearReserva.SetActive(false);
         textResultadoMesasDisponibles.text = "";
-        PonerEnDatePickerLaFechaActual();
+        // Si hay una fecha puesta, se actualiza a la actual.
+        if (inputFieldFecha.text.Trim().Length > 5)
+        {
+            PonerEnDatePickerLaFechaActual();
+        }
     }
 
     public void ActivarCanvasInfoMesasDisponibles()
