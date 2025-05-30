@@ -21,8 +21,8 @@ public class CursorChangerController : MonoBehaviour
     {
         if (IsPointerOverUIButton())
         {
-            Cursor.SetCursor(cursorTexture, hotspot, cursorMode); 
-            //Cursor.SetCursor(cursorTexture, new Vector2(12, 5), cursorMode);
+            //Cursor.SetCursor(cursorTexture, hotspot, cursorMode); 
+            Cursor.SetCursor(cursorTexture, new Vector2(25, 6), cursorMode);
         }
         else
         {
