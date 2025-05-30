@@ -981,11 +981,12 @@ public class EditarRestauranteController : MonoBehaviour
 
     private void EsconderManosAdvertencia()
     {
+        // Muevo la mano
         rtManosAdvertencia.gameObject.SetActive(false);
         rtManosAdvertencia.anchoredPosition = new Vector2(rtManosAdvertencia.anchoredPosition.x, -898f);
         rtManosAdvertencia.gameObject.SetActive(true);
 
-        instanceButtonMesaController.PonerTodosLosBotonesEnBlanco();
+        //instanceButtonMesaController.PonerTodosLosBotonesEnBlanco();
         PonerInteractuablesBotonesMesaEnMapa();
     }
 
