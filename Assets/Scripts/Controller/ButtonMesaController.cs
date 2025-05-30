@@ -71,7 +71,7 @@ public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHan
                 Debug.Log("Ya existe una mesa en el centro. No se creará una nuevo.");
 
                 string cad = "";
-                if (Usuario.Idioma.CompareTo("Español") == 0)
+                if (Usuario.Idioma.CompareTo("Español") == 0) 
                 {
                     cad = "Ya existe una mesa en el centro.";
                     StartCoroutine(instanceEditarRestauranteController.MovimientoCartelDeMadera(2f, cad, 0f, 12f));

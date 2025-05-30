@@ -21,6 +21,10 @@ public class Cambio_Idioma_Escena_Editar_Restaurante_Controller : MonoBehaviour
     [SerializeField] private TMP_Text textHayCambiosSinGuardarEdit; 
     [SerializeField] private TMP_Text textNoGuardarEdit;
     [SerializeField] private TMP_Text textGuardarEnHayCambiosEdit;
+    [SerializeField] private TMP_Text textCantDeComensalesEdit;
+    [SerializeField] private TMP_Text textBtnCancelarCantComensalesEdit;
+    [SerializeField] private TMP_Text textBtnConfirmarCantComensalesEdit;
+
 
     // Textos en canvas Info Manejo Mesas
     [SerializeField] private TMP_Text textEncabezadoInfoManejo;
@@ -66,6 +70,9 @@ public class Cambio_Idioma_Escena_Editar_Restaurante_Controller : MonoBehaviour
                 textHayCambiosSinGuardarEdit.text = "Hay cambios sin guardar";
                 textNoGuardarEdit.text = "No guardar";
                 textGuardarEnHayCambiosEdit.text = "Guardar";
+                textCantDeComensalesEdit.text = "Cantidad de comensales";
+                textBtnCancelarCantComensalesEdit.text = "Cancelar";
+                textBtnConfirmarCantComensalesEdit.text = "Confirmar";
 
                 // Textos en canvas Info Manejo Mesas
                 textEncabezadoInfoManejo.text = "INFORMACIÓN MANEJO DE MESAS";
@@ -95,6 +102,9 @@ public class Cambio_Idioma_Escena_Editar_Restaurante_Controller : MonoBehaviour
                 textHayCambiosSinGuardarEdit.text = "There are unsaved changes";
                 textNoGuardarEdit.text = "Don´t save";
                 textGuardarEnHayCambiosEdit.text = "Save";
+                textCantDeComensalesEdit.text = "Number of guests";
+                textBtnCancelarCantComensalesEdit.text = "Cancel";
+                textBtnConfirmarCantComensalesEdit.text = "Confirm";
 
                 // Textos en canvas Info Manejo Mesas
                 textEncabezadoInfoManejo.text = "TABLE HANDLING INFORMATION";

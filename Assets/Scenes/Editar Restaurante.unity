@@ -13135,6 +13135,9 @@ MonoBehaviour:
   textHayCambiosSinGuardarEdit: {fileID: 265459493}
   textNoGuardarEdit: {fileID: 393554255}
   textGuardarEnHayCambiosEdit: {fileID: 1440838771}
+  textCantDeComensalesEdit: {fileID: 924502920}
+  textBtnCancelarCantComensalesEdit: {fileID: 1473150580}
+  textBtnConfirmarCantComensalesEdit: {fileID: 2067279182}
   textEncabezadoInfoManejo: {fileID: 1988085822}
   "textRat\xF3n1InfoManejo": {fileID: 219813743}
   "textRat\xF3n2InfoManejo": {fileID: 264358430}

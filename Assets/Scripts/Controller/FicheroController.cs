@@ -56,7 +56,7 @@ namespace Assets.Scripts.Controller
 
                 if (cad.Contains("UserInfo"))
                 {
-                    GestionarEncriptarFicheroUserInfo(Usuario.ID, Usuario.Restaurante_ID, "Spanish", Usuario.Token);
+                    GestionarEncriptarFicheroUserInfo(Usuario.ID, Usuario.Restaurante_ID, "Español", Usuario.Token);
                 }
 
                 Debug.Log("Archivo creado en: " + rutaArchivo);
