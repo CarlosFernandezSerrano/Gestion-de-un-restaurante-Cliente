@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class HistorialReservasController : MonoBehaviour
@@ -18,6 +19,7 @@ public class HistorialReservasController : MonoBehaviour
     [SerializeField] private RectTransform rtContentHistorialReservas;
     [SerializeField] private RectTransform rtPadreDeLosBotonesMesa;
     [SerializeField] private Scrollbar scrollbarHistorialReservas;
+    [SerializeField] private TMP_InputField[] inputFields; // Asigno los InputFields en el orden de tabulación deseado
 
     GestionarMesasController instanceGestionarMesasController;
 
@@ -30,6 +32,11 @@ public class HistorialReservasController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            SelectNextInputField();
+        }
+
         ActivarBotónBuscar();
     }
 
@@ -330,4 +337,21 @@ public class HistorialReservasController : MonoBehaviour
         canvasHistorialReservas.SetActive(false);
     }
 
+    /// <summary>
+    /// Método para cambiar de componente con TAB en la interfaz gráfica.
+    /// </summary>
+    private void SelectNextInputField()
+    {
+        GameObject current = EventSystem.current.currentSelectedGameObject;
+
+        for (int i = 0; i < inputFields.Length; i++)
+        {
+            if (inputFields[i].gameObject == current)
+            {
+                int nextIndex = (i + 1) % inputFields.Length;
+                inputFields[nextIndex].Select();
+                break;
+            }
+        }
+    }
 }

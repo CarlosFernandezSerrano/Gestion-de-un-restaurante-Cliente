@@ -1,3 +1,7 @@
+using Assets.Scripts.Model;
+using System;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -12,6 +16,7 @@ public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHan
 
     public RectTransform rectTransform; // RectTransform del botón generado
     private bool isDragging = false;
+    private static int cantComensalesMesaSeleccionadaParaEditarOBorrar;
 
     EditarRestauranteController instanceEditarRestauranteController;
 
@@ -65,8 +70,17 @@ public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHan
             {
                 Debug.Log("Ya existe una mesa en el centro. No se creará una nuevo.");
 
-                string cad = "Ya existe una mesa en el centro.";
-                StartCoroutine(instanceEditarRestauranteController.MovimientoCartelDeMadera(2f, cad, 0f, 12f));
+                string cad = "";
+                if (Usuario.Idioma.CompareTo("Español") == 0) 
+                {
+                    cad = "Ya existe una mesa en el centro.";
+                    StartCoroutine(instanceEditarRestauranteController.MovimientoCartelDeMadera(2f, cad, 0f, 12f));
+                }
+                else
+                {
+                    cad = "There is already a table in the center.";
+                    StartCoroutine(instanceEditarRestauranteController.MovimientoCartelDeMadera(2f, cad, 7.5f, 12f));
+                }
                 return;
             }
         }
@@ -130,11 +144,19 @@ public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHan
         // Si se pulsa con clic derecho, se marca este botón
         if (eventData.button == PointerEventData.InputButton.Right)
         {
-            // Actualizamos la referencia del botón seleccionado
+            if (buttonSeleccionadoParaBorrar != null)
+            {
+                DesactivarCaretsInputFieldBotónMesa(buttonSeleccionadoParaBorrar);
+                ComprobarQueElInputFieldNoEstáVacío(buttonSeleccionadoParaBorrar); // Si está vacío se poen la cantidad de comensales que tenía antes la mesa
+            }
+            
+            // Actualizo la referencia del botón seleccionado
             buttonSeleccionadoParaBorrar = this;
 
+            cantComensalesMesaSeleccionadaParaEditarOBorrar = int.Parse(buttonSeleccionadoParaBorrar.transform.Find("InputField").GetComponent<TMP_InputField>().text);
             PonerTodosLosBotonesEnBlanco();
             PonerBotónSeleccionadoConCírculoAmarillo(buttonSeleccionadoParaBorrar);
+            ActivarInputFieldDelBotónMesa(buttonSeleccionadoParaBorrar);
             //Debug.Log("Botón marcado: " + gameObject.name);
 
             instanceEditarRestauranteController.ActivarPapelera();
@@ -145,23 +167,120 @@ public class ButtonMesaController : MonoBehaviour, IPointerDownHandler, IDragHan
         // Si se pulsa con clic izquierdo
         else if (eventData.button == PointerEventData.InputButton.Left)
         {
-            // Si el clic izquierdo es en algo que no es el botón papelera, se desmarca
-            if (!gameObject.CompareTag("TrashButton"))
-            {
-                // Si se ha marcado algún botón previamente y se hace clic en otro elemento,
-                // se deselecciona el botón marcado.
-                if (buttonSeleccionadoParaBorrar != null)
-                {
-                    // Pongo el color del botón seleccionado para borrar en blanco
-                    Image imgButtonAEliminar = buttonSeleccionadoParaBorrar.transform.Find("Imagen Circle").GetComponent<Image>();
-                    imgButtonAEliminar.color = Color.white;
-                }
-                buttonSeleccionadoParaBorrar = null;
+            DesactivarPapeleraEInputFieldBtnMesa();
+        }
+    }
 
-                instanceEditarRestauranteController.DesactivarPapelera();
-                //Debug.Log("Selección desmarcada");
+    public void DesactivarPapeleraEInputFieldBtnMesa()
+    {
+        // Si el clic izquierdo es en algo que no es el botón papelera, se desmarca
+        if (!gameObject.CompareTag("TrashButton"))
+        {
+            // Si se ha marcado algún botón previamente y se hace clic en otro elemento,
+            // se deselecciona el botón marcado.
+            if (buttonSeleccionadoParaBorrar != null)
+            {
+                // Pongo el color del botón seleccionado para borrar en blanco
+                Image imgButtonAEliminar = buttonSeleccionadoParaBorrar.transform.Find("Imagen Circle").GetComponent<Image>();
+                imgButtonAEliminar.color = Color.white; 
+
+                DesactivarCaretsInputFieldBotónMesa(buttonSeleccionadoParaBorrar);
+                ComprobarQueElInputFieldNoEstáVacío(buttonSeleccionadoParaBorrar); // Si está vacío se poen la cantidad de comensales que tenía antes la mesa
             }
-            isDragging = true;
+            buttonSeleccionadoParaBorrar = null;
+
+            instanceEditarRestauranteController.DesactivarPapelera();
+            //Debug.Log("Selección desmarcada");
+        }
+        isDragging = true;
+    }
+
+    private void ActivarInputFieldDelBotónMesa(ButtonMesaController buttonSeleccionadoParaBorrar)
+    {
+        GameObject inputFieldInstance = buttonSeleccionadoParaBorrar.transform.Find("InputField").gameObject;
+
+        TMP_Text textComponent = inputFieldInstance.transform.Find("Text Area/Text").GetComponent<TMP_Text>();
+
+        TMP_Text textPlaceHolder = inputFieldInstance.transform.Find("Text Area/Placeholder").GetComponent<TMP_Text>();
+
+        // Desactivo Raycast Target para que no bloqueen interacción con el botón
+        TMP_SelectionCaret caret = inputFieldInstance.GetComponentInChildren<TMP_SelectionCaret>();
+        if (caret != null)
+        {
+            // Desactivo raycastTarget del Caret
+            caret.raycastTarget = true;
+        }
+        else
+        {
+            Debug.Log("Caret no encontrado!!!!!!!!!!!!!!!!!");
+        }
+
+        inputFieldInstance.GetComponent<Image>().raycastTarget = true;
+        textPlaceHolder.raycastTarget = true;
+        textComponent.raycastTarget = true;
+
+        TMP_InputField inputField = inputFieldInstance.GetComponent<TMP_InputField>();
+        inputField.Select();
+    }
+
+    private void DesactivarCaretsInputFieldBotónMesa(ButtonMesaController buttonSeleccionadoParaBorrar)
+    {
+        GameObject inputFieldInstance = buttonSeleccionadoParaBorrar.transform.Find("InputField").gameObject;
+        TMP_Text textComponent = inputFieldInstance.transform.Find("Text Area/Text").GetComponent<TMP_Text>();
+
+        TMP_Text textPlaceHolder = inputFieldInstance.transform.Find("Text Area/Placeholder").GetComponent<TMP_Text>();
+
+        // Desactivo Raycast Target para que no bloqueen interacción con el botón
+        TMP_SelectionCaret caret = inputFieldInstance.GetComponentInChildren<TMP_SelectionCaret>();
+        if (caret != null)
+        {
+            // Desactivamos raycastTarget del Caret
+            caret.raycastTarget = false;
+        }
+        else
+        {
+            Debug.Log("Caret no encontrado!!!!!!!!!!!!!!!!!");
+        }
+
+        inputFieldInstance.GetComponent<Image>().raycastTarget = false;
+        textPlaceHolder.raycastTarget = false;
+        textComponent.raycastTarget = false;
+    }
+
+    private void ComprobarQueElInputFieldNoEstáVacío(ButtonMesaController buttonSeleccionadoParaBorrar)
+    {
+        TMP_InputField inputField = buttonSeleccionadoParaBorrar.transform.Find("InputField").GetComponent<TMP_InputField>();
+
+        string textInputField = inputField.text.Trim();
+
+        // InputField no está vacío
+        if (textInputField.Length > 0 && textInputField.CompareTo("0") != 0)
+        {
+            return;
+        }
+        else // InputField vacío, por lo que se pone el valor que tenía antes
+        {
+            int cantCom = 0;
+            try
+            {
+                string[] arrayNombreBtnMesa = buttonSeleccionadoParaBorrar.name.Split("-");
+                List<Mesa> mesas = instanceEditarRestauranteController.GetMesasRest();
+                foreach (Mesa mesa in mesas)
+                {
+                    if (mesa.Id.Equals(int.Parse(arrayNombreBtnMesa[1])))
+                    {
+                        cantCom = mesa.CantPers;
+                    }
+                }
+            }
+            catch
+            {
+                //Debug.Log("Pasa por el catch:"+cantComensalesMesaSeleccionadaParaEditarOBorrar);
+                cantCom = cantComensalesMesaSeleccionadaParaEditarOBorrar;
+            }
+
+            //Debug.Log("Pasa por el catch2:"+cantCom);
+            inputField.text = ""+ cantCom;
         }
     }
 

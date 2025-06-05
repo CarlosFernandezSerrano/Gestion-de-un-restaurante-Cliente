@@ -56,7 +56,7 @@ namespace Assets.Scripts.Controller
 
                 if (cad.Contains("UserInfo"))
                 {
-                    GestionarEncriptarFicheroUserInfo(0, "Spanish", Usuario.Token);
+                    GestionarEncriptarFicheroUserInfo(Usuario.ID, Usuario.Restaurante_ID, "Español", Usuario.Token);
                 }
 
                 Debug.Log("Archivo creado en: " + rutaArchivo);
@@ -75,7 +75,7 @@ namespace Assets.Scripts.Controller
             }
         }
 
-        public static void GestionarEncriptarFicheroUserInfo(int id, string language, string token)
+        public static void GestionarEncriptarFicheroUserInfo(int id, int idRestaurante, string language, string token)
         {
             string contenido = "ID:"+id+"*\nLanguage:"+language+"*\nToken:"+token;
 

@@ -32,6 +32,9 @@ public class MainController : MonoBehaviour
     [SerializeField] private GameObject canvasVídeoTutorialApp;
     [SerializeField] private VideoClip videoClipEmpleado;
     [SerializeField] private VideoClip videoClipGerente;
+    [SerializeField] private Image imgBtnOnYPausa;
+    [SerializeField] private Sprite imgPausa;
+    [SerializeField] private Sprite imgPlay;
 
     private bool telónMoviéndose = false;
     private bool telónAbajo = false;
@@ -70,7 +73,7 @@ public class MainController : MonoBehaviour
 
         // Método para prevenir
         QuitarYPonerBotonesSegúnElTrabajador();
-
+        
     }
 
     
@@ -203,7 +206,7 @@ public class MainController : MonoBehaviour
 
     private IEnumerator MoverTelónHaciaAbajo(RectTransform rt)
     {
-        float velocidad = 1000f;
+        float velocidad = 1200f;
         while (rt.anchoredPosition.y > 193)
         {
             //Actualizo
@@ -223,7 +226,7 @@ public class MainController : MonoBehaviour
 
     private IEnumerator MoverTelónHaciaArriba(RectTransform rt)
     {
-        float velocidad = 1000f;
+        float velocidad = 1200f;
         while (rt.anchoredPosition.y < 1143)
         {
             //Actualizo
@@ -326,6 +329,27 @@ public class MainController : MonoBehaviour
         VideoPlayer vp = canvasVídeoTutorialApp.GetComponent<VideoPlayer>();
         vp.Stop();
         canvasVídeoTutorialApp.SetActive(false);
+
+        imgBtnOnYPausa.sprite = imgPausa;
+    }
+
+    public void PausarODespausarVídeo()
+    {
+        VideoPlayer vp = canvasVídeoTutorialApp.GetComponent<VideoPlayer>();
+        if (imgBtnOnYPausa.sprite == imgPausa)
+        {
+            vp.Pause();
+            imgBtnOnYPausa.sprite = imgPlay;
+            return;
+        }
+
+        if (imgBtnOnYPausa.sprite == imgPlay)
+        {
+            vp.Play();
+            imgBtnOnYPausa.sprite = imgPausa;
+            return;
+        }
+
     }
 
     public TMP_Text getTextPerfilUserNombre()
@@ -342,4 +366,5 @@ public class MainController : MonoBehaviour
     {
         return textUserRestaurante;
     }
+
 }

@@ -6,7 +6,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TMPro;
+using UI.Dates;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class CrearReservaController : MonoBehaviour
@@ -28,6 +30,9 @@ public class CrearReservaController : MonoBehaviour
     [SerializeField] private TMP_Text textValorNumComensalesEnCrear;
     [SerializeField] private Button buttonCrear;
     [SerializeField] private GameObject canvasInfoMesasDisponibles;
+    [SerializeField] private TMP_InputField inputFieldFecha;
+    [SerializeField] private DatePicker datePicker;
+    [SerializeField] private TMP_InputField[] inputFields; // Asigno los InputFields en el orden de tabulación deseado
 
 
     private List<int> mesasDisponiblesEnMapa = new List<int>();
@@ -58,9 +63,14 @@ public class CrearReservaController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            SelectNextInputField();
+        }
+
         ActualizarBotónCrear();
 
-        ActualizarHoraReserva();
+        //ActualizarHoraReserva();
         
     }
     
@@ -90,7 +100,7 @@ public class CrearReservaController : MonoBehaviour
             
             string hora_Actual = DateTime.Now.ToString("HH:mm");      // Ejemplo: "14:35"
             TimeSpan horaActual = TimeSpan.Parse(hora_Actual);
-            
+            /*
             // Si la fecha de la reserva es la misma que la fecha actual y la hora de la reserva es menor que la hora actual, se pone la hora actual
             if ( fechaReserva == fechaActual && hora_Reserva < horaActual)
             {
@@ -111,8 +121,9 @@ public class CrearReservaController : MonoBehaviour
                     textResultadoMesasDisponibles.text = " Past hour.";
                 }
                 Espero1SegundoYQuitoElTextoDeMesasDisponiblesAsync();
-            }
+            }*/
 
+            /*
             // Si la fecha de la reserva es menor que la fecha actual, se pone la fecha actual en los dropdowns
             if (fechaReserva < fechaActual)
             {
@@ -135,7 +146,7 @@ public class CrearReservaController : MonoBehaviour
                     textResultadoMesasDisponibles.text = " Past date.";
                 }
                 Espero1SegundoYQuitoElTextoDeMesasDisponiblesAsync();
-            }
+            }*/
         }
         
     }
@@ -146,7 +157,7 @@ public class CrearReservaController : MonoBehaviour
 
         await Task.Delay(1500); // Espero 1 segundo sin bloquear
 
-        if (texto.Contains("Fecha pasada") || texto.Contains("Past date") || texto.Contains("Hora pasada") || texto.Contains("Past hour") || texto.Contains("Ninguna") || texto.Contains("None") || texto.Contains("Reserva registrada correctamente") || texto.Contains("Reservation successfully registered"))
+        if (texto.Contains("Fecha pasada") || texto.Contains("Past date") || texto.Contains("Ninguna") || texto.Contains("None") || texto.Contains("Reserva registrada") || texto.Contains("Reservation registered") || texto.Contains("Hora incorrecta") || texto.Contains("Wrong hour") || texto.Contains("No hay una fecha puesta") || texto.Contains("There is no date set") || texto.Contains("Error,") || texto.Contains("Hora pasada, son las") || texto.Contains("Past hour, it's"))
         {
             textResultadoMesasDisponibles.text = "";
         }
@@ -166,7 +177,7 @@ public class CrearReservaController : MonoBehaviour
         // Si ninguno de los campos está vacío, devuelve true. Todos los campos están llenos.
         if (!campos.Any(string.IsNullOrWhiteSpace) && NumMesaCorrecto(num_Mesa) && LosInputFieldCumplenElTamaño(nombre, dni))
         {
-            if (System.Text.RegularExpressions.Regex.IsMatch(dni, @"^\d{8}[A-Za-z]$"))
+            if (System.Text.RegularExpressions.Regex.IsMatch(dni, @"^\d{8}[A-Za-z]$") && DNIValido(dni))
             {
                 return true;
             }
@@ -179,6 +190,24 @@ public class CrearReservaController : MonoBehaviour
         {
             return false;
         }
+    }
+
+    public static bool DNIValido(string dni)
+    {
+        if (string.IsNullOrWhiteSpace(dni) || dni.Length != 9)
+            return false;
+
+        string letras = "TRWAGMYFPDXBNJZSQVHLCKE";
+        string numeros = dni.Substring(0, 8);
+        char letra = char.ToUpper(dni[8]);
+
+        if (!int.TryParse(numeros, out int numeroDni))
+            return false;
+
+        int indice = numeroDni % 23;
+        char letraEsperada = letras[indice];
+
+        return letra == letraEsperada;
     }
 
     private bool LosInputFieldCumplenElTamaño(string nombreInputField, string dniInputField)
@@ -396,10 +425,30 @@ public class CrearReservaController : MonoBehaviour
         textResultadoMesasDisponibles.text = "";
         mesasDisponiblesEnMapa.Clear();
 
+        
         string fecha_Actual = DateTime.Now.ToString("dd/MM/yyyy");   // Ejemplo: "01-04-2025"
         string hora_Actual = DateTime.Now.ToString("HH:mm");      // Ejemplo: "14:35"
-        
-        string fecha_Reserva = dropDownDías.options[dropDownDías.value].text + "/" + dropDownMeses.options[dropDownMeses.value].text + "/" + dropDownAños.options[dropDownAños.value].text;
+
+        string fecha_Reserva = inputFieldFecha.text.Trim();
+
+        // Si no hay ninguna fecha puesta
+        if (fecha_Reserva.Length < 10)
+        {
+            if (Usuario.Idioma.CompareTo("Español") == 0)
+            {
+                textResultadoMesasDisponibles.text = " No hay una fecha puesta.";
+            }
+            else
+            {
+                textResultadoMesasDisponibles.text = " There is no date set.";
+            }
+            Espero1SegundoYQuitoElTextoDeMesasDisponiblesAsync();
+            return;
+        }
+
+
+
+        //string fecha_Reserva = dropDownDías.options[dropDownDías.value].text + "/" + dropDownMeses.options[dropDownMeses.value].text + "/" + dropDownAños.options[dropDownAños.value].text;
         string hora_Reserva = dropDownHoras.options[dropDownHoras.value].text + ":" + dropDownMinutos.options[dropDownMinutos.value].text;
         string cantComensales_Reserva = dropDownCantComensales.options[dropDownCantComensales.value].text;
         int cantComensales = int.Parse(cantComensales_Reserva.Trim());
@@ -423,6 +472,17 @@ public class CrearReservaController : MonoBehaviour
         if (fechaReserva < fechaActual)
         {
             Debug.Log("++Error, no se puede crear una reserva en esa fecha porque ya ha pasado.");
+            if (Usuario.Idioma.CompareTo("Español") == 0)
+            {
+                textResultadoMesasDisponibles.text = "Error, esa fecha ha pasado.";
+            }
+            else
+            {
+                textResultadoMesasDisponibles.text = "Error, that date has passed.";
+            }
+            Espero1SegundoYQuitoElTextoDeMesasDisponiblesAsync();
+
+            PonerEnDatePickerLaFechaActual();
             return;
         }
         else // Fecha puesta para crear la reserva, CORRECTA
@@ -435,12 +495,16 @@ public class CrearReservaController : MonoBehaviour
                 Debug.Log("++Error, fecha correcta, pero hora pasada");
                 if (Usuario.Idioma.CompareTo("Español") == 0)
                 {
-                    textResultadoMesasDisponibles.text = " Hora pasada, son las " + DateTime.Now.ToString("HH:mm") + ".";
+                    textResultadoMesasDisponibles.text = "Hora pasada, son las " + DateTime.Now.ToString("HH:mm") + ".";
                 }
                 else
                 {
-                    textResultadoMesasDisponibles.text = " Past hour, it's " + DateTime.Now.ToString("HH:mm") + ".";
+                    textResultadoMesasDisponibles.text = "Past hour, it's " + DateTime.Now.ToString("HH:mm") + ".";
                 }
+                Espero1SegundoYQuitoElTextoDeMesasDisponiblesAsync();
+                PonerValoresEnLasOpcionesDeCrear("", "", "");
+                inputFieldNumMesa.text = "";
+                PonerLaHoraActual(hora_Actual);
                 return;
             }
 
@@ -459,17 +523,18 @@ public class CrearReservaController : MonoBehaviour
             // Si se pone una hora cuando el restaurante no está de servicio, sale error
             if (hora_Apertura > hora_Cierre)
             {
-                Debug.Log("Reparando");
                 if (horaReserva > hora_Cierre && horaReserva < hora_Apertura)
                 {
                     if (Usuario.Idioma.CompareTo("Español") == 0)
                     {
-                        textResultadoMesasDisponibles.text = " Hora incorrecta.";
+                        textResultadoMesasDisponibles.text = "Hora incorrecta";
                     }
                     else
                     {
-                        textResultadoMesasDisponibles.text = " Wrong hour.";
+                        textResultadoMesasDisponibles.text = "Wrong hour";
                     }
+                    Espero1SegundoYQuitoElTextoDeMesasDisponiblesAsync();
+                    PonerLaHoraActual(hora_Actual);
                     return;
                 }
             }
@@ -479,12 +544,14 @@ public class CrearReservaController : MonoBehaviour
                 {
                     if (Usuario.Idioma.CompareTo("Español") == 0)
                     {
-                        textResultadoMesasDisponibles.text = " Hora incorrecta.";
+                        textResultadoMesasDisponibles.text = "Hora incorrecta";
                     }
                     else
                     {
-                        textResultadoMesasDisponibles.text = " Wrong hour.";
+                        textResultadoMesasDisponibles.text = "Wrong hour";
                     }
+                    Espero1SegundoYQuitoElTextoDeMesasDisponiblesAsync();
+                    PonerLaHoraActual(hora_Actual);
                     return;
                 }
             }
@@ -551,6 +618,7 @@ public class CrearReservaController : MonoBehaviour
                         }
                         Espero1SegundoYQuitoElTextoDeMesasDisponiblesAsync();
                         PonerValoresEnLasOpcionesDeCrear("", "", "");
+                        PonerEnDatePickerLaFechaActual();
                     }
                 }
                 else // Ninguna mesa disponible en esa fecha a esa hora
@@ -565,6 +633,7 @@ public class CrearReservaController : MonoBehaviour
                     }
                     Espero1SegundoYQuitoElTextoDeMesasDisponiblesAsync();
                     PonerValoresEnLasOpcionesDeCrear("", "", "");
+                    PonerEnDatePickerLaFechaActual();
                 }
             }
             else
@@ -573,6 +642,23 @@ public class CrearReservaController : MonoBehaviour
             }
 
         }
+    }
+
+    private void PonerLaHoraActual(string hora_Actual)
+    {
+        // Pongo la hora actual
+        string[] horaActualArray = hora_Actual.Split(":");
+        string hora = horaActualArray[0].Trim();
+        string minuto = horaActualArray[1].Trim();
+
+        BuscoElIndiceYLoPongoSiLoEncuentro(dropDownHoras, hora);
+        BuscoElIndiceYLoPongoSiLoEncuentro(dropDownMinutos, minuto);
+    }
+
+    private void PonerEnDatePickerLaFechaActual()
+    {
+        string fechaFormatoGlobal = DateTime.Now.ToString("yyyy-MM-dd");
+        datePicker.SelectedDate = DateTime.Parse(fechaFormatoGlobal.Trim());
     }
 
     // Valores: día, fecha, cant comensales
@@ -693,13 +779,14 @@ public class CrearReservaController : MonoBehaviour
             Debug.Log("+ +Reserva registrada correctamente en mesa: " + reserva.Mesa_Id);
             if (Usuario.Idioma.CompareTo("Español") == 0)
             {
-                textResultadoMesasDisponibles.text = "Reserva registrada correctamente";
+                textResultadoMesasDisponibles.text = "Reserva registrada";// correctamente";
             }
             else
             {
-                textResultadoMesasDisponibles.text = "Reservation successfully registered";
+                textResultadoMesasDisponibles.text = "Reservation registered";// successfully registered";
             }
             Espero1SegundoYQuitoElTextoDeMesasDisponiblesAsync();
+            PonerEnDatePickerLaFechaActual();
             Poner4ValoresEnCrearVacíos();
             PonerValoresEnLasOpcionesDeCrear("", "", "");
             AsignarValoresConcretosEnDropdowns();
@@ -722,6 +809,11 @@ public class CrearReservaController : MonoBehaviour
     {
         canvasCrearReserva.SetActive(false);
         textResultadoMesasDisponibles.text = "";
+        // Si hay una fecha puesta, se actualiza a la actual.
+        if (inputFieldFecha.text.Trim().Length > 5)
+        {
+            PonerEnDatePickerLaFechaActual();
+        }
     }
 
     public void ActivarCanvasInfoMesasDisponibles()
@@ -734,4 +826,21 @@ public class CrearReservaController : MonoBehaviour
         canvasInfoMesasDisponibles.SetActive(false);
     }
 
+    /// <summary>
+    /// Método para cambiar de componente con TAB en la interfaz gráfica.
+    /// </summary>
+    private void SelectNextInputField()
+    {
+        GameObject current = EventSystem.current.currentSelectedGameObject;
+
+        for (int i = 0; i < inputFields.Length; i++)
+        {
+            if (inputFields[i].gameObject == current)
+            {
+                int nextIndex = (i + 1) % inputFields.Length;
+                inputFields[nextIndex].Select();
+                break;
+            }
+        }
+    }
 }

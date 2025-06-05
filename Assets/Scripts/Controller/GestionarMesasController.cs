@@ -327,9 +327,15 @@ public class GestionarMesasController : MonoBehaviour
                             Debug.Log("Error al intentar actualizar la mesa");
                         }
 
-                        Image img = padreDeLosBotonesMesa.gameObject.transform.Find("Button-" + reserva.Mesa_Id + "/Imagen Circle").GetComponent<Image>();
-                        PonerColorCorrectoAImg(img, colorHexadecimalRojo);
-
+                        try
+                        {
+                            Image img = padreDeLosBotonesMesa.gameObject.transform.Find("Button-" + reserva.Mesa_Id + "/Imagen Circle").GetComponent<Image>();
+                            PonerColorCorrectoAImg(img, colorHexadecimalRojo);
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.Log("Exception: " + ex);
+                        }
                     }
                     else // No hay ninguna reserva ahora mismo en uso, pongo la mesa en disponible
                     {
@@ -349,8 +355,16 @@ public class GestionarMesasController : MonoBehaviour
                             Debug.Log("Error al intentar actualizar la mesa");
                         }
 
-                        Image img = padreDeLosBotonesMesa.gameObject.transform.Find("Button-" + reserva.Mesa_Id + "/Imagen Circle").GetComponent<Image>();
-                        PonerColorCorrectoAImg(img, colorHexadecimalVerde);
+                        try
+                        {
+                            Image img = padreDeLosBotonesMesa.gameObject.transform.Find("Button-" + reserva.Mesa_Id + "/Imagen Circle").GetComponent<Image>();
+                            PonerColorCorrectoAImg(img, colorHexadecimalVerde);
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.Log("Exception: " + ex);
+                        }
+                        
                     }
                 }
                 else // Si límite de tiempo es = 0
@@ -1068,7 +1082,14 @@ public class GestionarMesasController : MonoBehaviour
         Button botónMesaSelected = botónMesaSeleccionado;
         int id_Mesa = ObtenerIDMesaDelNombreDelBotónMesa(botónMesaSelected);
 
-        textReservasHoyMesa.text = "Registros Hoy Mesa " + ObtenerIDMesaDelMapa(botónMesaSelected);
+        if (Usuario.Idioma.CompareTo("Español") == 0)
+        {
+            textReservasHoyMesa.text = "Registros Hoy Mesa " + ObtenerIDMesaDelMapa(botónMesaSelected);
+        }
+        else
+        {
+            textReservasHoyMesa.text = "Registrations Today Table " + ObtenerIDMesaDelMapa(botónMesaSelected);
+        }
 
         // Obtengo las reservas pendientes que tiene la mesa, ya sean de hoy o en adelante
         List<Reserva> reservasMesaPendientes = ObtenerReservasMesaDeHoyEnAdelante(id_Mesa);
@@ -1389,11 +1410,27 @@ public class GestionarMesasController : MonoBehaviour
         // Si el cliente tiene un número de teléfono registrado en la BDD
         if (reserva.Cliente.NumTelefono.Trim().Length > 0)
         {
-            textoBotón.text = " " + reserva.Fecha + "  " + reserva.Hora + "        " + reserva.CantComensales + "            " + id_Mesa_En_Mapa + "         " + reserva.Cliente.Dni + "   " + reserva.Cliente.NumTelefono + "    " + reserva.Cliente.Nombre;
+            if (id_Mesa_En_Mapa.ToString().Length.Equals(2))
+            {
+                textoBotón.text = " " + reserva.Fecha + "  " + reserva.Hora + "        " + reserva.CantComensales + "            " + id_Mesa_En_Mapa + "       " + reserva.Cliente.Dni + "   " + reserva.Cliente.NumTelefono + "    " + reserva.Cliente.Nombre;
+            }
+            else
+            {
+                textoBotón.text = " " + reserva.Fecha + "  " + reserva.Hora + "        " + reserva.CantComensales + "            " + id_Mesa_En_Mapa + "         " + reserva.Cliente.Dni + "   " + reserva.Cliente.NumTelefono + "    " + reserva.Cliente.Nombre;
+            }
+            
         }
         else // El cliente no tiene ningún número de teléfono registrado
         {
-            textoBotón.text = " " + reserva.Fecha + "  " + reserva.Hora + "        " + reserva.CantComensales + "            " + id_Mesa_En_Mapa + "         " + reserva.Cliente.Dni + "                       " + reserva.Cliente.Nombre;
+            if (id_Mesa_En_Mapa.ToString().Length.Equals(2))
+            {
+                textoBotón.text = " " + reserva.Fecha + "  " + reserva.Hora + "        " + reserva.CantComensales + "            " + id_Mesa_En_Mapa + "       " + reserva.Cliente.Dni + "                       " + reserva.Cliente.Nombre;
+            }
+            else
+            {
+                textoBotón.text = " " + reserva.Fecha + "  " + reserva.Hora + "        " + reserva.CantComensales + "            " + id_Mesa_En_Mapa + "         " + reserva.Cliente.Dni + "                       " + reserva.Cliente.Nombre;
+            }
+            
         }
     }
 

@@ -7,9 +7,11 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 using Image = UnityEngine.UI.Image;
 
 public class EditarRestauranteController : MonoBehaviour
@@ -274,11 +276,13 @@ public class EditarRestauranteController : MonoBehaviour
 
     private async void GestionarGuardarDatosRestauranteAsync()
     {
+        instanceButtonMesaController.DesactivarPapeleraEInputFieldBtnMesa();
+
         Restaurante restaurante = RellenarRestauranteSiActualizara(); // Mesas ya existentes en la BDD
         Restaurante rest = ObtenerRestauranteConNuevasMesasCreadasParaRegistrar(); // Mesas creadas nuevas
 
 
-        bool b = await NombreRestauranteVálidoDistintoYNoRepetidoEnLaBDD();
+        bool b = NombreRestauranteVálidoDistintoYNoRepetidoEnLaBDD();
 
         // Nombre cambiado y comprobado que se puede actualizar porque no existe otro restaurante con ese nuevo nombre
         if (b)
@@ -296,7 +300,7 @@ public class EditarRestauranteController : MonoBehaviour
 
             ObtenerDatosRestauranteAsync();
         } 
-        else if (HorasDistintasEnRestaurante() && NombreEsIgualQueEnLaBDD() || NombreEsIgualQueEnLaBDD() && MesasDistintasEnRestaurante() || NombreEsIgualQueEnLaBDD() && TiempoParaComerDistintoEnRestaurante())
+        else if (HorasDistintasEnRestaurante() && NombreEsIgualQueEnLaBDD() || NombreEsIgualQueEnLaBDD() && MesasDistintasEnRestaurante() || NombreEsIgualQueEnLaBDD() && TiempoParaComerDistintoEnRestaurante() || NombreEsIgualQueEnLaBDD() && CantComensalesEnMesasDistintoQueEnLaBDD())
         {
             Debug.Log("Hay cambios 2");
             await ActualizarRestauranteEnBDDAsync(restaurante);
@@ -315,6 +319,46 @@ public class EditarRestauranteController : MonoBehaviour
             Debug.Log("No hay cambios");
             inputFieldNombreRestaurante.text = NombreRestaurante;
         }
+    }
+
+    private bool CantComensalesEnMesasDistintoQueEnLaBDD()
+    {
+        instanceButtonMesaController.DesactivarPapeleraEInputFieldBtnMesa();
+
+        // Obtengo los botones mesa del mapa del restaurante
+        List<GameObject> hijosPadreFondoRestaurante = ObtenerGameObjectsDelPadreFondoDelRestaurante();
+
+        foreach (Mesa mesaEnBDD in Mesas)
+        {
+            foreach (GameObject gameObject in hijosPadreFondoRestaurante)
+            {
+                string[] nombreBtnMesaArray = gameObject.name.Split("-");
+
+                if (mesaEnBDD.Id.Equals(int.Parse(nombreBtnMesaArray[1])))
+                {
+                    TMP_InputField inputField = gameObject.transform.Find("InputField").GetComponent<TMP_InputField>();
+
+                    // Si el número de comensales de la mesa en la BDD es distinto que en la mesa del mapa, devuelve true
+                    if (!mesaEnBDD.CantPers.Equals(int.Parse(inputField.text.Trim())))
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private List<GameObject> ObtenerGameObjectsDelPadreFondoDelRestaurante()
+    {
+        List<GameObject> hijosPadreMapaEnEditarRest = new List<GameObject>();
+
+        for (int i = 0; i < padreDeLosBotonesMesa.childCount; i++)
+        {
+            hijosPadreMapaEnEditarRest.Add(padreDeLosBotonesMesa.GetChild(i).gameObject);
+            Debug.Log("+*-" + padreDeLosBotonesMesa.GetChild(i).gameObject.name);
+        }
+        return hijosPadreMapaEnEditarRest;
     }
 
     private bool TiempoParaComerDistintoEnRestaurante()
@@ -555,7 +599,7 @@ public class EditarRestauranteController : MonoBehaviour
         
      }
 
-    private async Task<bool> NombreRestauranteVálidoDistintoYNoRepetidoEnLaBDD()
+    private bool NombreRestauranteVálidoDistintoYNoRepetidoEnLaBDD()
     {
         // Nombre del restaurante cambiado del original.
         if (NombreRestaurante.CompareTo(inputFieldNombreRestaurante.text) != 0)
@@ -566,7 +610,8 @@ public class EditarRestauranteController : MonoBehaviour
             // Si el nombre del restaurante tiene más de 2 caracteres, se crea.
             if (nombreRestaurante.Length > 2)
             {
-                string cad = await instanceMétodosApiController.GetDataAsync("restaurante/existeConNombre/" + nombreRestaurante);
+                return true;
+                /*string cad = await instanceMétodosApiController.GetDataAsync("restaurante/existeConNombre/" + nombreRestaurante);
                 // Deserializo la respuesta
                 Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
 
@@ -588,11 +633,19 @@ public class EditarRestauranteController : MonoBehaviour
                             StartCoroutine(MovimientoCartelDeMadera(2f, cad3, 6f, 11f));
                         }
                         return false;
-                }
+                }*/
             }
             else
             {
-                string cad4 = "Nombre tiene menos de 3 caracteres";
+                string cad4 = "";
+                if (Usuario.Idioma.CompareTo("Español") == 0)
+                {
+                    cad4 = "Nombre tiene menos de 3 caracteres";
+                }
+                else
+                {
+                    cad4 = "Name has less than 3 characters";
+                }
                 StartCoroutine(MovimientoCartelDeMadera(2f, cad4, 0f, 12f));
                 Debug.Log("Nombre tiene menos de 3 caracteres");
                 return false;
@@ -627,9 +680,9 @@ public class EditarRestauranteController : MonoBehaviour
         ComprobarSiHayCambios();        
     }
 
-    private async void ComprobarSiHayCambios()
+    private void ComprobarSiHayCambios()
     {
-        bool b = await NombreRestauranteVálidoDistintoYNoRepetidoEnLaBDD();
+        bool b = NombreRestauranteVálidoDistintoYNoRepetidoEnLaBDD();
 
         // Nombre cambiado y comprobado que se puede actualizar porque no existe otro restaurante con ese nuevo nombre
         if (b)
@@ -638,7 +691,7 @@ public class EditarRestauranteController : MonoBehaviour
             DesactivarBotonesDelCanvas();
             imgHayCambiosSinGuardar.SetActive(true);
         }
-        else if (HorasDistintasEnRestaurante() && NombreEsIgualQueEnLaBDD() || NombreEsIgualQueEnLaBDD() && MesasDistintasEnRestaurante() || NombreEsIgualQueEnLaBDD() && TiempoParaComerDistintoEnRestaurante())
+        else if (HorasDistintasEnRestaurante() && NombreEsIgualQueEnLaBDD() || NombreEsIgualQueEnLaBDD() && MesasDistintasEnRestaurante() || NombreEsIgualQueEnLaBDD() && TiempoParaComerDistintoEnRestaurante() || NombreEsIgualQueEnLaBDD() && CantComensalesEnMesasDistintoQueEnLaBDD())
         {
             Debug.Log("Hay cambios. ¿Desea guardar antes de irse?");
             DesactivarBotonesDelCanvas();
@@ -928,11 +981,12 @@ public class EditarRestauranteController : MonoBehaviour
 
     private void EsconderManosAdvertencia()
     {
+        // Muevo la mano
         rtManosAdvertencia.gameObject.SetActive(false);
         rtManosAdvertencia.anchoredPosition = new Vector2(rtManosAdvertencia.anchoredPosition.x, -898f);
         rtManosAdvertencia.gameObject.SetActive(true);
 
-        instanceButtonMesaController.PonerTodosLosBotonesEnBlanco();
+        //instanceButtonMesaController.PonerTodosLosBotonesEnBlanco();
         PonerInteractuablesBotonesMesaEnMapa();
     }
 
@@ -1106,7 +1160,9 @@ public class EditarRestauranteController : MonoBehaviour
 
         TMP_Text textComponent = inputFieldInstance.transform.Find("Text Area/Text").GetComponent<TMP_Text>();
         TMP_Text textPlaceHolder = inputFieldInstance.transform.Find("Text Area/Placeholder").GetComponent<TMP_Text>();
-        
+
+        textPlaceHolder.text = "";
+
         //inputFieldInstance.GetComponent<TMP_InputField>().interactable = false; // Pongo el inputField en no interactuable
         textComponent.alignment = TextAlignmentOptions.Center; // Centro el texto
         textComponent.fontSize = 56;
@@ -1114,7 +1170,14 @@ public class EditarRestauranteController : MonoBehaviour
         textComponent.color = UnityEngine.Color.white;
         RectTransform rtInputField = inputFieldInstance.GetComponent<RectTransform>();
         rtInputField.sizeDelta = new Vector2(100, 55);
-        inputFieldInstance.GetComponent<TMP_InputField>().text = ""+cantComensales; // Asigno la cantidad de comensales a la mesa
+        TMP_InputField inputField = inputFieldInstance.GetComponent<TMP_InputField>();
+        inputField.text = ""+cantComensales; // Asigno la cantidad de comensales a la mesa
+        inputField.characterLimit = 2;
+        inputField.contentType = TMP_InputField.ContentType.IntegerNumber;
+        inputField.caretWidth = 3;
+        inputField.customCaretColor = true;
+        inputField.caretColor = new Color(0f, 0f, 0f, 1f);
+        inputField.onValueChanged.AddListener(ValidarTextoInputField);
         inputFieldInstance.GetComponent<Image>().enabled = false; // Quito la imagen del inputField (la pongo en invisible)
         // Espero un frame para que se cree el Caret
         yield return null;
@@ -1134,6 +1197,18 @@ public class EditarRestauranteController : MonoBehaviour
         inputFieldInstance.GetComponent<Image>().raycastTarget = false;
         textPlaceHolder.raycastTarget = false;
         textComponent.raycastTarget = false;
+    }
+
+    private void ValidarTextoInputField(string texto)
+    {
+        if (texto.Length > 0 && texto.StartsWith("0"))
+        {
+            TMP_InputField inputField = ButtonMesaController.buttonSeleccionadoParaBorrar.transform.Find("InputField").GetComponent<TMP_InputField>();
+
+            // Elimina el cero inicial
+            inputField.text = texto.TrimStart('0');
+        }
+        ;
     }
 
     public void CancelarCrearBotónMesa()
@@ -1198,5 +1273,10 @@ public class EditarRestauranteController : MonoBehaviour
     public UnityEngine.UI.Button GetButtonAñadirMesa()
     {
         return buttonAñadirMesa;
+    }
+
+    public List<Mesa> GetMesasRest()
+    {
+        return Mesas;
     }
 }

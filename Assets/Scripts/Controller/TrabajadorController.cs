@@ -2,7 +2,6 @@
 using Newtonsoft.Json;
 using System.Collections;
 using System.Threading.Tasks;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Assets.Scripts.Controller
@@ -70,7 +69,7 @@ namespace Assets.Scripts.Controller
             Trabajador trabajador = JsonConvert.DeserializeObject<Trabajador>(cad);
             
             Usuario.ID = trabajador.Id;
-            FicheroController.GestionarEncriptarFicheroUserInfo(Usuario.ID, Usuario.Idioma, Usuario.Token);
+            FicheroController.GestionarEncriptarFicheroUserInfo(Usuario.ID, Usuario.Restaurante_ID, Usuario.Idioma, Usuario.Token);
             Usuario.Rol_ID = trabajador.Rol_ID;
             // Si el valor es 0, es que no está en ningún restaurante.
             Usuario.Restaurante_ID = trabajador.Restaurante_ID;

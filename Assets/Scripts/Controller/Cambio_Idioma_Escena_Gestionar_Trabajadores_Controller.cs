@@ -79,9 +79,9 @@ public class Cambio_Idioma_Escena_Gestionar_Trabajadores_Controller : MonoBehavi
                 textContraseñaRegistrarUsuario.text = "Contraseña:";
                 textRepetirContraseñaRegistrarUsuario.text = "Confirmar contraseña:";
                 textBtnConfirmarRegistrarUsuario.text = "Confirmar";
-                textPlaceHolderInputFieldNombreRegistrarUsuario.text = "Mínimo 3 caracteres...";
-                textPlaceHolderInputFieldPasswordRegistrarUsuario.text = "Mínimo 6 caracteres...";
-                textPlaceHolderInputFieldRepeatPasswordRegistrarUsuario.text = "Repetir contraseña...";
+                textPlaceHolderInputFieldNombreRegistrarUsuario.text = " Mínimo 3 caracteres...";
+                textPlaceHolderInputFieldPasswordRegistrarUsuario.text = " Mínimo 6 caracteres...";
+                textPlaceHolderInputFieldRepeatPasswordRegistrarUsuario.text = " Repetir contraseña...";
                 
 
                 break;
@@ -113,9 +113,9 @@ public class Cambio_Idioma_Escena_Gestionar_Trabajadores_Controller : MonoBehavi
                 textContraseñaRegistrarUsuario.text = "Password:";
                 textRepetirContraseñaRegistrarUsuario.text = "Confirm password:";
                 textBtnConfirmarRegistrarUsuario.text = "Confirm";
-                textPlaceHolderInputFieldNombreRegistrarUsuario.text = "Minimum 3 characters...";
-                textPlaceHolderInputFieldPasswordRegistrarUsuario.text = "Minimum 6 characters...";
-                textPlaceHolderInputFieldRepeatPasswordRegistrarUsuario.text = "Repeat password...";
+                textPlaceHolderInputFieldNombreRegistrarUsuario.text = " Minimum 3 characters...";
+                textPlaceHolderInputFieldPasswordRegistrarUsuario.text = " Minimum 6 characters...";
+                textPlaceHolderInputFieldRepeatPasswordRegistrarUsuario.text = " Repeat password...";
 
                 break;
         }

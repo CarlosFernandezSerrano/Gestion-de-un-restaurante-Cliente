@@ -42,11 +42,13 @@ public class BuscarReservaController : MonoBehaviour
 
     public void BuscarReservasDeCliente()
     {
-        if (inputFieldDniCliente.text.Trim().Length > 5)
+        if (inputFieldDniCliente.text.Trim().Length.Equals(9))
         {
             dniEnInputField = inputFieldDniCliente.text.Trim();
 
             BuscarReservasCliente(dniEnInputField);
+
+            inputFieldDniCliente.text = "";
         }        
     }
 
@@ -274,11 +276,25 @@ public class BuscarReservaController : MonoBehaviour
         // El cliente de la reserva tiene un número de teléfono registrado
         if (reserva.Cliente.NumTelefono.Trim().Length > 0)
         {
-            textoBotón.text = " " + reserva.Fecha + "  " + reserva.Hora + "        " + reserva.CantComensales + "            " + id_Mesa_En_Mapa + "        " + reserva.Cliente.Dni + "   " + reserva.Cliente.NumTelefono + "    " + reserva.Cliente.Nombre;
+            if (id_Mesa_En_Mapa.ToString().Length.Equals(2))
+            {
+                textoBotón.text = " " + reserva.Fecha + "  " + reserva.Hora + "        " + reserva.CantComensales + "            " + id_Mesa_En_Mapa + "      " + reserva.Cliente.Dni + "   " + reserva.Cliente.NumTelefono + "    " + reserva.Cliente.Nombre;
+            }
+            else
+            {
+                textoBotón.text = " " + reserva.Fecha + "  " + reserva.Hora + "        " + reserva.CantComensales + "            " + id_Mesa_En_Mapa + "        " + reserva.Cliente.Dni + "   " + reserva.Cliente.NumTelefono + "    " + reserva.Cliente.Nombre;
+            }
         }
         else
         {
-            textoBotón.text = " " + reserva.Fecha + "  " + reserva.Hora + "        " + reserva.CantComensales + "            " + id_Mesa_En_Mapa + "        " + reserva.Cliente.Dni + "                       " + reserva.Cliente.Nombre;
+            if (id_Mesa_En_Mapa.ToString().Length.Equals(2))
+            {
+                textoBotón.text = " " + reserva.Fecha + "  " + reserva.Hora + "        " + reserva.CantComensales + "            " + id_Mesa_En_Mapa + "      " + reserva.Cliente.Dni + "                       " + reserva.Cliente.Nombre;
+            }
+            else
+            {
+                textoBotón.text = " " + reserva.Fecha + "  " + reserva.Hora + "        " + reserva.CantComensales + "            " + id_Mesa_En_Mapa + "        " + reserva.Cliente.Dni + "                       " + reserva.Cliente.Nombre;
+            }
         }
     }
 
