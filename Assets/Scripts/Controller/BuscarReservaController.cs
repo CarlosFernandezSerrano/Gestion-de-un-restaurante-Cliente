@@ -18,6 +18,7 @@ public class BuscarReservaController : MonoBehaviour
     [SerializeField] private GameObject bloqueConfirmarCancelarReserva;
     [SerializeField] private Button botónConfirmarCancelarReserva;
     [SerializeField] private Button botónBuscarReservas;
+    [SerializeField] private TextMeshProUGUI titulo;
 
     private List<Button> botonesParaCancelar = new List<Button>();
     private Button botónMesaSeleccionado;

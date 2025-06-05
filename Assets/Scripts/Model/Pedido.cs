@@ -10,22 +10,24 @@ public enum EstadoPedido
     Completado,
     Pagado
 }
+//Tal vez no haga falta tener el enum sin utilizar, pero mejor asegurarse
 public class Pedido
 {
     public int id { get; set; }
     public string fecha { get; set; }
     public int mesa { get; set; }
     public string estado { get; set; }
-    //public Factura factura { get; set; }
+    public int factura { get; set; }
     //public List<InstanciaArticulo> listaArticulos { get; set; }
 
     [JsonConstructor]
-    public Pedido(int id, string fecha, int mesa, string estado)
+    public Pedido(int id, string fecha, int mesa, string estado, int factura)
     {
         this.id = id;
         this.fecha = fecha;
         this.estado = estado;
         this.mesa = mesa;
+        this.factura = factura;
         //this.listaArticulos = new List<InstanciaArticulo>();
         //this.factura = factura;
     }
@@ -53,20 +55,25 @@ public class Pedido
             return EstadoPedido.Pagado;
         else return EstadoPedido.Apuntado;
     }
+    /*
+    REALIZAR ESTO MEDIANTE UNA PETICIÓN AL SERVIDOR
     public string MostrarLista()
-    {
+    { 
         string str = "lista:";
         /*foreach (InstanciaArticulo art in listaArticulos)
-            str += art.Mostrar() + "\n";*/
+            str += art.Mostrar() + "\n";
         return str;
     }
+    */
 
     public string Mostrar()
     {
-        return "id:" + this.id + " " + "fecha:" + this.fecha + " " + "mesa:" + this.mesa + " " + "estado:" + this.estado + " instanciarts: " + MostrarLista();
+        return "id:" + this.id + " " + "fecha:" + this.fecha + " " + "mesa:" + this.mesa + " " + "estado:" + this.estado + " " + this.factura;
     }
 
-    /*public void AddArticulo(InstanciaArticulo art)
+    /*
+    REALIZAR TODO ESTO MEDIANTE PETICIONES AL SERVIDOR
+    public void AddArticulo(InstanciaArticulo art)
     {
         listaArticulos.Add(art);
     }

@@ -162,6 +162,7 @@ public class MétodosAPIController : MonoBehaviour
             if (request.result != UnityWebRequest.Result.Success)
             {
                 Debug.LogError("Error: " + request.error);
+                Debug.LogError(json);
                 return null;
             }
 

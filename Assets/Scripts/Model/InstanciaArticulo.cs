@@ -9,20 +9,18 @@ public class InstanciaArticulo
     public int idArticulo { get; set; }
     public int idPedido { get; set; }
     public int cantidad { get; set; }
-    public float precio {  get; set; }
 
     [JsonConstructor]
-    public InstanciaArticulo(int idArt, int idPedido, int cantidad, float precio)
+    public InstanciaArticulo(int idArticulo, int idPedido, int cantidad)
     {
-        this.idArticulo = idArt;
+        this.idArticulo = idArticulo;
         this.idPedido = idPedido;
         this.cantidad = cantidad;
-        this.precio = precio;
     }
 
     public string Mostrar()
     {
-        return this.idArticulo + " " + this.idPedido + " " + this.cantidad+" "+this.precio;
+        return this.idArticulo + " " + this.idPedido + " " + this.cantidad;
     }
     /*public InstanciaArticulo(Articulo art, int idPedido, int cantidad, float precio)
     {
