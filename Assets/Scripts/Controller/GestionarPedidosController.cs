@@ -196,7 +196,7 @@ public class GestionarPedidosController : MonoBehaviour
     public void pasarAFacturas()
     {
         instanceGestionarFacturasController = new GestionarFacturasController();
-        Debug.Log(factura.id);
+        Debug.Log("fACTURA:"+factura.id);
         instanceGestionarFacturasController.entrarFactura(factura.id);
         Debug.Log("mesa"+factura.mesa);
         canvasFacturas.SetActive(true);

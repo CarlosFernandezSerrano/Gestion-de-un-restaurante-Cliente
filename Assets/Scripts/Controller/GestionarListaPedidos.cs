@@ -40,7 +40,11 @@ public class GestionarListaPedidos : MonoBehaviour
         cambiarEstadoPedido(69, "PRUEBO");*/
     }
 
-
+    public void buscarPorFiltro()
+    {
+        //esto debería pillar de MesaFiltro
+        crearBotonesPedidos(0);
+    }
     //esto debería tener un order by que empezara desde el ID más alto
     public async void crearBotonesPedidos(int mesa)
     {

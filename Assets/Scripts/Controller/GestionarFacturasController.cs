@@ -22,6 +22,7 @@ public class GestionarFacturasController : MonoBehaviour
     public TextMeshProUGUI Cantidad;
     public TextMeshProUGUI Importe;
     public TextMeshProUGUI Total;
+    public GameObject canvasMesas;
     public GameObject canvasFactura;
     // Start is called before the first frame update
     void Start()
@@ -44,6 +45,7 @@ public class GestionarFacturasController : MonoBehaviour
         //En un restaurante real, esto imprimiría la factura en un recibo
         Debug.Log(factura.Mostrar());
     }
+    //CRASHEA, MIRAR
     public async void realizarPago()
     {
         //Puesto que no tenemos una pasarela de pago implementada, esto simplemente pasará la factura al estado no activo
@@ -66,11 +68,11 @@ public class GestionarFacturasController : MonoBehaviour
 
     public async void entrarFactura(int idF)
     {
-        canvasFactura.SetActive(true);
+        Debug.Log("Pruebafac");
         Debug.Log("facturaasd");
-        instanceMétodosApiController = MétodosAPIController.InstanceMétodosAPIController;
         //this.pedido = idP;
         //Debug.Log("idp:"+idP+"idA"+idF);
+        instanceMétodosApiController = MétodosAPIController.InstanceMétodosAPIController;
         string cad = await instanceMétodosApiController.GetDataAsync("factura/getFactura/" + idF);
         Debug.Log("cadena:"+cad);
         factura = JsonConvert.DeserializeObject<Factura>(cad);
@@ -114,5 +116,11 @@ public class GestionarFacturasController : MonoBehaviour
         Debug.Log(cad4);
         float tot = JsonConvert.DeserializeObject<float>(cad4);
         Total.text = "TOTAL: "+tot;
+    }
+
+    public void volver()
+    {
+        canvasMesas.SetActive(true);
+        canvasFactura.SetActive(false);
     }
 }

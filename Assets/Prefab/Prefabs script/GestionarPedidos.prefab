@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7706359094300989267
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8421565809023155457}
+  - component: {fileID: 1876639806129514024}
+  m_Layer: 0
+  m_Name: GestionarPedidos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8421565809023155457
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7706359094300989267}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1876639806129514024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7706359094300989267}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4befe3f339b3780478a50d07c3f346f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fondoPedidos: {fileID: 0}
+  instanceGestionarMesasController: {fileID: 0}
+  "instanceM\xE9todosApiController": {fileID: 0}
+  titulo: {fileID: 0}
+  articulosPedidos: {fileID: 0}
+  selMesa: {fileID: 0}
+  instanceGestionarFacturasController: {fileID: 0}
+  canvasMesas: {fileID: 0}
+  canvasFacturas: {fileID: 0}
+  imagenPrueba: {fileID: 21300000, guid: 65c46f46689b051429e0fc5ebc3220b9, type: 3}
+  idMesa: 0
+  canvasPedidos: {fileID: 0}
