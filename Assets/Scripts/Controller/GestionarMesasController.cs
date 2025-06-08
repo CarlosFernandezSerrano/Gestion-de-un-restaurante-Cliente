@@ -1553,8 +1553,9 @@ public class GestionarMesasController : MonoBehaviour
     {
         if (botónMesaSeleccionado != null)
         {
-            canvasPedidos.SetActive(true);
             instanceGestionarPedidosController = GestionarPedidosController.instanceGestionarPedidosController;
+            instanceGestionarPedidosController.pedido=new Pedido(-1,"",-1,"",-1);
+            instanceGestionarPedidosController.actualizarArticulos();
             instanceGestionarPedidosController.entrarPedido(Int32.Parse(botónMesaSeleccionado.gameObject.name.Split("-")[1]));
             Debug.Log("BOTÓN SELECCIONADO: " + botónMesaSeleccionado.gameObject.name);
         }

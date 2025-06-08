@@ -11,13 +11,14 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Text.RegularExpressions;
-//TO DO: ELIMINAR ARTÍCULOS(INST) DE PEDIDOS, TAL VEZ AÑADIR COMENTARIOS A LOS PEDIDOS
 //SI ES POSIBLE, PANTALLA PARA AÑADIR ARTÍCULOS A LA BASE DE DATOS
 //IMÁGENES
 
 public class GestionarPedidosController : MonoBehaviour
 {
     //se debe marcar la categoría seleccionada
+    //Volver debería volver a lista artículos en vez de mesas cuando se accede desde ahí (hacer que únicamente setactive false)
+    //Scrollbar pedidos
     public RectTransform fondoPedidos;
     public static GestionarPedidosController instanceGestionarPedidosController { get; set; }
     public GestionarMesasController instanceGestionarMesasController;
@@ -75,7 +76,6 @@ public class GestionarPedidosController : MonoBehaviour
     {
         borrarPedidoSiNoFinalizado();
         canvasPedidos.SetActive(false);
-        canvasMesas.SetActive(true);
     }
 
     public async Task borrarPedidoSiNoFinalizado()
@@ -191,6 +191,10 @@ public class GestionarPedidosController : MonoBehaviour
         {
             Destroy(t.gameObject);
             Debug.Log("Se ha eliminado: " + t);
+        }
+        if (pedido == null)
+        {
+            return;
         }
         string cad = await instanceMétodosApiController.GetDataAsync("pedido/getArticulos/" + pedido.id);
         Debug.Log("Cadena de artículos:" + cad);
@@ -313,10 +317,12 @@ public class GestionarPedidosController : MonoBehaviour
 
     public async Task entrarPedido(int mesa)
     {
+        actualizarArticulos();
         crearFacturaYPedidoSiNoExisten(mesa);
         crearBotonesCategoria("PLATOS");
-        canvasPedidos.SetActive(true);
         idMesa = mesa;
+        titulo.text = "Pedido para la mesa " + mesa;
+        canvasPedidos.SetActive(true);
         //crear pedido, crear factura si no existe
         /*string cad=await instanceMétodosApiController.GetDataAsync("factura/obtenerActiva/"+ idMesa);
         Factura f=  JsonConvert.DeserializeObject<Factura>(cad);
@@ -346,6 +352,7 @@ public class GestionarPedidosController : MonoBehaviour
         Debug.Log(cad2);
         factura = JsonConvert.DeserializeObject<Factura>(cad);
         Debug.Log("Entrada 3");
+        titulo.text = "Pedido para la mesa " + factura.mesa;
         crearBotonesCategoria("PLATOS");
         Debug.Log("Entrada 4");
         actualizarArticulos();

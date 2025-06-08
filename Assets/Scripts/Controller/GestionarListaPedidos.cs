@@ -210,7 +210,6 @@ public class GestionarListaPedidos : MonoBehaviour
         //OBTENER MESA Y FACTURA A PARTIR DE PEDIDO Y LUEGO IR A GESTIONAR PEDIDOS (EL CANVAS)
         instanceGestionarPedidosController.entrarPedidoHecho(p.id);
         canvasPedidos.SetActive(true);
-        canvasLista.SetActive(false);
     }
     public async Task eliminarPedido(int idP)
     {
