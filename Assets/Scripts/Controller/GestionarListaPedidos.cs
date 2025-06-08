@@ -23,9 +23,11 @@ public class GestionarListaPedidos : MonoBehaviour
     public GameObject canvasPedidos;
     public MétodosAPIController instanceMétodosApiController;
     public GestionarPedidosController instanceGestionarPedidosController;
+    public GestionarMesasController instanceGestionarMesasController;
     public TextMeshProUGUI selMesa;
     public TMP_InputField selMesaE;
     public Transform espacio;
+    public Scrollbar scrollbarLista;
     public static GestionarListaPedidos InstanceGestionarListaPedidos { get; private set; }
     //Debería haber una barra de scroll para explorar los pedidos
 
@@ -137,6 +139,7 @@ public class GestionarListaPedidos : MonoBehaviour
     }*/
     public void crearBoton(Pedido p,int num)
     {
+        instanceGestionarMesasController = GestionarMesasController.InstanceGestionarMesasController;
         GameObject botonP = Instantiate(baseP, fondoPedidos, true);
         botonP.transform.position = new Vector2(950, 820-num*150);
         botonP.transform.SetParent(fondoPedidos);
@@ -150,14 +153,23 @@ public class GestionarListaPedidos : MonoBehaviour
         if (Usuario.Idioma.CompareTo("Español") == 0)
         {
             texto.text = "Pedido " + p.id;
-            textoF.text = "Mesa " + p.mesa;
+            textoF.text = "Mesa " + instanceGestionarMesasController.getNumMesa(p.mesa);
         }
         else
         {
             texto.text = "Order " + p.id;
-            textoF.text = "Table " + p.mesa;
+            textoF.text = "Table " + instanceGestionarMesasController.getNumMesa(p.mesa);
         }
-
+        /*if (Usuario.Idioma.CompareTo("Español") == 0)
+        {
+            texto.text = "Pedido " + p.id;
+            textoF.text = "Mesa " + instanceGestionarMesasController.getNumMesa(p.mesa);
+        }
+        else
+        {
+            texto.text = "Order " + p.id;
+            textoF.text = "Table " + instanceGestionarMesasController.getNumMesa(p.mesa);
+        }*/
 
         GameObject dropdown = botonP.transform.Find("Dropdown").gameObject;
         TMP_Dropdown drop = dropdown.GetComponent<TMP_Dropdown>();

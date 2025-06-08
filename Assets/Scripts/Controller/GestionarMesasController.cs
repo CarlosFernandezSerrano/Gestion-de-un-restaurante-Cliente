@@ -1586,4 +1586,10 @@ public class GestionarMesasController : MonoBehaviour
         Debug.Log("FIN PRUEBA");
     }
 
+    public int getNumMesa(int idMesa)
+    {
+        TextMeshProUGUI texto=padreDeLosBotonesMesa.gameObject.transform.Find("Button-" + idMesa + "/Imagen Rectangle/Text").GetComponent<TextMeshProUGUI>();
+        Debug.Log("TEXTO:" + texto.text);
+        return Int32.Parse(texto.text);
+    }
 }

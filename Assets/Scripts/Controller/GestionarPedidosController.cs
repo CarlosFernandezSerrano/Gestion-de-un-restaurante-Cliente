@@ -25,9 +25,7 @@ using System.Text.RegularExpressions;
 */
 public class GestionarPedidosController : MonoBehaviour
 {
-    //Obtener num mesa en vez de ID (ObtenerIDMesaDelMapa de gestionarmesas, buscar botón)
     //Scrollbar pedidos
-    //Cambiar tamaño de items en combobox listapedidos
     public RectTransform fondoPedidos;
     public static GestionarPedidosController instanceGestionarPedidosController { get; set; }
     public GestionarMesasController instanceGestionarMesasController;
@@ -336,7 +334,7 @@ public class GestionarPedidosController : MonoBehaviour
         }
         else
         {
-            titulo.text = "Pedido para la mesa " + mesa;
+            titulo.text = "Pedido para la mesa " + instanceGestionarMesasController.getNumMesa(mesa);
         }
         canvasPedidos.SetActive(true);
         //crear pedido, crear factura si no existe
@@ -369,7 +367,7 @@ public class GestionarPedidosController : MonoBehaviour
         factura = JsonConvert.DeserializeObject<Factura>(cad);
         Debug.Log("Entrada 3");
         int numMesa = factura.mesa;
-        titulo.text = "Pedido para la mesa " + factura.mesa;
+        titulo.text = "Pedido para la mesa " + instanceGestionarMesasController.getNumMesa(factura.mesa);
         crearBotonesCategoria("PLATOS");
         Debug.Log("Entrada 4");
         actualizarArticulos();

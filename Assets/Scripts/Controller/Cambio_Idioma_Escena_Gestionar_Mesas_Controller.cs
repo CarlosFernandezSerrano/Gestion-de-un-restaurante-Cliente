@@ -292,8 +292,8 @@ public class Cambio_Idioma_Escena_Gestionar_Mesas_Controller : MonoBehaviour
                 botonEntrarPedido.text = "Make an order";
                 tituloPedidos.text = "Order for table ";
                 encabezadoArticulos.text = "Items";
-                textoCat1.text = "Entrees";
-                textoCat2.text = "Dishes";
+                textoCat1.text = "Appetizer";
+                textoCat2.text = "Main dish";
                 textoCat3.text = "Drinks";
                 textoCat4.text = "Desserts";
                 botonFactura.text = "Go to bill";
