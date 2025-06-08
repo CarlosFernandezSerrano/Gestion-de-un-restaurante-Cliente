@@ -3601,7 +3601,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1218439649}
         m_TargetAssemblyTypeName: GestionarMesasController, Assembly-CSharp
-        m_MethodName: ActivarCanvasHistorialReservas
+        m_MethodName: ActivarCanvasCrearReserva
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3668,7 +3668,7 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 1218439649}
           m_TargetAssemblyTypeName: GestionarMesasController, Assembly-CSharp
-          m_MethodName: MostrarImgConTextoDeBuscarReserva
+          m_MethodName: MostrarImgYTextoDeCrearReserva
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -34514,7 +34514,7 @@ PrefabInstance:
     - target: {fileID: 3668302834764021900, guid: b1f6e995e0b78b64483bdd1bf846987f, type: 3}
       propertyPath: textHoraCierre
       value: 
-      objectReference: {fileID: 110875966}
+      objectReference: {fileID: 786648910}
     - target: {fileID: 3668302834764021900, guid: b1f6e995e0b78b64483bdd1bf846987f, type: 3}
       propertyPath: buttonDisponible
       value: 
@@ -34522,7 +34522,7 @@ PrefabInstance:
     - target: {fileID: 3668302834764021900, guid: b1f6e995e0b78b64483bdd1bf846987f, type: 3}
       propertyPath: textHoraApertura
       value: 
-      objectReference: {fileID: 45315291}
+      objectReference: {fileID: 223721325}
     - target: {fileID: 3668302834764021900, guid: b1f6e995e0b78b64483bdd1bf846987f, type: 3}
       propertyPath: buttonNoDisponible
       value: 
@@ -52886,6 +52886,42 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: imprimirFactura
       objectReference: {fileID: 0}
+    - target: {fileID: 179428809675524498, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
+      propertyPath: m_fontSize
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 179428809675524498, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 270783875397101897, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
+      propertyPath: m_fontStyle
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 652954687103594276, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
+      propertyPath: m_fontSize
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 652954687103594276, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
+      propertyPath: m_fontStyle
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 652954687103594276, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 1973817378278040069, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
+      propertyPath: m_fontStyle
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2210192068687002783, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 116.1648
+      objectReference: {fileID: 0}
+    - target: {fileID: 2210192068687002783, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 144.3
+      objectReference: {fileID: 0}
     - target: {fileID: 2493488847991798979, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0
@@ -52894,9 +52930,12 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 471
       objectReference: {fileID: 0}
+	HEAD
     - target: {fileID: 3908524423637186721, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
       propertyPath: m_fontStyle
       value: 4
+0b42b0a92fbacb16be731300c2f9630ed524db7e
+1adaf010ed375978dde28b08f04448220407e9f4
       objectReference: {fileID: 0}
     - target: {fileID: 5132846742985246594, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -53002,6 +53041,18 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 6615919703292397322, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
+      propertyPath: m_fontSize
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 6615919703292397322, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 7610978294823563849, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
+      propertyPath: m_fontStyle
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7610978294823563849, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
       propertyPath: m_HorizontalAlignment
       value: 2
@@ -53013,6 +53064,14 @@ PrefabInstance:
     - target: {fileID: 7732021735570862447, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8254071613915175157, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
+      propertyPath: m_fontSize
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 8254071613915175157, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 22
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
