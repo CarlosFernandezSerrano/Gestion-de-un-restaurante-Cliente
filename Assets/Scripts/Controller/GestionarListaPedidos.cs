@@ -20,9 +20,11 @@ public class GestionarListaPedidos : MonoBehaviour
     public GameObject baseP;
     public GameObject canvasMesas;
     public GameObject canvasLista;
+    public GameObject canvasPedidos;
     public MétodosAPIController instanceMétodosApiController;
     public GestionarPedidosController instanceGestionarPedidosController;
     public TextMeshProUGUI selMesa;
+    public TMP_InputField selMesaE;
     public Transform espacio;
     public static GestionarListaPedidos InstanceGestionarListaPedidos { get; private set; }
     //Debería haber una barra de scroll para explorar los pedidos
@@ -40,17 +42,18 @@ public class GestionarListaPedidos : MonoBehaviour
         cambiarEstadoPedido(69, "PRUEBO");*/
     }
 
-    public void buscarPorFiltro()
+    /*public void buscarPorFiltro()
     {
         //esto debería pillar de MesaFiltro
         crearBotonesPedidos(0);
-    }
+    }*/
     //esto debería tener un order by que empezara desde el ID más alto
-    public async void crearBotonesPedidos(int mesa)
+    public async Task crearBotonesPedidos(int mesa)
     {
         foreach (Transform t in espacio.transform)
         {
             Destroy(t.gameObject);
+            Debug.Log("Se ha eliminado: " + t);
         }
         //LimpiarBotones();
         List<Pedido> lista;
@@ -69,6 +72,31 @@ public class GestionarListaPedidos : MonoBehaviour
             }
         }
     }
+    public async Task crearBotonesPedidos(string estado)
+    {
+        foreach (Transform t in espacio.transform)
+        {
+            Destroy(t.gameObject);
+            Debug.Log("Se ha eliminado: " + t);
+        }
+        //LimpiarBotones();
+        List<Pedido> lista;
+
+        string cad = await instanceMétodosApiController.GetDataAsync("pedido/getTodosPedidos/");
+        Debug.Log("CADENA:" + cad);
+        lista = JsonConvert.DeserializeObject<List<Pedido>>(cad);
+        int i = 0;
+        foreach (Pedido p in lista)
+        {
+            if (estado==null || estado.ToUpper().Equals(p.estado) || estado.ToUpper().Equals(""))
+            {
+                crearBoton(p, i);
+                Debug.Log("Creado botón: " + p.id);
+                i++;
+            }
+        }
+    }
+
     public void crearBoton(Pedido p,int num)
     {
         GameObject botonP = Instantiate(baseP, fondoPedidos, true);
@@ -82,12 +110,21 @@ public class GestionarListaPedidos : MonoBehaviour
         texto.text = "Pedido "+p.id;
         GameObject fecha= botonP.transform.Find("Fecha").gameObject;
         TextMeshProUGUI textoF = fecha.GetComponent<TextMeshProUGUI>();
-        textoF.text = p.fecha;
+        textoF.text = "Mesa "+p.mesa;
         GameObject dropdown = botonP.transform.Find("Dropdown").gameObject;
         TMP_Dropdown drop = dropdown.GetComponent<TMP_Dropdown>();
+        if (p.estado.ToUpper().Equals("APUNTADO"))
+            drop.value = 0;
+        else if (p.estado.ToUpper().Equals("ENCOCINA"))
+            drop.value = 1;
+        else if (p.estado.ToUpper().Equals("COMPLETADO"))
+            drop.value = 2;
+        else if (p.estado.ToUpper().Equals("PAGADO"))
+            drop.value = 3;
+        else drop.value = 4;
         drop.onValueChanged.AddListener((_) =>
         {
-            cambiarEstadoPedido(p.id,drop.options[drop.value].text);
+            cambiarEstadoPedido(p, drop.options[drop.value].text);
         });
         GameObject modificar = botonP.transform.Find("Modificar").gameObject;
         Button mod = modificar.AddComponent<Button>();
@@ -98,6 +135,7 @@ public class GestionarListaPedidos : MonoBehaviour
 
         //modificar.GetComponent<Button>().onClick = () => { Debug.Log("Botón accedido correctamente"); };
     }
+
     public void auxFiltro()
     {
         string str2 = "";
@@ -108,6 +146,11 @@ public class GestionarListaPedidos : MonoBehaviour
         }
         int idMesa = int.Parse(str2);
         crearBotonesPedidos(idMesa);
+    }
+
+    public void auxFiltroEstado()
+    {
+        crearBotonesPedidos(selMesaE.text);
     }
 
     /*public void pruebaCrear()
@@ -147,9 +190,10 @@ public class GestionarListaPedidos : MonoBehaviour
 
 
     }*/
-    public async void  cambiarEstadoPedido(int idP,string s)
+    public async Task cambiarEstadoPedido(Pedido p,string s)
     {
-        string cad = await instanceMétodosApiController.PutDataAsync("pedido/cambiarEstado/"+idP,s);
+        p.estado = s;
+        string cad = await instanceMétodosApiController.PutDataAsync("pedido/cambiarEstado/",p);
         Debug.Log("CAMBIO ESTADO"+cad);
         Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
         if (resultado.Result.Equals(1))
@@ -164,9 +208,11 @@ public class GestionarListaPedidos : MonoBehaviour
     public void modificarPedido(Pedido p)
     {
         //OBTENER MESA Y FACTURA A PARTIR DE PEDIDO Y LUEGO IR A GESTIONAR PEDIDOS (EL CANVAS)
-        instanceGestionarPedidosController.entrarPedido(p.mesa);
+        instanceGestionarPedidosController.entrarPedidoHecho(p.id);
+        canvasPedidos.SetActive(true);
+        canvasLista.SetActive(false);
     }
-    public async void eliminarPedido(int idP)
+    public async Task eliminarPedido(int idP)
     {
         //ELIMINAR PEDIDO EN SERVER Y RECARGAR LISTA
         //DEBERÍA HABER UN POP UP DE "SEGURO QUE LO QUIERES HACER?"
@@ -181,7 +227,7 @@ public class GestionarListaPedidos : MonoBehaviour
         {
             Debug.Log("Error al finalizar factura");
         }
-        //FALTA ELIMINAR BOTONES
+        crearBotonesPedidos(0);
     }
     public void entrarLista(int mesa)
     {

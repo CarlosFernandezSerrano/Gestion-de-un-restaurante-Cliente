@@ -22,23 +22,27 @@ public class GestionarFacturasController : MonoBehaviour
     public TextMeshProUGUI Cantidad;
     public TextMeshProUGUI Importe;
     public TextMeshProUGUI Total;
+    public TextMeshProUGUI RestauranteTexto;
     public GameObject canvasMesas;
     public GameObject canvasFactura;
+    public string restaurante;
+    public static GestionarFacturasController instanceGestionarFacturasController;
     // Start is called before the first frame update
     void Start()
     {
         instanceMétodosApiController = MétodosAPIController.InstanceMétodosAPIController;
         instanceGestionarPedidosController = GestionarPedidosController.instanceGestionarPedidosController;
-        /*try
-        {
-            factura = instanceGestionarPedidosController.factura;
-        }
-        catch(Exception e)
-        {
-            factura = new Factura(1, 0, true, 1);
-        }*/
-        //mostrarDatosFactura();
+        instanceGestionarFacturasController=this;
+    /*try
+    {
+        factura = instanceGestionarPedidosController.factura;
     }
+    catch(Exception e)
+    {
+        factura = new Factura(1, 0, true, 1);
+    }*/
+    //mostrarDatosFactura();
+}
 
     public void imprimirFactura()
     {
@@ -77,13 +81,24 @@ public class GestionarFacturasController : MonoBehaviour
         Debug.Log("cadena:"+cad);
         factura = JsonConvert.DeserializeObject<Factura>(cad);
         Debug.Log(factura);
+        mostrarDatosFactura();
         //mostrarDatosFactura();
     }
 
-    public async void mostrarDatosFactura()
+    public async Task getNombreRestaurante()
+    {
+        string cad = await instanceMétodosApiController.GetDataAsync("mesa/ObtenerRestaurante/" + factura.mesa);
+        Debug.Log("resultado 1:"+cad);
+        int IDRes = JsonConvert.DeserializeObject<int>(cad);
+        string cad2 = await instanceMétodosApiController.GetDataAsync("restaurante/getNombrePorId/" + IDRes);
+        Debug.Log("resultado 2:"+cad2);
+        RestauranteTexto.text = "Restaurante: " + cad2;
+    }
+
+    public async Task mostrarDatosFactura()
     {
         //En caso de pedir una misma cosa en varios pedidos (p.ej, una coca cola al inicio de la sesión y luego otra) se mostrarán como artículos diferentes. Se debería cambiar esto luego.
-        string cad = await instanceMétodosApiController.GetDataAsync("factura/getPedidos/" + 0);
+        string cad = await instanceMétodosApiController.GetDataAsync("factura/getPedidos/" + factura.id);
         Debug.Log(cad);
         List<Pedido> listaPed = JsonConvert.DeserializeObject<List<Pedido>>(cad);
         List<InstanciaArticulo> listaArt = new List<InstanciaArticulo>();
@@ -112,10 +127,12 @@ public class GestionarFacturasController : MonoBehaviour
             Cantidad.text = Cantidad.text +a.cantidad+ "\n";
             Importe.text = Importe.text + (a.cantidad*aux.precio)+"\n";
         }
-        string cad4 = await instanceMétodosApiController.GetDataAsync("factura/getTotal/" + 1);
+        string cad4 = await instanceMétodosApiController.GetDataAsync("factura/getTotal/" + factura.id);
         Debug.Log(cad4);
         float tot = JsonConvert.DeserializeObject<float>(cad4);
         Total.text = "TOTAL: "+tot;
+        getNombreRestaurante();
+        Debug.Log("Sale");
     }
 
     public void volver()

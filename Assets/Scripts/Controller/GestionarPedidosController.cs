@@ -11,8 +11,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Text.RegularExpressions;
-//UTILIZAR EL COUNT DE CADA TABLA PARA CREAR UN ID NUEVO ÚNICO (ESTO PUEDE DAR PROBLEMAS AL BORRAR ENTRADAS DE LA BASE DE DATOS, SI ESTO SUCEDE, MULTIPLICAR POR 5 Y VOLVER A INTENTAR?)
-//Aumentar no parece funcionar correctamente, LOS BOTONES DE INSTANCIA ARTÍCULO EN GESTIONAR PEDIDOS NO VAN BIEN EN GENERAL
+//TO DO: ELIMINAR ARTÍCULOS(INST) DE PEDIDOS, TAL VEZ AÑADIR COMENTARIOS A LOS PEDIDOS
+//SI ES POSIBLE, PANTALLA PARA AÑADIR ARTÍCULOS
 
 public class GestionarPedidosController : MonoBehaviour
 {
@@ -47,13 +47,13 @@ public class GestionarPedidosController : MonoBehaviour
         }
         instanceGestionarMesasController= GestionarMesasController.InstanceGestionarMesasController;
         instanceMétodosApiController = MétodosAPIController.InstanceMétodosAPIController;
-        //CAMBIAR COMO OBTENER MESA
-        //Mesa m = new Mesa(1, 0, 0, 0, 0, 0, 0, 0, true, 1, null);
-        //idMesa = 1;
-        //SceneManager.LoadSceneAsync("General Controller", LoadSceneMode.Additive);
-        pedido = new Pedido(69, "16:00", 1, "Completado", 1);
-        factura = new Factura(1, 10, true, 1);
-    }
+    //CAMBIAR COMO OBTENER MESA
+    //Mesa m = new Mesa(1, 0, 0, 0, 0, 0, 0, 0, true, 1, null);
+    //idMesa = 1;
+    //SceneManager.LoadSceneAsync("General Controller", LoadSceneMode.Additive);
+    /*pedido = new Pedido(69, "16:00", 1, "Completado", 1);
+    factura = new Factura(1, 10, true, 1);*/
+}
     /* Ahora la mesa estará en Factura, así que se tiene que obtener cuando se abre la ventana y se asigna una factura
      * public void cambiarMesa()
     {
@@ -71,8 +71,30 @@ public class GestionarPedidosController : MonoBehaviour
     // Start is called before the first frame update
     public void volver()
     {
+        borrarPedidoSiNoFinalizado();
         canvasPedidos.SetActive(false);
         canvasMesas.SetActive(true);
+    }
+
+    public async Task borrarPedidoSiNoFinalizado()
+    {
+        string cad = await instanceMétodosApiController.GetDataAsync("pedido/getPedido/" + pedido.id);
+        Debug.Log(cad);
+        Pedido p = JsonConvert.DeserializeObject<Pedido>(cad);
+        if (p.estado.ToUpper().Equals("INICIADO"))
+        {
+            string cad2 = await instanceMétodosApiController.DeleteDataAsync("pedido/borrar/" + pedido.id);
+            Debug.Log(cad2);
+            Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad2);
+            if (resultado.Result.Equals(1))
+            {
+                Debug.Log("Estado cambiado correctamente");
+            }
+            else
+            {
+                Debug.Log("Error al finalizar factura");
+            }
+        }
     }
 
     //Crear los botones con un for que vaya cambiando de posición. Separación de 30 píxeles +160 tanto para arriba como para abajo. Se empieza en -800 150 y se termina en 360 -280
@@ -98,11 +120,17 @@ public class GestionarPedidosController : MonoBehaviour
         textMeshPro.text = art.nombre;
         textObject.transform.localPosition = new Vector2(0,-100);
 
-        Button b = boton.AddComponent<Button>();
-        b.onClick.AddListener(()=> addArticulo(art.id));
+        Button mod = boton.AddComponent<Button>();
+        mod.onClick.AddListener(() => addArticulo(art.id));
     }
+
+
     public async void crearBotonesCategoria(string s)
     {
+        foreach (Transform t in fondoPedidos.transform)
+        {
+            Destroy(t.gameObject);
+        }
         Debug.Log(instanceMétodosApiController);
         string cad = await instanceMétodosApiController.GetDataAsync("articulo/getArticulosCat/" + s);
         Debug.Log(cad);
@@ -122,21 +150,25 @@ public class GestionarPedidosController : MonoBehaviour
         Debug.Log("Pruebafin");
     }
 
-    public async void addArticulo(int id)
+    public async Task addArticulo(int id)
     {
+        Debug.Log("SE INTENTA AÑADIR ART" + id);
         //Cantidad será siempre 1, al pulsar un botón se añadirá 1 a la cantidad, tal vez se debiera cambiar el botón para añadir varios de una vez. El servidor manejará si se crea realmente una instancia nueva o se añade 1 a una instancia existente
-        InstanciaArticulo anyadido = new InstanciaArticulo(pedido.id,id,1);
+        InstanciaArticulo anyadido = new InstanciaArticulo(id,pedido.id,1);
         string cad = await instanceMétodosApiController.GetDataAsync("InstanciaArticulo/existeInstancia/"+id+"/"+pedido.id+"/");
 
         bool existe = JsonConvert.DeserializeObject<bool>(cad);
+        Debug.Log("existe:"+existe);
         string cad2;
         if (existe)
         {
             cad2 = await instanceMétodosApiController.PutDataAsync("InstanciaArticulo/aumentar/",anyadido);
+            Debug.Log("cad2" + cad2);
         }
         else
         {
-            cad2 = await instanceMétodosApiController.PostDataAsync("InstanciaArticulo/crearInstancia/", anyadido);
+            cad2 = await instanceMétodosApiController.PostDataAsync("InstanciaArticulo/crearInstancia/",anyadido);
+            Debug.Log("cad3" + cad2);
         }
 
         Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad2);
@@ -163,7 +195,7 @@ public class GestionarPedidosController : MonoBehaviour
             string cad2 = await instanceMétodosApiController.GetDataAsync("articulo/getArticulo/" + i.idArticulo);
             Debug.Log(cad2);
             Articulo ar= JsonConvert.DeserializeObject<Articulo>(cad2);
-            texto += ar.nombre + " " + i.cantidad + "\n";
+            texto += ar.nombre + " x " + i.cantidad + "\n";
             Debug.Log("Finalizado un loop instancias:" + cad);
         }
         articulosPedidos.text = texto;
@@ -195,7 +227,7 @@ public class GestionarPedidosController : MonoBehaviour
      }*/
     public void pasarAFacturas()
     {
-        instanceGestionarFacturasController = new GestionarFacturasController();
+        instanceGestionarFacturasController = GestionarFacturasController.instanceGestionarFacturasController;
         Debug.Log("fACTURA:"+factura.id);
         instanceGestionarFacturasController.entrarFactura(factura.id);
         Debug.Log("mesa"+factura.mesa);
@@ -205,17 +237,46 @@ public class GestionarPedidosController : MonoBehaviour
         Debug.Log(factura);
     }
     
-    private async Task registrarPedido(Pedido p)
+
+
+    public async Task crearFacturaYPedidoSiNoExisten(int mesa)
     {
-        string cad = await instanceMétodosApiController.PostDataAsync("pedido/crearPedido",p);
-        Debug.Log(cad);
+        Factura f;
+        try
+        {
+            string cad = await instanceMétodosApiController.GetDataAsync("factura/obtenerActiva/" + mesa);
+            f = JsonConvert.DeserializeObject<Factura>(cad);
+            Debug.Log("Probar OBTENERR:" + f.Mostrar());
+            if (f != null)
+            {
+                factura = f;
+            }
+        }
+        catch
+        {
+            string cad = await instanceMétodosApiController.GetDataAsync("factura/maxID/");
+            int fID= JsonConvert.DeserializeObject<int>(cad);
+            f = new Factura(fID+1, 0, true, mesa);
+            string cad2 = await instanceMétodosApiController.PostDataAsync("factura/crearFactura/", f);
+            Debug.Log(cad2);
+            Debug.Log("Probar OBTENER:" + f.Mostrar());
+            factura = f;
+        }
+        string cad3 = await instanceMétodosApiController.GetDataAsync("pedido/maxID/");
+        int pID = JsonConvert.DeserializeObject<int>(cad3);
+        pedido = new Pedido(pID+1, "16:00", mesa, "INICIADO", factura.id); 
+        string cad4 = await instanceMétodosApiController.PostDataAsync("pedido/crearPedido", pedido);
+        Debug.Log(cad4);
     }
-    public async void entrarPedido(int mesa)
+
+    public async Task entrarPedido(int mesa)
     {
+        crearFacturaYPedidoSiNoExisten(mesa);
+        crearBotonesCategoria("PLATOS");
         canvasPedidos.SetActive(true);
         idMesa = mesa;
         //crear pedido, crear factura si no existe
-        string cad=await instanceMétodosApiController.GetDataAsync("factura/obtenerActiva/"+ idMesa);
+        /*string cad=await instanceMétodosApiController.GetDataAsync("factura/obtenerActiva/"+ idMesa);
         Factura f=  JsonConvert.DeserializeObject<Factura>(cad);
         Debug.Log("Probar:" + f.Mostrar());
         if (f == null)
@@ -229,11 +290,52 @@ public class GestionarPedidosController : MonoBehaviour
         cad = await instanceMétodosApiController.GetDataAsync("pedido/getNumPedidos/");
         int i = JsonConvert.DeserializeObject<int>(cad);
         //OBTENER LA HORA DE VERDAD
-        pedido = new Pedido(i+1,"16:00",idMesa,"APUNTADO",f.id);
+        pedido = new Pedido(i+1,"16:00",idMesa,"APUNTADO",f.id);*/
     }
+
+    public async Task entrarPedidoHecho(int idPedido)
+    {
+        Debug.Log("Entrada 1");
+        string cad = await instanceMétodosApiController.GetDataAsync("pedido/getPedido/" + idPedido);
+        Debug.Log(cad);
+        pedido = JsonConvert.DeserializeObject<Pedido>(cad);
+        Debug.Log("Entrada 2");
+        string cad2 = await instanceMétodosApiController.GetDataAsync("factura/getFactura/" + pedido.factura);
+        Debug.Log(cad2);
+        factura = JsonConvert.DeserializeObject<Factura>(cad);
+        Debug.Log("Entrada 3");
+        crearBotonesCategoria("PLATOS");
+        Debug.Log("Entrada 4");
+        actualizarArticulos();
+    }
+
     public void finalizarPedido()
     {
         registrarPedido(pedido);
+    }
+
+    private async Task registrarPedido(Pedido p)
+    {
+        if (p.estado.Equals("INICIADO"))
+        {
+            p.estado = "APUNTADO";
+        }
+        Debug.Log("Pruebar");
+        string cad = await instanceMétodosApiController.PutDataAsync("pedido/cambiarEstado",p);
+        Debug.Log("RESPUESTA:"+cad);
+        /*string cad = await instanceMétodosApiController.DeleteDataAsync("pedido/borrar/" + p.id);
+        Debug.Log(cad);
+        Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
+        if (resultado.Result.Equals(1))
+        {
+            Debug.Log("Estado cambiado correctamente");
+        }
+        else
+        {
+            Debug.Log("Error al finalizar factura");
+        }
+        string cad2 = await instanceMétodosApiController.PostDataAsync("pedido/crearPedido", p);
+        Debug.Log(cad2);*/
     }
 
 }

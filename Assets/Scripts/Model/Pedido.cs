@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Assets.Scripts.Model;
 public enum EstadoPedido
 {
+    Iniciado,
     Apuntado,
     EnCocina,
     Completado,
@@ -53,6 +54,8 @@ public class Pedido
             return EstadoPedido.Completado;
         else if (e.ToUpper().Equals("PAGADO"))
             return EstadoPedido.Pagado;
+        else if (e.ToUpper().Equals("INICIADO"))
+            return EstadoPedido.Iniciado;
         else return EstadoPedido.Apuntado;
     }
     /*

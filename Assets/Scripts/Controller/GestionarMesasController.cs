@@ -1546,7 +1546,6 @@ public class GestionarMesasController : MonoBehaviour
             canvasPedidos.SetActive(true);
             instanceGestionarPedidosController = GestionarPedidosController.instanceGestionarPedidosController;
             instanceGestionarPedidosController.entrarPedido(Int32.Parse(botónMesaSeleccionado.gameObject.name.Split("-")[1]));
-            instanceGestionarPedidosController.crearBotonesCategoria("PLATOS");
             Debug.Log("BOTÓN SELECCIONADO: " + botónMesaSeleccionado.gameObject.name);
         }
         //Se debería mostrar un mensaje de error si no se tiene una mesa seleccionada
