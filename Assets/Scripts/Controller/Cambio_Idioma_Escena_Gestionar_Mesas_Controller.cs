@@ -71,6 +71,33 @@ public class Cambio_Idioma_Escena_Gestionar_Mesas_Controller : MonoBehaviour
     [SerializeField] private TMP_Text textNumMesaInfoMesasDisponibles;
     [SerializeField] private TMP_Text textNumComensalesInfoMesasDisponibles;
 
+    //Textos en canvas Pedidos
+    [SerializeField] private TMP_Text imagenTextoPedidos;
+    [SerializeField] private TMP_Text botonEntrarPedido;
+    [SerializeField] private TMP_Text tituloPedidos;
+    [SerializeField] private TMP_Text encabezadoArticulos;
+    [SerializeField] private TMP_Text textoCat1;
+    [SerializeField] private TMP_Text textoCat2;
+    [SerializeField] private TMP_Text textoCat3;
+    [SerializeField] private TMP_Text textoCat4;
+    [SerializeField] private TMP_Text botonFactura;
+    [SerializeField] private TMP_Text botonFinPedido;
+
+    //Textos en canvas ListaPedidos
+    [SerializeField] private TMP_Text tituloListaPedidos;
+    [SerializeField] private TMP_Text buscarEstado;
+    [SerializeField] private TMP_Text buscarMesa;
+
+    //Texto en canvas factura
+    [SerializeField] private TMP_Text tituloFactura;
+    [SerializeField] private TMP_Text botonPago;
+    [SerializeField] private TMP_Text botonImprimir;
+    [SerializeField] private TMP_Text totalFactura;
+    [SerializeField] private TMP_Text IDFactura;
+    [SerializeField] private TMP_Text descripcionFactura;
+    [SerializeField] private TMP_Text cantidadFactura;
+    [SerializeField] private TMP_Text importeArticulo;
+    [SerializeField] private TMP_Text nombreRestauranteFactura;
 
 
     // Start is called before the first frame update
@@ -159,6 +186,35 @@ public class Cambio_Idioma_Escena_Gestionar_Mesas_Controller : MonoBehaviour
                 textNumMesaInfoMesasDisponibles.text = "Número de mesa";
                 textNumComensalesInfoMesasDisponibles.text = "Número de comensales";
 
+                //Textos en canvas Pedidos
+                imagenTextoPedidos.text = "Lista de pedidos";
+                botonEntrarPedido.text = "Realizar pedido";
+                tituloPedidos.text="Pedidos para la mesa ";
+                encabezadoArticulos.text="Artículos";
+                textoCat1.text = "Entrantes";
+                textoCat2.text = "Platos";
+                textoCat3.text = "Bebidas";
+                textoCat4.text = "Postres";
+                botonFactura.text = "Pasar a factura";
+                botonFinPedido.text = "Finalizar pedido";
+
+                //Textos en canvas ListaPedidos
+                tituloListaPedidos.text = "Lista de pedidos";
+                buscarEstado.text = "Buscar por estado";
+                buscarMesa.text = "Buscar por mesa";
+
+                //Texto en canvas factura
+                tituloFactura.text = "Factura";
+                botonPago.text = "Realizar pago";
+                botonImprimir.text = "Imprimir factura";
+                totalFactura.text = "TOTAL: ";
+                IDFactura.text = "ID";
+                descripcionFactura.text = "Descripción";
+                cantidadFactura.text = "Cantidad";
+                importeArticulo.text = "Importe";
+                nombreRestauranteFactura.text = "Restaurante:";
+
+
                 break;
 
             case "English":
@@ -231,6 +287,34 @@ public class Cambio_Idioma_Escena_Gestionar_Mesas_Controller : MonoBehaviour
                 textNumMesaInfoMesasDisponibles.text = "Table number";
                 textNumComensalesInfoMesasDisponibles.text = "Number of guests";
 
+                //Textos en canvas Pedidos
+                imagenTextoPedidos.text = "List of orders";
+                botonEntrarPedido.text = "Make an order";
+                tituloPedidos.text = "Order for table ";
+                encabezadoArticulos.text = "Items";
+                textoCat1.text = "Entrees";
+                textoCat2.text = "Dishes";
+                textoCat3.text = "Drinks";
+                textoCat4.text = "Desserts";
+                botonFactura.text = "Go to bill";
+                botonFinPedido.text = "Finish order";
+
+
+                //Textos en canvas ListaPedidos
+                tituloListaPedidos.text = "Orders";
+                buscarEstado.text = "Search by state";
+                buscarMesa.text = "Search by table";
+
+                //Texto en canvas factura
+                tituloFactura.text = "Bill";
+                botonPago.text = "Proceed to payment";
+                botonImprimir.text = "Print bill";
+                totalFactura.text = "TOTAL: ";
+                IDFactura.text = "ID";
+                descripcionFactura.text = "Description";
+                cantidadFactura.text = "Amount";
+                importeArticulo.text = "Price";
+                nombreRestauranteFactura.text = "Restaurant:";
                 break;
         }
 

@@ -92,7 +92,15 @@ public class GestionarFacturasController : MonoBehaviour
         int IDRes = JsonConvert.DeserializeObject<int>(cad);
         string cad2 = await instanceMétodosApiController.GetDataAsync("restaurante/getNombrePorId/" + IDRes);
         Debug.Log("resultado 2:"+cad2);
-        RestauranteTexto.text = "Restaurante: " + cad2;
+        if (Usuario.Idioma.CompareTo("Español") != 0)
+        {
+            RestauranteTexto.text = "Restaurant";
+        }
+        else
+        {
+            RestauranteTexto.text = "Restaurante";
+        }
+        RestauranteTexto.text = RestauranteTexto.text + cad2;
     }
 
     public async Task mostrarDatosFactura()
