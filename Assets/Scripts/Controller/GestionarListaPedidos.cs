@@ -102,7 +102,7 @@ public class GestionarListaPedidos : MonoBehaviour
         GameObject botonP = Instantiate(baseP, fondoPedidos, true);
         botonP.transform.position = new Vector2(950, 820-num*150);
         botonP.transform.SetParent(fondoPedidos);
-        botonP.AddComponent<CanvasRenderer>();
+        //botonP.AddComponent<CanvasRenderer>();
         // Crear un GameObject para el botón y asignarle un nombre único.
         botonP.name = "Pedido-" + p.id;
         GameObject tit = botonP.transform.Find("NumPedido").gameObject;

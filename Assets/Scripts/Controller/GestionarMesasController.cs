@@ -37,6 +37,7 @@ public class GestionarMesasController : MonoBehaviour
     [SerializeField] private Sprite imgCuadradoBordeNegroFino;
     [SerializeField] private GameObject imgConTextoDeBuscarReserva;
     [SerializeField] private GameObject ImgYTextoCrearReserva;
+    [SerializeField] private GameObject ImgYTextoListaPedidos;
     [SerializeField] private GameObject ImgYTextoHistorialReservas;
     public GestionarPedidosController instanceGestionarPedidosController;
     public GestionarListaPedidos instanceGestionarListaPedidos;
@@ -1523,7 +1524,16 @@ public class GestionarMesasController : MonoBehaviour
         Debug.Log("Ocultando imagen desde EventTrigger");
         ImgYTextoHistorialReservas.SetActive(false);
     }
-
+    public void MostrarImgConTextoDeListaPedidos()
+    {
+        Debug.Log("Activando imagen desde EventTrigger");
+        ImgYTextoListaPedidos.SetActive(true);
+    }
+    public void OcultarImgYTextoDeListaPedidos()
+    {
+        Debug.Log("Ocultando imagen desde EventTrigger");
+        ImgYTextoListaPedidos.SetActive(false);
+    }
     public List<Mesa> GetMesas()
     {
         return Mesas;
