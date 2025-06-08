@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1684573771703484439
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1898181803755104510}
+  - component: {fileID: 3668302834764021900}
+  m_Layer: 0
+  m_Name: GestionarMesasRestaurante
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1898181803755104510
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1684573771703484439}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3668302834764021900
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1684573771703484439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eef5cc83ac1457b44857982afcbcc593, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textNombreRestaurante: {fileID: 0}
+  textHoraActual: {fileID: 0}
+  tmpInputFieldPrefab: {fileID: 476926517351533604, guid: f3eb7c47497e91f4dbcf1404765fbba6, type: 3}
+  textHoraApertura: {fileID: 0}
+  textHoraCierre: {fileID: 0}
+  contenedorInfoReservasMesa: {fileID: 0}
+  buttonNoDisponible: {fileID: 0}
+  buttonDisponible: {fileID: 0}
+  canvasReservasHoyMesa: {fileID: 0}
+  scrollbarReservasMesaHoy: {fileID: 0}
+  rectTransformContent: {fileID: 0}
+  textReservasHoyMesa: {fileID: 0}
+  canvasCrearReserva: {fileID: 0}
+  canvasBuscarReserva: {fileID: 0}
+  canvasHistorialReservas: {fileID: 0}
+  canvasPedidos: {fileID: 0}
+  canvasListaPedidos: {fileID: 0}
+  scrollbarHistorialReservas: {fileID: 0}
+  rectTransformContentHistorialReservas: {fileID: 0}
+  imgCuadradoBordeNegroFino: {fileID: 21300000, guid: 291d767454cafe149ad33c53c646949d, type: 3}
+  imgConTextoDeBuscarReserva: {fileID: 0}
+  ImgYTextoCrearReserva: {fileID: 0}
+  ImgYTextoHistorialReservas: {fileID: 0}
+  instanceGestionarPedidosController: {fileID: 0}
+  instanceGestionarListaPedidos: {fileID: 0}
+  "bot\xF3nMesaSeleccionado": {fileID: 0}
+  padreDeLosBotonesMesa: {fileID: 0}

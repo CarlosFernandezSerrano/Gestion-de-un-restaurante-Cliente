@@ -11,7 +11,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-
+//Cambios: Se ha vuelto public el botónMesaSeleccionado para poder pasarlo así a gestionar Pedidos, se ha añadido 2 botones y sus handlers al final, se han añadido los canvas necesarios para pasar a las otras pantallas
 
 public class GestionarMesasController : MonoBehaviour
 {
@@ -30,19 +30,24 @@ public class GestionarMesasController : MonoBehaviour
     [SerializeField] private GameObject canvasCrearReserva;
     [SerializeField] private GameObject canvasBuscarReserva;
     [SerializeField] private GameObject canvasHistorialReservas;
+    [SerializeField] private GameObject canvasPedidos;
+    [SerializeField] private GameObject canvasListaPedidos;
     [SerializeField] private Scrollbar scrollbarHistorialReservas; 
     [SerializeField] private RectTransform rectTransformContentHistorialReservas;
     [SerializeField] private Sprite imgCuadradoBordeNegroFino;
     [SerializeField] private GameObject imgConTextoDeBuscarReserva;
     [SerializeField] private GameObject ImgYTextoCrearReserva;
+    [SerializeField] private GameObject ImgYTextoListaPedidos;
     [SerializeField] private GameObject ImgYTextoHistorialReservas;
+    public GestionarPedidosController instanceGestionarPedidosController;
+    public GestionarListaPedidos instanceGestionarListaPedidos;
 
     private List<Mesa> Mesas;
 
     private int lastIDMesa = 0;
     private string colorHexadecimalVerde = "#00B704";
     private string colorHexadecimalRojo = "#A12121";
-    private Button botónMesaSeleccionado; 
+    public Button botónMesaSeleccionado; 
 
     private int contMostrarBotonesMesa = 1;
 
@@ -1212,9 +1217,11 @@ public class GestionarMesasController : MonoBehaviour
         }
 
         // Agrego un componente Button para que sea interactivo
-        botónGO.AddComponent<Button>();
+        Button b=botónGO.AddComponent<Button>();
 
-        // Creo un nuevo GameObject hijo, el texto del botón
+        int idMesa = Int32.Parse(botónMesaSeleccionado.gameObject.name.Split("-")[1]);
+        b.onClick.AddListener(() => cambiarAListaPedidos(idMesa));
+         //Creo un nuevo GameObject hijo, el texto del botón
         CrearTextoDelButton(rt, reserva);
     }
 
@@ -1532,7 +1539,16 @@ public class GestionarMesasController : MonoBehaviour
         Debug.Log("Ocultando imagen desde EventTrigger");
         ImgYTextoHistorialReservas.SetActive(false);
     }
-
+    public void MostrarImgConTextoDeListaPedidos()
+    {
+        Debug.Log("Activando imagen desde EventTrigger");
+        ImgYTextoListaPedidos.SetActive(true);
+    }
+    public void OcultarImgYTextoDeListaPedidos()
+    {
+        Debug.Log("Ocultando imagen desde EventTrigger");
+        ImgYTextoListaPedidos.SetActive(false);
+    }
     public List<Mesa> GetMesas()
     {
         return Mesas;
@@ -1547,6 +1563,25 @@ public class GestionarMesasController : MonoBehaviour
     {
         return textHoraCierre.text;
     }
-
+    // PONER AQUÍ LAS FUNCIONES PARA GENERAR CANVAS PEDIDOS
+    public async void cambiarAPedidos()
+    {
+        if (botónMesaSeleccionado != null)
+        {
+            instanceGestionarPedidosController = GestionarPedidosController.instanceGestionarPedidosController;
+            instanceGestionarPedidosController.pedido=new Pedido(-1,"",-1,"",-1);
+            instanceGestionarPedidosController.actualizarArticulos();
+            instanceGestionarPedidosController.entrarPedido(Int32.Parse(botónMesaSeleccionado.gameObject.name.Split("-")[1]));
+            Debug.Log("BOTÓN SELECCIONADO: " + botónMesaSeleccionado.gameObject.name);
+        }
+        //Se debería mostrar un mensaje de error si no se tiene una mesa seleccionada
+        else Debug.Log("No se ha seleccionado ningún botón");
+    }
+    public void cambiarAListaPedidos(int mesa)
+    {
+        Debug.Log("PRUEBA LISTA");
+        instanceGestionarListaPedidos.entrarLista(mesa);
+        Debug.Log("FIN PRUEBA");
+    }
 
 }
