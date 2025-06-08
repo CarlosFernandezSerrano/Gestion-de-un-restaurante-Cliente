@@ -53623,6 +53623,42 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: imprimirFactura
       objectReference: {fileID: 0}
+    - target: {fileID: 179428809675524498, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
+      propertyPath: m_fontSize
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 179428809675524498, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 270783875397101897, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
+      propertyPath: m_fontStyle
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 652954687103594276, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
+      propertyPath: m_fontSize
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 652954687103594276, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
+      propertyPath: m_fontStyle
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 652954687103594276, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 1973817378278040069, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
+      propertyPath: m_fontStyle
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2210192068687002783, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 116.1648
+      objectReference: {fileID: 0}
+    - target: {fileID: 2210192068687002783, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 144.3
+      objectReference: {fileID: 0}
     - target: {fileID: 2493488847991798979, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0
@@ -53630,6 +53666,10 @@ PrefabInstance:
     - target: {fileID: 2493488847991798979, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 471
+      objectReference: {fileID: 0}
+    - target: {fileID: 3487286810072039449, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
+      propertyPath: m_fontStyle
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5132846742985246594, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -53735,6 +53775,18 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 6615919703292397322, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
+      propertyPath: m_fontSize
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 6615919703292397322, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 7610978294823563849, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
+      propertyPath: m_fontStyle
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7610978294823563849, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
       propertyPath: m_HorizontalAlignment
       value: 2
@@ -53746,6 +53798,14 @@ PrefabInstance:
     - target: {fileID: 7732021735570862447, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8254071613915175157, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
+      propertyPath: m_fontSize
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 8254071613915175157, guid: 1b1984eb2a99afc43b6a8bc744e1ae52, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 22
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
