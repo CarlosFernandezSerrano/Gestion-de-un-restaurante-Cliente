@@ -35,6 +35,7 @@ public class MainController : MonoBehaviour
     [SerializeField] private Image imgBtnOnYPausa;
     [SerializeField] private Sprite imgPausa;
     [SerializeField] private Sprite imgPlay;
+    [SerializeField] private VideoPlayer videoPlayer;
 
     private bool telónMoviéndose = false;
     private bool telónAbajo = false;
@@ -306,7 +307,8 @@ public class MainController : MonoBehaviour
     public void ActivarCanvasVídeoTutorial()
     {
         VideoPlayer vp = canvasVídeoTutorialApp.GetComponent<VideoPlayer>();
-        
+
+
         if (textUserRol.text.Trim().Length > 0)
         {
             if (textUserRol.text.Contains("Empleado") || textUserRol.text.Contains("Employee"))
@@ -335,7 +337,7 @@ public class MainController : MonoBehaviour
 
     public void PausarODespausarVídeo()
     {
-        VideoPlayer vp = canvasVídeoTutorialApp.GetComponent<VideoPlayer>();
+        VideoPlayer vp =  canvasVídeoTutorialApp.GetComponent<VideoPlayer>();
         if (imgBtnOnYPausa.sprite == imgPausa)
         {
             vp.Pause();
