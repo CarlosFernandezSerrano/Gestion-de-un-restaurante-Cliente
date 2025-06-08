@@ -13,12 +13,21 @@ using UnityEngine.UI;
 using System.Text.RegularExpressions;
 //SI ES POSIBLE, PANTALLA PARA AÑADIR ARTÍCULOS A LA BASE DE DATOS
 //IMÁGENES
-
+/*
+ * if (Usuario.Idioma.CompareTo("Español") == 0)
+        {
+            textReservasHoyMesa.text = "Registros Hoy Mesa " + ObtenerIDMesaDelMapa(botónMesaSelected);
+        }
+        else
+        {
+            textReservasHoyMesa.text = "Registrations Today Table " + ObtenerIDMesaDelMapa(botónMesaSelected);
+        }
+*/
 public class GestionarPedidosController : MonoBehaviour
 {
-    //se debe marcar la categoría seleccionada
-    //Volver debería volver a lista artículos en vez de mesas cuando se accede desde ahí (hacer que únicamente setactive false)
+    //Obtener num mesa en vez de ID (ObtenerIDMesaDelMapa de gestionarmesas, buscar botón)
     //Scrollbar pedidos
+    //Cambiar tamaño de items en combobox listapedidos
     public RectTransform fondoPedidos;
     public static GestionarPedidosController instanceGestionarPedidosController { get; set; }
     public GestionarMesasController instanceGestionarMesasController;
@@ -184,7 +193,7 @@ public class GestionarPedidosController : MonoBehaviour
         }
         actualizarArticulos();
     }
-
+    
     public async void actualizarArticulos()
     {
         foreach (Transform t in fondoArticulos.transform)
@@ -321,7 +330,14 @@ public class GestionarPedidosController : MonoBehaviour
         crearFacturaYPedidoSiNoExisten(mesa);
         crearBotonesCategoria("PLATOS");
         idMesa = mesa;
-        titulo.text = "Pedido para la mesa " + mesa;
+        if (Usuario.Idioma.CompareTo("Español") != 0)
+        {
+            titulo.text = "Order for table " + mesa;
+        }
+        else
+        {
+            titulo.text = "Pedido para la mesa " + mesa;
+        }
         canvasPedidos.SetActive(true);
         //crear pedido, crear factura si no existe
         /*string cad=await instanceMétodosApiController.GetDataAsync("factura/obtenerActiva/"+ idMesa);
@@ -352,6 +368,7 @@ public class GestionarPedidosController : MonoBehaviour
         Debug.Log(cad2);
         factura = JsonConvert.DeserializeObject<Factura>(cad);
         Debug.Log("Entrada 3");
+        int numMesa = factura.mesa;
         titulo.text = "Pedido para la mesa " + factura.mesa;
         crearBotonesCategoria("PLATOS");
         Debug.Log("Entrada 4");

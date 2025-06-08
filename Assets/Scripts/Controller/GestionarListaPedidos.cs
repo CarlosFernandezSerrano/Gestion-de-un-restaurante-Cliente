@@ -96,7 +96,45 @@ public class GestionarListaPedidos : MonoBehaviour
             }
         }
     }
+    
+    /*public void crearBoton(Pedido p, int num)
+    {
+        GameObject botonP = Instantiate(baseP, fondoPedidos, true);
+        botonP.transform.position = new Vector2(950, 820 - num * 150);
+        botonP.transform.SetParent(fondoPedidos);
+        //botonP.AddComponent<CanvasRenderer>();
+        // Crear un GameObject para el botón y asignarle un nombre único.
+        botonP.name = "Pedido-" + p.id;
+        GameObject tit = botonP.transform.Find("NumPedido").gameObject;
+        TextMeshProUGUI texto = tit.GetComponent<TextMeshProUGUI>();
+        texto.text = "Pedido " + p.id;
+        GameObject fecha = botonP.transform.Find("Fecha").gameObject;
+        TextMeshProUGUI textoF = fecha.GetComponent<TextMeshProUGUI>();
+        textoF.text = "Mesa " + p.mesa;
+        GameObject dropdown = botonP.transform.Find("Dropdown").gameObject;
+        TMP_Dropdown drop = dropdown.GetComponent<TMPDropdown>();
+        if (p.estado.ToUpper().Equals("APUNTADO"))
+            drop.value = 0;
+        else if (p.estado.ToUpper().Equals("ENCOCINA"))
+            drop.value = 1;
+        else if (p.estado.ToUpper().Equals("COMPLETADO"))
+            drop.value = 2;
+        else if (p.estado.ToUpper().Equals("PAGADO"))
+            drop.value = 3;
+        else drop.value = 4;
+        drop.onValueChanged.AddListener(() =>
+        {
+            cambiarEstadoPedido(p, drop.options[drop.value].text);
+        });
+        GameObject modificar = botonP.transform.Find("Modificar").gameObject;
+        Button mod = modificar.AddComponent<Button>();
+        mod.onClick.AddListener(() => modificarPedido(p));
+        GameObject eliminar = botonP.transform.Find("Eliminar").gameObject;
+        Button del = eliminar.AddComponent<Button>();
+        del.onClick.AddListener(() => eliminarPedido(p.id));
 
+        //modificar.GetComponent<Button>().onClick = () => { Debug.Log("Botón accedido correctamente"); };
+    }*/
     public void crearBoton(Pedido p,int num)
     {
         GameObject botonP = Instantiate(baseP, fondoPedidos, true);
@@ -107,10 +145,20 @@ public class GestionarListaPedidos : MonoBehaviour
         botonP.name = "Pedido-" + p.id;
         GameObject tit = botonP.transform.Find("NumPedido").gameObject;
         TextMeshProUGUI texto = tit.GetComponent<TextMeshProUGUI>();
-        texto.text = "Pedido "+p.id;
         GameObject fecha= botonP.transform.Find("Fecha").gameObject;
         TextMeshProUGUI textoF = fecha.GetComponent<TextMeshProUGUI>();
-        textoF.text = "Mesa "+p.mesa;
+        if (Usuario.Idioma.CompareTo("Español") == 0)
+        {
+            texto.text = "Pedido " + p.id;
+            textoF.text = "Mesa " + p.mesa;
+        }
+        else
+        {
+            texto.text = "Order " + p.id;
+            textoF.text = "Table " + p.mesa;
+        }
+
+
         GameObject dropdown = botonP.transform.Find("Dropdown").gameObject;
         TMP_Dropdown drop = dropdown.GetComponent<TMP_Dropdown>();
         if (p.estado.ToUpper().Equals("APUNTADO"))
@@ -122,6 +170,17 @@ public class GestionarListaPedidos : MonoBehaviour
         else if (p.estado.ToUpper().Equals("PAGADO"))
             drop.value = 3;
         else drop.value = 4;
+
+        if (Usuario.Idioma.CompareTo("Español") != 0)
+        {
+            drop.options[0].text = "REGISTERED";
+            drop.options[1].text = "INKITCHEN";
+            drop.options[2].text = "COMPLETED";
+            drop.options[3].text = "PAID";
+            drop.options[4].text = "STARTED";
+        }
+
+
         drop.onValueChanged.AddListener((_) =>
         {
             cambiarEstadoPedido(p, drop.options[drop.value].text);
@@ -133,6 +192,49 @@ public class GestionarListaPedidos : MonoBehaviour
         Button del = eliminar.AddComponent<Button>();
         del.onClick.AddListener(() => eliminarPedido(p.id));
 
+
+        GameObject modIMG = modificar.transform.Find("Image").gameObject;
+        GameObject modTexto = modIMG.transform.Find("Text (TMP)").gameObject;
+        TextMeshProUGUI textoMod = modTexto.GetComponent<TextMeshProUGUI>();
+        GameObject delIMG = eliminar.transform.Find("Image").gameObject;
+        GameObject delTexto = delIMG.transform.Find("Text (TMP)").gameObject;
+        TextMeshProUGUI textoDel = delTexto.GetComponent<TextMeshProUGUI>();
+        if (Usuario.Idioma.CompareTo("Español") != 0)
+        {
+            Debug.Log("Debería traducirse");
+            textoMod.text = "Modify";
+            textoDel.text = "Delete";
+        }
+        else
+        {
+            textoMod.text = "Modificar";
+            textoDel.text = "Eliminar";
+        }
+        /*GameObject modificar = botonP.transform.Find("Modificar").gameObject;
+        GameObject modTexto = modificar.transform.Find("Text (TMP)").gameObject;
+        TextMeshProUGUI textoMod = modTexto.GetComponent<TextMeshProUGUI>();
+        Button mod = modificar.AddComponent<Button>();
+        mod.onClick.AddListener(() => modificarPedido(p));
+        GameObject eliminar = botonP.transform.Find("Eliminar").gameObject;
+        GameObject eliTexto = eliminar.transform.Find("Text (TMP)").gameObject;
+        TextMeshProUGUI textoDel = eliTexto.GetComponent<TextMeshProUGUI>();
+
+
+        if (Usuario.Idioma.CompareTo("Español") !=0)
+        {
+            Debug.Log("Debería traducirse");
+            textoMod.text = "Modify";
+            textoDel.text = "Delete";
+        }
+        else
+        {
+            textoMod.text = "Modificar";
+            textoDel.text = "Eliminar";
+        }
+        Button del = eliminar.AddComponent<Button>();
+        del.onClick.AddListener(() => eliminarPedido(p.id));
+        
+        */
         //modificar.GetComponent<Button>().onClick = () => { Debug.Log("Botón accedido correctamente"); };
     }
 
@@ -192,7 +294,28 @@ public class GestionarListaPedidos : MonoBehaviour
     }*/
     public async Task cambiarEstadoPedido(Pedido p,string s)
     {
-        p.estado = s;
+        string aux=s;
+        if (s.Equals("REGISTERED"))
+        {
+            aux = "APUNTADO";
+        }
+        else if (s.Equals("INKITCHEN"))
+        {
+            aux = "ENCOCINA";
+        }
+        else if (s.Equals("COMPLETED"))
+        {
+            aux = "COMPLETADO";
+        }
+        else if (s.Equals("PAID"))
+        {
+            aux = "PAGADO";
+        }
+        else if (s.Equals("STARTED"))
+        {
+            aux = "INICIADO";
+        }
+        p.estado = aux;
         string cad = await instanceMétodosApiController.PutDataAsync("pedido/cambiarEstado/",p);
         Debug.Log("CAMBIO ESTADO"+cad);
         Resultado resultado = JsonConvert.DeserializeObject<Resultado>(cad);
