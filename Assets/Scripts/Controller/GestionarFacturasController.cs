@@ -138,7 +138,7 @@ public class GestionarFacturasController : MonoBehaviour
         string cad4 = await instanceMétodosApiController.GetDataAsync("factura/getTotal/" + factura.id);
         Debug.Log(cad4);
         float tot = JsonConvert.DeserializeObject<float>(cad4);
-        Total.text = "TOTAL: "+tot;
+        Total.text = "TOTAL: "+tot+" €";
         getNombreRestaurante();
         Debug.Log("Sale");
     }

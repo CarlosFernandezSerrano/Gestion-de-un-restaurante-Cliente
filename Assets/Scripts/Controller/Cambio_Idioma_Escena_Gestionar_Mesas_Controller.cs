@@ -231,7 +231,7 @@ public class Cambio_Idioma_Escena_Gestionar_Mesas_Controller : MonoBehaviour
 
                 // Textos en canvas Registros Hoy Mesa
                 textEncabezadoRegistrosMesa.text = "Records Today Table";
-                textIndicaciónEstructuraRegistrosMesa.text = "    Date      Hour   Guests   Telephone Customer";
+                textIndicaciónEstructuraRegistrosMesa.text = "    Date      Hour   Guests  Telephone  Customer";
                 textTextoEnUsoRegistrosMesa.text = "In use.";
                 textTextoConfirmadaRegistrosMesa.text = "Confirmed.";
                 textTerminadaCanceladaRegistrosMesa.text = "Completed / Cancelled.";

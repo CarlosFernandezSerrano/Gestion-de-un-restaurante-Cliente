@@ -105,6 +105,8 @@ public class GestionarMesasController : MonoBehaviour
         // Deserializo la respuesta
         Restaurante restaurante = JsonConvert.DeserializeObject<Restaurante>(cad);
 
+
+
         textHoraApertura.text = restaurante.HoraApertura;
         textHoraCierre.text = restaurante.HoraCierre;
         Restaurante.TiempoPermitidoParaComer = restaurante.TiempoParaComer;
@@ -1255,15 +1257,30 @@ public class GestionarMesasController : MonoBehaviour
         textoBotón.fontSize = 56;
         textoBotón.alignment = TextAlignmentOptions.Left;
 
-        // Si el cliente tiene un número de teléfono registrado en la BDD
-        if (reserva.Cliente.NumTelefono.Trim().Length > 0)
+        if (Usuario.Idioma.CompareTo("Español") == 0)
         {
-            textoBotón.text = "  " + reserva.Fecha + "    " + reserva.Hora + "           " + reserva.CantComensales + "          " + reserva.Cliente.NumTelefono + "    " + reserva.Cliente.Nombre;
+            // Si el cliente tiene un número de teléfono registrado en la BDD
+            if (reserva.Cliente.NumTelefono.Trim().Length > 0)
+            {
+                textoBotón.text = "  " + reserva.Fecha + "    " + reserva.Hora + "           " + reserva.CantComensales + "          " + reserva.Cliente.NumTelefono + "    " + reserva.Cliente.Nombre;
+            }
+            else // El cliente no tiene ningún número de teléfono registrado
+            {
+                textoBotón.text = "  " + reserva.Fecha + "    " + reserva.Hora + "           " + reserva.CantComensales + "                              " + reserva.Cliente.Nombre;
+            }
         }
-        else // El cliente no tiene ningún número de teléfono registrado
+        else
         {
-            textoBotón.text = "  " + reserva.Fecha + "    " + reserva.Hora + "           " + reserva.CantComensales + "                              " + reserva.Cliente.Nombre;
-        }
+            // Si el cliente tiene un número de teléfono registrado en la BDD
+            if (reserva.Cliente.NumTelefono.Trim().Length > 0)
+            {
+                textoBotón.text = "  " + reserva.Fecha + "    " + reserva.Hora + "          " + reserva.CantComensales + "         " + reserva.Cliente.NumTelefono + "     " + reserva.Cliente.Nombre;
+            }
+            else // El cliente no tiene ningún número de teléfono registrado
+            {
+                textoBotón.text = "  " + reserva.Fecha + "    " + reserva.Hora + "          " + reserva.CantComensales + "                              " + reserva.Cliente.Nombre;
+            }
+        }        
     }
 
     public void DesactivarCanvasReservasMesaHoy()
