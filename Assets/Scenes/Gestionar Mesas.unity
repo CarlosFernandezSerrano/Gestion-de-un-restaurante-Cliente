@@ -3639,7 +3639,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1218439649}
         m_TargetAssemblyTypeName: GestionarMesasController, Assembly-CSharp
-        m_MethodName: ActivarCanvasHistorialReservas
+        m_MethodName: ActivarCanvasCrearReserva
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3706,7 +3706,7 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 1218439649}
           m_TargetAssemblyTypeName: GestionarMesasController, Assembly-CSharp
-          m_MethodName: MostrarImgConTextoDeBuscarReserva
+          m_MethodName: MostrarImgYTextoDeCrearReserva
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -36423,7 +36423,7 @@ PrefabInstance:
     - target: {fileID: 3668302834764021900, guid: b1f6e995e0b78b64483bdd1bf846987f, type: 3}
       propertyPath: textHoraCierre
       value: 
-      objectReference: {fileID: 110875966}
+      objectReference: {fileID: 786648910}
     - target: {fileID: 3668302834764021900, guid: b1f6e995e0b78b64483bdd1bf846987f, type: 3}
       propertyPath: buttonDisponible
       value: 
@@ -36431,7 +36431,7 @@ PrefabInstance:
     - target: {fileID: 3668302834764021900, guid: b1f6e995e0b78b64483bdd1bf846987f, type: 3}
       propertyPath: textHoraApertura
       value: 
-      objectReference: {fileID: 45315291}
+      objectReference: {fileID: 223721325}
     - target: {fileID: 3668302834764021900, guid: b1f6e995e0b78b64483bdd1bf846987f, type: 3}
       propertyPath: buttonNoDisponible
       value: 
